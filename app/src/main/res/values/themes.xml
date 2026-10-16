@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 基础主题（Material3） -->
+    <style name="Theme.SproutPet" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryDark">@color/brand_primary_dark</item>
+        <item name="colorSecondary">@color/brand_accent</item>
+        <item name="android:colorBackground">@color/bg_page</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+
+    <!-- 启动页主题 -->
+    <style name="Theme.SproutPet.Splash" parent="Theme.SproutPet">
+        <item name="android:windowBackground">@color/bg_page</item>
+    </style>
+
+    <!-- 通用文本样式 -->
+    <style name="TextTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextBody" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <style name="TextCaption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">@color/text_hint</item>
+    </style>
+
+    <!-- 卡片 -->
+    <style name="CardContainer">
+        <item name="android:background">@drawable/bg_card</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+</resources>

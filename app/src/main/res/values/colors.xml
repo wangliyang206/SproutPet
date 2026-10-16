@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 品牌主色：萌芽绿 -->
+    <color name="brand_primary">#FF4CAF50</color>
+    <color name="brand_primary_dark">#FF388E3C</color>
+    <color name="brand_primary_light">#FFC8E6C9</color>
+    <color name="brand_accent">#FFFFB300</color>
+
+    <!-- 语义色 -->
+    <color name="color_success">#FF4CAF50</color>
+    <color name="color_warning">#FFFF9800</color>
+    <color name="color_error">#FFF44336</color>
+    <color name="color_info">#FF2196F3</color>
+
+    <!-- 稀有度 -->
+    <color name="rarity_common">#FF9E9E9E</color>
+    <color name="rarity_rare">#FF2196F3</color>
+    <color name="rarity_epic">#FF9C27B0</color>
+    <color name="rarity_legendary">#FFFF9800</color>
+    <color name="rarity_mythic">#FFF44336</color>
+
+    <!-- 中性 -->
+    <color name="text_primary">#FF212121</color>
+    <color name="text_secondary">#FF757575</color>
+    <color name="text_hint">#FFBDBDBD</color>
+    <color name="bg_page">#FFF7F8FA</color>
+    <color name="bg_card">#FFFFFFFF</color>
+    <color name="divider">#FFEEEEEE</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">萌芽宠物</string>
+
+    <!-- 底部导航 -->
+    <string name="nav_home">宠物</string>
+    <string name="nav_incubator">孵化</string>
+    <string name="nav_social">社交</string>
+    <string name="nav_mine">我的</string>
+
+    <!-- 首页 -->
+    <string name="home_title">我的宠物</string>
+    <string name="home_no_pet">还没有宠物，去领一个蛋吧</string>
+    <string name="home_get_egg">领取盲盒蛋</string>
+
+    <!-- 盲盒/孵化 -->
+    <string name="blind_box_title">神秘盲盒</string>
+    <string name="blind_box_open">开启盲盒</string>
+    <string name="incubating">孵化中…</string>
+    <string name="incubate_speed_up">加速孵化</string>
+
+    <!-- 成长 -->
+    <string name="growth_stage_egg">蛋</string>
+    <string name="growth_stage_baby">幼崽</string>
+    <string name="growth_stage_teen">少年</string>
+    <string name="growth_stage_adult">成年</string>
+    <string name="growth_stage_elder">长者</string>
+
+    <!-- 社交 -->
+    <string name="ranking_title">排行榜</string>
+    <string name="family_title">家族</string>
+    <string name="family_tree_title">族谱</string>
+
+    <!-- 通用 -->
+    <string name="action_confirm">确定</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_retry">重试</string>
+    <string name="loading">加载中…</string>
+    <string name="empty_data">暂无数据</string>
+    <string name="network_error">网络异常，请稍后重试</string>
+</resources>
