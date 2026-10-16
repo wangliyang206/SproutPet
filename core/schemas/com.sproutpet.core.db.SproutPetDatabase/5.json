@@ -1,0 +1,342 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "92bdd64a43f686529e40d94ab4fcfc9c",
+    "entities": [
+      {
+        "tableName": "pet",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `owner_id` INTEGER NOT NULL, `nickname` TEXT NOT NULL, `species_id` TEXT NOT NULL, `rarity` INTEGER NOT NULL, `stage` INTEGER NOT NULL, `gender` INTEGER NOT NULL DEFAULT 0, `level` INTEGER NOT NULL, `exp` INTEGER NOT NULL, `attr_stamina` INTEGER NOT NULL, `attr_strength` INTEGER NOT NULL, `attr_agility` INTEGER NOT NULL, `attr_wisdom` INTEGER NOT NULL, `attr_charm` INTEGER NOT NULL, `attr_intimacy` INTEGER NOT NULL, `power` INTEGER NOT NULL, `gene_body_size` REAL NOT NULL, `gene_hue_shift` REAL NOT NULL, `gene_pattern_density` REAL NOT NULL, `gene_eye_size` REAL NOT NULL, `gene_tail_length` REAL NOT NULL, `gene_liveliness` REAL NOT NULL, `born_at` INTEGER NOT NULL, `hatch_at` INTEGER NOT NULL, `is_hatched` INTEGER NOT NULL, `spouse_id` INTEGER, `family_id` INTEGER, `parent_id_a` INTEGER, `parent_id_b` INTEGER, `generation` INTEGER NOT NULL, `batch_no` TEXT NOT NULL, `is_retired` INTEGER NOT NULL DEFAULT 0, `exotic_blood` INTEGER NOT NULL DEFAULT 0, `deity_form` INTEGER NOT NULL DEFAULT 0, `is_main` INTEGER NOT NULL DEFAULT 0, `home_slot` INTEGER NOT NULL DEFAULT -1, `desktop_slot` INTEGER NOT NULL DEFAULT -1, `remote_id` TEXT, `updated_at` INTEGER NOT NULL, `is_synced` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ownerId",
+            "columnName": "owner_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nickname",
+            "columnName": "nickname",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speciesId",
+            "columnName": "species_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rarity",
+            "columnName": "rarity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stage",
+            "columnName": "stage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gender",
+            "columnName": "gender",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exp",
+            "columnName": "exp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stamina",
+            "columnName": "attr_stamina",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "strength",
+            "columnName": "attr_strength",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "agility",
+            "columnName": "attr_agility",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wisdom",
+            "columnName": "attr_wisdom",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "charm",
+            "columnName": "attr_charm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intimacy",
+            "columnName": "attr_intimacy",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "power",
+            "columnName": "power",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geneBodySize",
+            "columnName": "gene_body_size",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geneHueShift",
+            "columnName": "gene_hue_shift",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "genePatternDensity",
+            "columnName": "gene_pattern_density",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geneEyeSize",
+            "columnName": "gene_eye_size",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geneTailLength",
+            "columnName": "gene_tail_length",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "geneLiveliness",
+            "columnName": "gene_liveliness",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bornAt",
+            "columnName": "born_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hatchAt",
+            "columnName": "hatch_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isHatched",
+            "columnName": "is_hatched",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "spouseId",
+            "columnName": "spouse_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "familyId",
+            "columnName": "family_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parentIdA",
+            "columnName": "parent_id_a",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parentIdB",
+            "columnName": "parent_id_b",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "generation",
+            "columnName": "generation",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "batchNo",
+            "columnName": "batch_no",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRetired",
+            "columnName": "is_retired",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "exoticBlood",
+            "columnName": "exotic_blood",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "hasFullDeityForm",
+            "columnName": "deity_form",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "isMain",
+            "columnName": "is_main",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "homeSlot",
+            "columnName": "home_slot",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "-1"
+          },
+          {
+            "fieldPath": "desktopSlot",
+            "columnName": "desktop_slot",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "-1"
+          },
+          {
+            "fieldPath": "remoteId",
+            "columnName": "remote_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSynced",
+            "columnName": "is_synced",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_pet_owner_id",
+            "unique": false,
+            "columnNames": [
+              "owner_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_owner_id` ON `${TABLE_NAME}` (`owner_id`)"
+          },
+          {
+            "name": "index_pet_family_id",
+            "unique": false,
+            "columnNames": [
+              "family_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_family_id` ON `${TABLE_NAME}` (`family_id`)"
+          },
+          {
+            "name": "index_pet_spouse_id",
+            "unique": false,
+            "columnNames": [
+              "spouse_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_spouse_id` ON `${TABLE_NAME}` (`spouse_id`)"
+          },
+          {
+            "name": "index_pet_parent_id_a",
+            "unique": false,
+            "columnNames": [
+              "parent_id_a"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_parent_id_a` ON `${TABLE_NAME}` (`parent_id_a`)"
+          },
+          {
+            "name": "index_pet_parent_id_b",
+            "unique": false,
+            "columnNames": [
+              "parent_id_b"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_parent_id_b` ON `${TABLE_NAME}` (`parent_id_b`)"
+          },
+          {
+            "name": "index_pet_power",
+            "unique": false,
+            "columnNames": [
+              "power"
+            ],
+            "orders": [
+              "DESC"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_power` ON `${TABLE_NAME}` (`power` DESC)"
+          },
+          {
+            "name": "index_pet_is_hatched_owner_id",
+            "unique": false,
+            "columnNames": [
+              "is_hatched",
+              "owner_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_pet_is_hatched_owner_id` ON `${TABLE_NAME}` (`is_hatched`, `owner_id`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '92bdd64a43f686529e40d94ab4fcfc9c')"
+    ]
+  }
+}

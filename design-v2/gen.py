@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""倒置 IA 设计稿 v2 —— 10 屏定义 + 渲染 + 归档页构建。
+"""倒置 IA 设计稿 v2 —— 30 屏定义 + 渲染 + 归档页构建。
 
 原则（docs/09 U-10 拍板稿）：
   P1 打开 App = 家（全屏场景，无 Tab 栏）
@@ -76,9 +76,9 @@ def s01():
     {pet("瞌睡猫", 31, 150, 288, 84, "cat", "sleep")}
     {zzz(226, 288)}
     {pet("绒绒犬", 18, 272, 294, 84, "dog", "happy")}
-    {pet("慢慢", 22, 22, 452, 100, "dog", "happy")}
-    {pet("小蓝", 9, 145, 456, 100, "chick", "happy")}
-    {pet("团子", 14, 268, 454, 100, "cat", "happy")}
+    {pet("慢慢", 22, 22, 452, 100, "turtle", "happy")}
+    {pet("小蓝", 9, 145, 456, 100, "snake", "happy")}
+    {pet("团子", 14, 268, 454, 100, "dragon", "happy")}
     <div class="eggtag abs" style="left:296px;top:626px">{egg_svg(72, 0)}<span class="lb">新蛋 · 轻点看看</span></div>
     <div class="foot-hint">摸摸它 · 把食物<b>拖过去</b> · 长按看档案　·　家最多站 <b>6</b> 只</div>
     """
@@ -121,7 +121,7 @@ def s03():
       <span class="tip">按住，拖给它 —— 用完的耐久自己会掉</span>
       <div class="it"><span class="em">🌾</span><b>谷物饲料</b><i>×12</i></div>
       <div class="it"><span class="em">🧶</span><b>毛线球</b><i>×5</i></div>
-      <div class="it"><span class="em">🥊</span><b>训练沙袋</b><i>×2</i></div>
+      <div class="it"><span class="em">🥊</span><b>铁哑铃</b><i>×2</i></div>
     </div>
     """
 
@@ -129,7 +129,7 @@ def s03():
 # ---------------------------------------------------------------- 04 蛋 · 就地揭晓
 def s04():
     kv = ('<div class="kv"><span>羽虫</span><span>公</span><span>世代 1</span>'
-          '<span style="background:#FFF7E6;color:#A66F00">距史诗保底还差 12 次</span></div>')
+          '<span style="background:#FFF7E6;color:#A66F00">距史诗保底还差 12 抽</span></div>')
     return "", f"""
     <img class="bg" src="{BG_DAY}"><div class="modal-mask"></div>
     {rays(105, 130, 180)}
@@ -177,7 +177,7 @@ def s05():
 # ---------------------------------------------------------------- 06 破壳 · 起名仪式
 def s06():
     stats = "".join(f'<div class="stat{" pw" if k == "综合" else ""}"><i>{k}</i><b>{v}</b></div>'
-                    for k, v in (("体力", 12), ("力量", 9), ("敏捷", 14), ("智慧", 8), ("魅力", 13), ("综合", 62)))
+                    for k, v in (("体力", 12), ("力量", 9), ("敏捷", 14), ("智慧", 8), ("魅力", 13), ("综合", 19)))
     return "", f"""
     <img class="bg" src="{BG_NIGHT}"><div class="modal-mask" style="background:rgba(18,36,22,.5)"></div>
     {rays(115, 96, 160, "rgba(255,236,170,.42)")}
@@ -243,8 +243,9 @@ def s09():
     rows = "".join(f'<div class="mrow"><span class="ic" style="background:{bg}">{em}</span>'
                    f'<span class="tx"><b>{t}</b><i>{s}</i></span>{cnt}<span class="chev">›</span></div>'
                    for em, bg, t, s, cnt in (
-        ("📖", "#E8F5E9", "宠物图鉴", "五虫十八种 · 已收集", '<span class="cnt">8/18</span>'),
-        ("🌳", "#EAF4EA", "族谱", "三代血缘 · 称谓已生成", ""),
+        ("📖", "#E8F5E9", "宠物图鉴", "五虫十八种 · 已收集 8 种 / 5 类群", '<span class="cnt">8/18</span>'),
+        ("🌳", "#EAF4EA", "族谱", "三代血缘 · 称谓由血缘推导（§5.1）", ""),
+        ("🏡", "#EDE7F6", "家庭成员", "在家 6/6 · 待命 3 · 放出 / 收起在这里", '<span class="cnt">6/6</span>'),
         ("🎒", "#FFF3E0", "仓库", "道具 23 件 · 盲盒 ×3", ""),
         ("🛍️", "#FFF8E1", "商店 · 盲盒", "今日免费 2 抽 · 金币 300 日限 1", '<span class="cnt">2</span>'),
         ("📱", "#E3F2FD", "桌面宠物", "桌面 3 只 · 主宠恒占 1 号 · 可换可收回", '<span class="cnt">3/3</span>'),
@@ -254,6 +255,7 @@ def s09():
     ))
     return "", f"""
     <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.34)"></div>
+    <style>.drawer{{overflow-y:auto}}</style>
     <div class="drawer">
       <div class="me">
         <span class="av">🌱</span>
@@ -312,21 +314,21 @@ def s11():
         f'<div class="prow"><span class="av" style="background:#FFF3E0">{em}</span>'
         f'<span class="tx"><b>{n}</b><i>{sub}</i></span>{act}</div>'
         for em, n, sub, act in (
-            ("🐣", "小豆芽", "Lv.26 · 羽虫 · 主宠 · 桌面 1 号", '<span class="go crown">👑</span>'),
-            ("🐱", "瞌睡猫", "Lv.31 · 毛虫 · 桌面 2 号", '<span class="go">收起</span>'),
-            ("🐶", "绒绒犬", "Lv.18 · 毛虫 · 桌面 3 号", '<span class="go">收起</span>'),
-            ("🐢", "慢慢", "Lv.22 · 鳞虫 · 在家", '<span class="go">收起</span>'),
-            ("🦋", "小蓝", "Lv.9 · 昆虫 · 在家", '<span class="go">收起</span>'),
-            ("🐲", "团子", "Lv.14 · 鳞虫 · 在家", '<span class="go">收起</span>'),
+            ("🐣", "小豆芽", "Lv.26 · 萌芽鸡 · 羽虫 · 主宠 · 桌面 1 号", '<span class="go crown">👑</span>'),
+            ("🐱", "瞌睡猫", "Lv.31 · 瞌睡猫 · 毛虫 · 桌面 2 号", '<span class="go">收起</span>'),
+            ("🐶", "绒绒犬", "Lv.18 · 绒绒犬 · 毛虫 · 桌面 3 号", '<span class="go">收起</span>'),
+            ("🐢", "慢慢", "Lv.22 · 圆壳龟 · 昆虫 · 在家", '<span class="go">收起</span>'),
+            ("🐍", "小蓝", "Lv.9 · 小青蛇 · 鳞虫 · 在家", '<span class="go">收起</span>'),
+            ("🐲", "团子", "Lv.14 · 小龙崽 · 鳞虫 · 在家", '<span class="go">收起</span>'),
         ))
     bench = "".join(
         f'<div class="prow off"><span class="av">{em}</span>'
         f'<span class="tx"><b>{n}</b><i>{sub}</i></span>'
         f'<span class="go">放出</span></div>'
         for em, n, sub in (
-            ("🥚", "糖球", "Lv.4 · 羽虫 · 待命中"),
-            ("🐭", "芝麻", "Lv.11 · 毛虫 · 待命中"),
-            ("🐸", "青豆", "Lv.7 · 鳞虫 · 待命中"),
+            ("🐣", "糖球", "Lv.4 · 萌芽鸡 · 羽虫 · 待命中"),
+            ("🐱", "芝麻", "Lv.11 · 疾风猫 · 毛虫 · 待命中"),
+            ("🐸", "青豆", "Lv.7 · 泡泡蛙 · 蠃虫 · 待命中"),
         ))
     return css, f"""
     <img class="bg" src="{BG_DAY}"><div class="modal-mask"></div>
@@ -665,6 +667,624 @@ def s18():
     '''
 
 
+# ---------------------------------------------------------------- 19 首启 · 隐私政策与开场
+def s19():
+    css = '''
+    .gate{position:absolute;left:20px;right:20px;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.97);border-radius:28px;padding:24px 22px 20px;
+      box-shadow:0 24px 60px rgba(15,40,18,.35);text-align:center}
+    .gate .logo{width:60px;height:60px;margin:0 auto 10px;border-radius:19px;
+      background:linear-gradient(135deg,#A5D6A7,#4CAF50);display:flex;align-items:center;
+      justify-content:center;font-size:30px;box-shadow:0 8px 20px rgba(76,175,80,.35)}
+    .gate h1{font-size:20px;font-weight:800;color:#26382A;margin-bottom:4px}
+    .gate .sub{font-size:11.5px;color:#7C8E79;margin-bottom:13px}
+    .gate .pl{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+    .gate .pl div{display:flex;gap:9px;padding:9px 11px;border-radius:14px;background:#F5F9F4;
+      font-size:10.5px;color:#44553F;line-height:1.55;text-align:left}
+    .gate .pl b{color:#2A3A28}
+    .gate .pl .no{flex:0 0 19px;height:19px;border-radius:7px;background:#E8F5E9;color:#2E7D32;
+      font-weight:800;font-size:10.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+    .gate .foot{font-size:9.5px;color:#9AA79A;margin-top:9px;line-height:1.55}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="backdrop-filter:blur(8px)"></div>
+    {rays(115, 92, 150)}
+    <div class="gate">
+      <div class="logo">🌱</div>
+      <h1>欢迎来到萌芽宠物</h1>
+      <div class="sub">在把第一颗蛋交给你之前，有几句实话要说</div>
+      <div class="pl">
+        <div><span class="no">1</span><span><b>悬浮窗只用来显示宠物。</b>用途声明为「桌面宠物展示」——
+          不读取任何其他 App 的内容、包名、图标，也不模拟点击（§3.6 / §十二）</span></div>
+        <div><span class="no">2</span><span><b>不用无障碍服务。</b>宠物「踩在图标上」是视觉效果，
+          我们并不知道那是什么 App —— 我们只能「演」，不能「读」</span></div>
+        <div><span class="no">3</span><span><b>概率全部公开。</b>抽蛋含保底综合概率 10.42%，
+          保底只到史诗 —— 公示常驻「设置 · 隐私与合规」里（§6.3.1）</span></div>
+      </div>
+      <span class="btn">同意并开始</span>
+      <div style="margin-top:8px"><span class="btn ghost">先看完整隐私政策</span></div>
+      <div class="foot">同意之前不会初始化任何采集类 SDK、不上报任何数据（合规红线第 5 条）<br>
+        这是全 App 唯一一次全屏阻断 —— 之后，处处都是「家」</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 20 图鉴 · 五虫十八种
+def s20():
+    css = '''
+    .dex{position:absolute;left:10px;right:10px;top:158px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .dex h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .dex h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .whead{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:#44553F;margin:11px 2px 6px}
+    .whead .d{width:9px;height:9px;border-radius:50%}
+    .whead i{font-style:normal;font-weight:500;color:#94A490;font-size:9.5px;margin-left:auto}
+    .cells{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+    .cell{border-radius:14px;padding:8px 2px 7px;text-align:center;background:#F5F9F4;border:1.5px solid #E4EFE2}
+    .cell .em{font-size:20px;line-height:1.1}
+    .cell .nm{display:block;font-size:9.5px;font-weight:700;color:#33422F;margin-top:4px}
+    .cell .sp{display:block;font-size:8.5px;color:#94A490;margin-top:1px}
+    .cell.no{background:#F4F6F4;border-style:dashed;border-color:#DDE5DC}
+    .cell.no .em{color:#C4CEC2;font-size:15px;font-weight:800;line-height:1.55}
+    .cell.no .nm{color:#9AA79A}
+    '''
+    got = {"萌芽鸡", "瞌睡猫", "绒绒犬", "圆壳龟", "小青蛇", "小龙崽", "疾风猫", "泡泡蛙"}
+    emap = {"萌芽鸡": "🐣", "瞌睡猫": "🐱", "绒绒犬": "🐶", "圆壳龟": "🐢",
+            "小青蛇": "🐍", "小龙崽": "🐲", "疾风猫": "🐱", "泡泡蛙": "🐸"}
+    groups = [
+        ("蠃虫 · 倮身无毛羽鳞甲", "#4FC3F7", "慢、黏人 / 跳脱 / 聪明", ("蜗蜗", "泡泡蛙", "软软章")),
+        ("鳞虫 · 有鳞者", "#26A69A", "悠然好运 / 灵动 / 爱炫", ("锦鲤鲤", "小青蛇", "小龙崽")),
+        ("毛虫 · 有毛者", "#BCAAA4", "慵懒傲娇 / 忠诚 / 警觉", ("瞌睡猫", "绒绒犬", "疾风猫")),
+        ("羽虫 · 有羽者", "#FF8A65", "憨好奇 / 话多 / 爱看书", ("萌芽鸡", "元气鸡", "学者鸡")),
+        ("昆虫 · 有甲者", "#9CCC65", "勤劳 / 沉稳 / 发光神秘", ("蜜蜜蜂", "圆壳龟", "闪闪萤")),
+        ("不入十类 · 不可抽", "#78909C", "跨虫混血 4% / 异兽对 40%", ("星狐", "月兔", "荧波")),
+    ]
+    secs = ""
+    for name, color, trait, sps in groups:
+        cells = "".join(
+            (f'<div class="cell"><span class="em">{emap[s]}</span><span class="nm">{s}</span>'
+             f'<span class="sp">已收集</span></div>' if s in got else
+             f'<div class="cell no"><span class="em">?</span><span class="nm">{s}</span>'
+             f'<span class="sp">未遇见</span></div>')
+            for s in sps)
+        secs += (f'<div class="whead"><span class="d" style="background:{color}"></span>{name}'
+                 f'<i>{trait}</i></div><div class="cells">{cells}</div>')
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="dex">
+      <h3>宠物图鉴 <i>已收集 8 / 18 种 · 5 / 6 类群</i></h3>
+      {secs}
+      <div style="margin-top:12px;padding:9px 12px;border-radius:14px;background:#FFF7E6;
+        font-size:10px;color:#8A6100;line-height:1.6">
+        还没见过的，都住在这 18 种里 —— 普通档抽蛋就有；<b>「不入十类」只能靠跨虫混血（4%）与异兽配对（40%）</b>；
+        <b>灵兽（第 6 档）不可抽取，只能配对生育</b>（ADR-017 红线）</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 21 族谱 · 血缘树
+def s21():
+    css = '''
+    .tree{position:absolute;left:10px;right:10px;top:126px;bottom:168px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:12px 12px 10px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22)}
+    .tree .cv{position:relative;width:100%;height:100%}
+    .node{position:absolute;width:88px;text-align:center}
+    .node .av{width:44px;height:44px;margin:0 auto;border-radius:16px;display:flex;align-items:center;
+      justify-content:center;font-size:22px;background:#FFF3E0;border:2.5px solid #E4EFE2}
+    .node.anc .av{border-color:#FFB300;background:#FFF7E6}
+    .node.npc .av{border-style:dashed;border-color:#90CAF9;background:#E3F2FD}
+    .node .nm{display:block;font-size:10.5px;font-weight:700;color:#2A3A28;margin-top:4px}
+    .node .lv{display:block;font-size:8.5px;color:#94A490;margin-top:1px}
+    .node .tag{display:inline-block;margin-top:3px;padding:1.5px 7px;border-radius:7px;
+      font-size:8px;font-weight:700;background:#EEF5EE;color:#2E7D32}
+    .node.anc .tag{background:#FFF3D6;color:#9A6A00}
+    .node.npc .tag{background:#E3F2FD;color:#1565C0}
+    .tstats{position:absolute;left:14px;right:14px;bottom:88px;display:flex;gap:8px}
+    .tstats .c{flex:1;padding:9px 8px;border-radius:14px;background:#F4F7F4;text-align:center}
+    .tstats .c i{display:block;font-style:normal;font-size:9.5px;color:#7C8E79}
+    .tstats .c b{font-size:14.5px;font-weight:800;color:#3A4A36}
+    .tnote{position:absolute;left:14px;right:14px;bottom:148px;padding:8px 11px;border-radius:13px;
+      background:#F0F7EF;font-size:9.5px;color:#3C4F39;line-height:1.55}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="tree"><div class="cv">
+      <svg width="366" height="440" style="position:absolute;left:0;top:0">
+        <path d="M183 106 L96 190" stroke="#B9D8B6" stroke-width="2.5" fill="none"/>
+        <path d="M96 224 L276 224" stroke="#FFD54F" stroke-width="2.5" stroke-dasharray="5 6" fill="none"/>
+        <path d="M183 234 L52 372 M183 234 L183 372 M183 234 L314 372" stroke="#B9D8B6" stroke-width="2.5" fill="none"/>
+      </svg>
+      <div class="node anc" style="left:139px;top:14px"><span class="av">🐔</span>
+        <span class="nm">老陈</span><span class="lv">Lv.60 · 萌芽鸡 · 传说</span>
+        <span class="tag">先辈 · 隐居中</span></div>
+      <div class="node" style="left:52px;top:190px"><span class="av">🐣</span>
+        <span class="nm">小豆芽</span><span class="lv">Lv.26 · 主宠</span><span class="tag">世代 2</span></div>
+      <div class="node npc" style="left:232px;top:190px"><span class="av">🐔</span>
+        <span class="nm">小婉</span><span class="lv">Lv.28 · 学者鸡 · NPC</span><span class="tag">生育搭档</span></div>
+      <div class="node" style="left:8px;top:372px"><span class="av">🐣</span>
+        <span class="nm">豆苗</span><span class="lv">Lv.12 · 羽虫</span><span class="tag">世代 3</span></div>
+      <div class="node" style="left:139px;top:372px"><span class="av">🐣</span>
+        <span class="nm">豆豆</span><span class="lv">Lv.8 · 羽虫</span><span class="tag">世代 3</span></div>
+      <div class="node" style="left:270px;top:372px"><span class="av">🐲</span>
+        <span class="nm">小芽芽</span><span class="lv">Lv.5 · 跨虫 4% 彩蛋</span><span class="tag">世代 3</span></div>
+    </div></div>
+    <div class="tnote">称谓由<b>血缘</b>推导（§5.1）：老陈是小豆芽的「爸爸」；小婉只是<b>「生育搭档」</b>——
+      配对关系不进称谓系统，取消配对也不会乱。🟡 虚线 = 配对，实线 = 血缘</div>
+    <div class="tstats">
+      <div class="c"><i>总世代</i><b>3</b></div>
+      <div class="c"><i>总后代</i><b>5</b></div>
+      <div class="c"><i>最大贡献血统</i><b style="color:#9A6A00">老陈</b></div>
+    </div>
+    <div style="position:absolute;left:18px;right:18px;bottom:20px"><span class="btn">导出族谱图片</span></div>
+    '''
+
+
+# ---------------------------------------------------------------- 22 仓库 · 道具与盲盒
+def s22():
+    css = '''
+    .bag{position:absolute;left:10px;right:10px;top:150px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .bag h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .bag h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .tabs{display:flex;gap:6px;margin:10px 0 4px;flex-wrap:wrap}
+    .tabs .t{padding:5px 11px;border-radius:11px;background:#F4F7F4;font-size:10px;font-weight:700;color:#5B6B58}
+    .tabs .t.on{background:#4CAF50;color:#fff}
+    .dur{height:4.5px;border-radius:3px;background:#EDF3EC;overflow:hidden;margin-top:5px;width:150px}
+    .dur b{display:block;height:100%;background:linear-gradient(90deg,#FFB300,#FF8F00)}
+    .brow{display:flex;align-items:center;gap:11px;padding:10px 2px;border-bottom:1px solid #EDF3EC}
+    .brow:last-of-type{border-bottom:none}
+    .brow .ic{flex:0 0 38px;height:38px;border-radius:12px;display:flex;align-items:center;
+      justify-content:center;font-size:18px;background:#F5F9F4}
+    .brow .tx{flex:1;min-width:0}
+    .brow .tx b{display:block;font-size:12.5px;font-weight:700;color:#2A3A28}
+    .brow .tx i{font-style:normal;font-size:10px;color:#94A490;line-height:1.45;display:block;margin-top:2px}
+    .brow .n{flex:0 0 auto;font-size:12px;font-weight:800;color:#5B6B58}
+    '''
+    rows = "".join(f'<div class="brow"><span class="ic" style="background:{bg}">{em}</span>'
+                   f'<span class="tx"><b>{t}</b><i>{d}</i>{dur}</span><span class="n">×{n}</span></div>'
+                   for em, bg, t, d, n, dur in (
+        ("⏳", "#E8F5E9", "沙漏碎片", "孵化 · 每个加速 1 小时", 3, ""),
+        ("🌾", "#FFF3E0", "谷物饲料", "食物 · 喂食经验 +60 · 亲密 +3", 12, ""),
+        ("🍱", "#FFF3E0", "营养便当", "食物 · 大份经验，亲密度加成更高", 2, ""),
+        ("🧶", "#F6EBFA", "毛线球", "玩具 · 每次玩耍 −1 耐久（G-08 已落地）", 5,
+         '<div class="dur"><b style="width:70%"></b></div>'),
+        ("🥊", "#FFEBEE", "铁哑铃", "训练 · 定向提升力量", 1, ""),
+        ("📚", "#E3F2FD", "知识之书", "训练 · 定向提升智慧", 1, ""),
+        ("🌱", "#E8F5E9", "成长果实", "成长 · 直接加经验", 2, ""),
+        ("💍", "#FCE4EC", "定情信物", "配对 · 提高真人配对接受率（NPC 免）", 1, ""),
+        ("📦", "#E0F2F1", "神秘盲盒", "抽蛋门票 · 可囤 —— 攒 10 个开十连", 3, ""),
+    ))
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="bag">
+      <h3>仓库 <i>道具 23 件 · 盲盒 ×3 · 六类收纳</i></h3>
+      <div class="tabs"><span class="t on">全部</span><span class="t">孵化</span><span class="t">食物</span>
+        <span class="t">玩具</span><span class="t">训练</span><span class="t">成长</span><span class="t">配对</span></div>
+      {rows}
+      <div style="margin-top:11px;padding:9px 12px;border-radius:14px;background:#FFF7E6;
+        font-size:10px;color:#8A6100;line-height:1.6">
+        道具回收 = <b>售价 50%</b>（§6.1）。⚠️ <b>宠物不可售卖</b> —— 重复宠物的去处是融合（26 屏），不是变现</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 23 商店 · 道具与补给
+def s23():
+    css = '''
+    .shop{position:absolute;left:10px;right:10px;top:140px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .shop h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .shop h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .ssec{font-size:10.5px;font-weight:800;color:#9AA79A;letter-spacing:1.2px;margin:12px 2px 6px}
+    .grow{display:flex;align-items:center;gap:11px;padding:9px 2px;border-bottom:1px solid #EDF3EC}
+    .grow:last-of-type{border-bottom:none}
+    .grow .ic{flex:0 0 36px;height:36px;border-radius:12px;display:flex;align-items:center;
+      justify-content:center;font-size:17px;background:#F5F9F4}
+    .grow .tx{flex:1;min-width:0}
+    .grow .tx b{display:block;font-size:12.5px;font-weight:700;color:#2A3A28}
+    .grow .tx i{font-style:normal;font-size:10px;color:#94A490;display:block;margin-top:2px}
+    .buy{flex:0 0 auto;padding:6px 12px;border-radius:12px;font-size:10.5px;font-weight:800;
+      background:#E8F5E9;color:#2E7D32}
+    .buy.gem{background:#E0F2F1;color:#00838F}
+    .gems{display:flex;gap:7px;margin-top:4px}
+    .gems .g{flex:1;padding:9px 4px;border-radius:14px;background:#F4F7F4;text-align:center}
+    .gems .g i{display:block;font-style:normal;font-size:9px;color:#7C8E79}
+    .gems .g b{font-size:12.5px;font-weight:800;color:#00838F}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="shop">
+      <h3>商店 <i>钱包：💰 12,480 · 💎 86</i></h3>
+
+      <div class="ssec">抽蛋门票（开箱就在家里 —— 13/14 屏）</div>
+      <div class="grow"><span class="ic">📦</span>
+        <span class="tx"><b>神秘盲盒</b><i>金币 300 / 个 · 日限 1 —— 钱买不来无限抽</i></span>
+        <span class="buy">买入</span></div>
+      <div class="grow"><span class="ic">📦</span>
+        <span class="tx"><b>神秘盲盒</b><i>钻石 60 / 个 · 无日限 · 可囤券攒十连</i></span>
+        <span class="buy gem">60 💎</span></div>
+
+      <div class="ssec">道具（与 §6.2 道具表逐一对应）</div>
+      <div class="grow"><span class="ic">🌾</span>
+        <span class="tx"><b>谷物饲料</b><i>喂食 · 经验 +60 · 亲密 +3</i></span><span class="buy">20</span></div>
+      <div class="grow"><span class="ic">🍱</span>
+        <span class="tx"><b>营养便当</b><i>大份经验 · 亲密度加成更高</i></span><span class="buy">120</span></div>
+      <div class="grow"><span class="ic">🧶</span>
+        <span class="tx"><b>毛线球</b><i>玩具 · 耐久 20 · 每次玩耍 −1</i></span><span class="buy">80</span></div>
+      <div class="grow"><span class="ic">🥏</span>
+        <span class="tx"><b>飞盘</b><i>玩具 · 耐久 30 · 每次玩耍 −1</i></span><span class="buy">120</span></div>
+      <div class="grow"><span class="ic">⏳</span>
+        <span class="tx"><b>沙漏碎片</b><i>孵化加速 1 小时 / 个</i></span><span class="buy gem">20 💎</span></div>
+
+      <div class="ssec">钻石充值（可选 · 不影响核心体验）</div>
+      <div class="gems">
+        <div class="g"><i>6 元</i><b>60 💎</b></div>
+        <div class="g"><i>30 元</i><b>328 💎</b></div>
+        <div class="g"><i>68 元</i><b>780 💎</b></div>
+        <div class="g"><i>128 元</i><b>1,580 💎</b></div>
+      </div>
+      <div style="margin-top:10px;padding:9px 12px;border-radius:14px;background:#F0F7EF;
+        font-size:10px;color:#3C4F39;line-height:1.6">
+        🛡️ 概率全公开（§6.3.1）· 未成年人保护 · 正规支付渠道 · 所有道具都能靠任务/活动拿到</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 24 配对广场 · 找搭档
+def s24():
+    css = '''
+    .plaza{position:absolute;left:10px;right:10px;top:132px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .plaza h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .plaza h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .mine{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;
+      background:#EAF6EA;border:1.5px solid #CDE8CC;margin:10px 0 8px}
+    .mine .av{flex:0 0 36px;height:36px;border-radius:12px;background:#fff;display:flex;
+      align-items:center;justify-content:center;font-size:18px}
+    .mine .tx{flex:1;min-width:0}
+    .mine .tx b{display:block;font-size:12.5px;color:#2A3A28}
+    .mine .tx i{font-style:normal;font-size:10px;color:#5B8A57;display:block;margin-top:2px}
+    .chk{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;padding:9px 12px;border-radius:14px;
+      background:#F5F9F4;font-size:9.5px;color:#44553F;line-height:1.7}
+    .chk .ok{color:#2E7D32;font-weight:700}
+    .fchips{display:flex;gap:6px;margin:9px 0 3px}
+    .fchips .f{padding:4px 10px;border-radius:10px;background:#F4F7F4;font-size:9.5px;font-weight:700;color:#5B6B58}
+    .cand{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #EDF3EC}
+    .cand .av{flex:0 0 38px;height:38px;border-radius:13px;display:flex;align-items:center;
+      justify-content:center;font-size:18px;background:#FFF3E0}
+    .cand .tx{flex:1;min-width:0}
+    .cand .tx b{display:block;font-size:12.5px;color:#2A3A28}
+    .cand .tx i{font-style:normal;font-size:9.5px;color:#94A490;display:block;margin-top:2px;line-height:1.4}
+    .cand .go{flex:0 0 auto;padding:6px 11px;border-radius:12px;font-size:10px;font-weight:800}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="plaza">
+      <h3>配对广场 <i>真人优先 · 无真人补 NPC · 我的记录在底部</i></h3>
+      <div class="mine"><span class="av">🐣</span>
+        <span class="tx"><b>小豆芽 · Lv.26 成年 · 公 · 羽虫</b>
+          <i>亲密度 78 / 70 ✓ · 距上次生育 5 天 ✓ · 已有后代 1 / 5 ✓</i></span>
+        <span style="font-size:10.5px;font-weight:800;color:#2E7D32">可配对</span></div>
+      <div class="chk">
+        <span><span class="ok">✓</span> 双方成年（Lv.26+）</span>
+        <span><span class="ok">✓</span> 亲密度 ≥ 70</span>
+        <span><span class="ok">✓</span> 一公一母（NPC 永远取反）</span>
+        <span><span class="ok">✓</span> 双方不同主人</span>
+        <span><span class="ok">✓</span> 冷却 ≥ 3 天</span>
+        <span><span class="ok">✓</span> 金币 3,000（有 12,480）</span>
+      </div>
+      <div class="fchips"><span class="f">物种</span><span class="f">稀有度</span>
+        <span class="f">世代</span><span class="f">性别</span></div>
+      <div class="cand"><span class="av">🐔</span>
+        <span class="tx"><b>小婉家的 学者鸡 · Lv.28 · 母 · 羽虫 · 世代 2</b>
+          <i>真人玩家「小婉」的宠 —— 发起后需对方点头才算数（§2.5）</i></span>
+        <span class="go" style="background:#FFF3D6;color:#9A6A00">邀请</span></div>
+      <div class="cand"><span class="av">🐍</span>
+        <span class="tx"><b>小溪边的小青蛇 · Lv.24 · 母 · 鳞虫 · 世代 1</b>
+          <i>NPC 托管 · 性别永远与你相反（U-09）· 免确认不阻塞</i></span>
+        <span class="go" style="background:#E8F5E9;color:#2E7D32">立即配对</span></div>
+      <div class="cand"><span class="av">🐸</span>
+        <span class="tx"><b>池畔的泡泡蛙 · Lv.30 · 母 · 蠃虫 · 世代 3</b>
+          <i>NPC 托管 · 跨虫配对：成功率 85% · 上漂 ×1.35</i></span>
+        <span class="go" style="background:#E8F5E9;color:#2E7D32">立即配对</span></div>
+      <div style="margin-top:11px;padding:9px 12px;border-radius:14px;background:#FFF7E6;
+        font-size:10px;color:#8A6100;line-height:1.6">
+        配对成功后<b>双方各得一只后代</b> —— 你的宠不会被拿走（§11.1）。称谓走血缘：对方只是「生育搭档」</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 25 配对 · 双光效汇合
+def s25():
+    css = '''
+    .beam{position:absolute;left:50%;top:300px;transform:translateX(-50%);width:120px;height:70px;
+      background:radial-gradient(ellipse at center,rgba(255,236,160,.85) 0 30%,rgba(255,236,160,0) 72%)}
+    .path{position:absolute;left:14px;right:14px;bottom:190px;display:flex;gap:8px}
+    .path .p{flex:1;padding:10px 11px;border-radius:16px;font-size:10px;line-height:1.55}
+    .path .p b{display:block;font-size:11px;margin-bottom:3px}
+    .path .human{background:rgba(255,251,240,.95);border:1.5px solid #F1E3C2;color:#8A6100}
+    .path .npc{background:rgba(232,245,233,.95);border:1.5px solid #CDE8CC;color:#2E5B2A}
+    .baby{position:absolute;left:18px;right:18px;bottom:26px;background:rgba(255,255,255,.97);
+      border-radius:22px;padding:15px 17px 13px;box-shadow:0 18px 44px rgba(15,40,18,.3)}
+    .baby .hd{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+    .baby .hd b{font-size:15px;font-weight:800;color:#26382A}
+    .baby .hd i{font-style:normal;font-size:10px;color:#94A490}
+    .baby .kv{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 9px}
+    .baby .kv span{padding:4px 9px;border-radius:10px;background:#F2F7F1;font-size:10px;
+      font-weight:600;color:#44553F}
+    .baby .rule{font-size:9.5px;color:#7C8E79;line-height:1.55}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    <div class="chipctx abs" style="left:14px;top:14px">配对进行中<i>双光效汇合</i></div>
+    {rays(36, 250, 130)}{rays(224, 250, 130)}
+    <div class="beam"></div>
+    {pet("小豆芽", 26, 28, 262, 108, "chick", "joy", badge="主宠")}
+    {pet("小婉", 28, 254, 262, 108, "chick", "joy")}
+    {hearts([(178,262,15,.95),(206,240,11,.7),(160,300,10,.6)])}
+    <div class="path">
+      <div class="p human"><b>真人 · 小婉</b>邀请已发出 —— 等对方点头才算数，可随时撤回</div>
+      <div class="p npc"><b>NPC · 免确认</b>系统托管，立即开始 —— 不阻塞玩法（§2.5）</div>
+    </div>
+    <div class="baby">
+      <div class="hd"><b>后代预览</b><i>双方各得一只 · 互不干涉</i></div>
+      <div class="kv"><span>豆苗 · 羽虫</span><span>世代 2</span>
+        <span style="background:#FFF7E6;color:#A66F00">稀有度以 max(父母) 为基准漂移</span></div>
+      <div class="rule">基因 = 父母均值 ± 15% 变异 · 物种同虫 99% 继承（跨虫 4% 出「不入十类」）·
+        <b>永不降级</b>：跨虫上漂 ×1.35，是刻意奖励社交</div>
+      <div style="margin-top:10px"><span class="btn">完成 —— 各自带一只回家</span></div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 26 融合 · 重复宠的去处
+def s26():
+    css = '''
+    .fus{position:absolute;left:10px;right:10px;top:132px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .fus h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .fus h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .rchips{display:flex;gap:6px;margin:9px 0}
+    .rchips .r{padding:4px 10px;border-radius:10px;background:#F4F7F4;font-size:9.5px;font-weight:700;color:#5B6B58}
+    .side{display:flex;gap:9px;margin-bottom:8px}
+    .side .b{flex:1;padding:10px 12px;border-radius:16px}
+    .side .b.keep{background:#EAF6EA;border:1.5px solid #CDE8CC}
+    .side .b.feed{background:#FFF7E6;border:1.5px solid #F1E3C2}
+    .side .b .lb{font-size:9.5px;font-weight:800;letter-spacing:1px;margin-bottom:5px}
+    .side .b.keep .lb{color:#2E7D32}
+    .side .b.feed .lb{color:#9A6A00}
+    .side .b .who{display:flex;align-items:center;gap:8px}
+    .side .b .who .av{flex:0 0 34px;height:34px;border-radius:12px;background:#fff;display:flex;
+      align-items:center;justify-content:center;font-size:17px}
+    .side .b .who b{display:block;font-size:12.5px;color:#2A3A28}
+    .side .b .who i{font-style:normal;font-size:9.5px;color:#94A490}
+    .imp{height:6px;border-radius:4px;background:#EDF3EC;overflow:hidden;margin-top:7px}
+    .imp b{display:block;height:100%;background:linear-gradient(90deg,#AB47BC,#9C27B0)}
+    .flaw{display:flex;gap:8px;margin-top:4px}
+    .flaw div{flex:1;padding:9px 11px;border-radius:14px;font-size:9.5px;line-height:1.55}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="fus">
+      <h3>融合 <i>重复宠物的去处 —— 挑一只留下，把重复的「喂」给它</i></h3>
+      <div class="rchips"><span class="r">同物种</span><span class="r">都已破壳</span><span class="r">消耗 200 金币</span></div>
+      <div class="side">
+        <div class="b keep"><div class="lb">留下（目标）</div>
+          <div class="who"><span class="av">🐣</span>
+            <span><b>小豆芽</b><i>萌芽鸡 · 史诗 · 印记 4 / 12</i></span></div>
+          <div class="imp"><b style="width:33%"></b></div></div>
+        <div class="b feed"><div class="lb">喂给它（副宠）</div>
+          <div class="who"><span class="av">🐣</span>
+            <span><b>糖球</b><i>萌芽鸡 · 稀有 · 印记 +2</i></span></div>
+          <div class="imp"><b style="width:50%;background:linear-gradient(90deg,#FFB300,#FF8F00)"></b></div></div>
+      </div>
+      <div style="padding:9px 12px;border-radius:14px;background:#F5F9F4;font-size:10px;color:#44553F;line-height:1.6">
+        融合后：印记 4 → <b>6 / 12</b>（副宠稀有 = 2，溢出保留到下一档）·
+        目标获得经验 = 副宠等级 × 50 = <b>200</b>（只加经验，不加属性 —— 10 §六）
+        印记满即升一档：普通→(5)→稀有→(8)→史诗→(12)→传说→(20)→神话</div>
+      <div class="flaw">
+        <div style="background:#FFF7E6;color:#8A6100">⛰️ 副宠「<b>入后山</b>」—— 不消失，
+          退出桌面与配对，仍留在族谱与图鉴；但<b>不可取回</b></div>
+        <div style="background:#FFEBEE;color:#B3413C">🚫 融合<b>永远不能产出灵兽</b>（ADR-017）·
+          <b>神话</b>不可作为融合目标 —— 直接拒绝，不让你白损失副宠</div>
+      </div>
+      <div style="margin-top:11px"><span class="btn" style="background:#AB47BC;box-shadow:0 8px 20px rgba(156,39,176,.3)">二次确认 —— 送糖球入后山</span></div>
+      <div style="margin-top:7px;text-align:center;font-size:9.5px;color:#9AA79A">
+        这是不可逆的操作 —— 弹窗会再确认一次，不会一键完成</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 27 后山小屋 · 隐居与召回
+def s27():
+    css = '''
+    .hill{position:absolute;border-radius:50%;background:linear-gradient(180deg,#8BC34A,#558B2F)}
+    .mtnote{position:absolute;left:14px;right:14px;bottom:130px;background:rgba(255,255,255,.95);
+      border-radius:18px;padding:12px 14px;font-size:10.5px;color:#44553F;line-height:1.65;
+      box-shadow:0 10px 26px rgba(20,45,20,.18)}
+    .mtnote b{color:#2E5B2A}
+    .mtnote .u{display:block;margin-top:3px;font-size:9.5px;color:#8A968A}
+    .mtbtn{flex:1;text-align:center;padding:13px;border-radius:18px;font-size:15px;font-weight:800}
+    .mtbtn.main{background:#4CAF50;color:#fff;box-shadow:0 8px 20px rgba(76,175,80,.35)}
+    .mtbtn.ghost{background:#EEF5EE;color:#2E7D32;font-size:13px;font-weight:600}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="vig" style="background:linear-gradient(180deg,rgba(178,223,219,0) 40%,rgba(104,159,56,.24) 78%,rgba(51,105,30,.34))"></div>
+    <div class="chipctx abs" style="left:14px;top:14px">⛰️ 后山小屋<i> · 家的延伸 · 走出边缘即达</i></div>
+    <div class="hill abs" style="left:-70px;bottom:-90px;width:290px;height:240px;opacity:.85"></div>
+    <div class="hill abs" style="right:-90px;bottom:-110px;width:330px;height:270px;opacity:.92"></div>
+    {pet("老陈", 60, 196, 380, 104, "chick", "sleep", badge="先辈")}
+    {zzz(316, 392)}
+    <div class="mtnote">
+      <b>老陈 · Lv.60 · 萌芽鸡 · 传说 · 隐居 12 天</b><br>
+      到 Lv.60 只会<b>提示</b>「可以入后山了」—— 是否隐居由你决定，系统绝不替你做（U-07）<br>
+      <span class="u">召回后先回到「待命」，要不要放出到家，也由你决定 · 隐居不占「在家 6 只」名额 ·
+      「召回」专指隐居回归（ADR-007），与日常「收起 / 放出」是两回事</span>
+    </div>
+    <div style="position:absolute;left:18px;right:18px;bottom:56px;display:flex;gap:9px">
+      <span class="mtbtn main">召回 老陈</span>
+      <span class="mtbtn ghost">先让它多歇会儿</span>
+    </div>
+    <div class="foot-hint">空态（10.3）：后山无人时 —— 这里只有一句「后山很安静，没有谁需要休息」</div>
+    '''
+
+
+# ---------------------------------------------------------------- 28 排行榜 · 五榜
+def s28():
+    css = '''
+    .rank{position:absolute;left:10px;right:10px;top:158px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .rank h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .rank h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .rtabs{display:flex;gap:6px;margin:10px 0 6px}
+    .rtabs .t{flex:1;text-align:center;padding:7px 2px;border-radius:12px;background:#F4F7F4;
+      font-size:10.5px;font-weight:700;color:#5B6B58}
+    .rtabs .t.on{background:#4CAF50;color:#fff}
+    .rrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid #EDF3EC}
+    .rrow .no{flex:0 0 26px;height:26px;border-radius:9px;background:#F4F7F4;color:#5B6B58;
+      font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+    .rrow.top .no{background:#FFF3D6;color:#9A6A00}
+    .rrow .tx{flex:1;min-width:0}
+    .rrow .tx b{display:block;font-size:12px;color:#2A3A28}
+    .rrow .tx i{font-style:normal;font-size:9.5px;color:#94A490}
+    .rrow .v{flex:0 0 auto;font-size:13px;font-weight:800;color:#3A4A36}
+    .rrow.me{background:#EAF6EA;border-radius:14px;border-bottom:none;padding:9px 10px;margin-top:8px}
+    '''
+    rows = "".join(f'<div class="rrow{" top" if i < 3 else ""}"><span class="no">{i + 1}</span>'
+                   f'<span class="tx"><b>{n}</b><i>{s}</i></span><span class="v">{v}</span></div>'
+                   for i, (n, s, v) in enumerate((
+        ("云养猫的人 · 凤翎", "Lv.42 · 羽虫 · 传说", 88),
+        ("山涧客 · 锦鲤鲤", "Lv.38 · 鳞虫 · 史诗", 81),
+        ("拾穗者 · 蜜蜜蜂", "Lv.35 · 昆虫 · 史诗", 77),
+        ("晚风 · 疾风猫", "Lv.31 · 毛虫 · 稀有", 71),
+        ("豆花 · 圆壳龟", "Lv.29 · 昆虫 · 稀有", 66),
+    )))
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="rank">
+      <h3>排行榜 <i>范围：全服 / 好友（世代榜与繁育榜仅全服）</i></h3>
+      <div class="rtabs"><span class="t on">战力</span><span class="t">等级</span><span class="t">亲密</span>
+        <span class="t">世代</span><span class="t">繁育</span></div>
+      {rows}
+      <div class="rrow me"><span class="no">23</span>
+        <span class="tx"><b>我 · 小豆芽</b><i>Lv.26 · 羽虫 · 史诗</i></span><span class="v">62</span></div>
+      <div style="margin-top:11px;padding:9px 12px;border-radius:14px;background:#F0F7EF;
+        font-size:10px;color:#3C4F39;line-height:1.6">
+        「综合战力」是<b>智慧 / 魅力唯一参与计算的地方</b>（U-06：二者是纯展示属性，
+        不影响养成产出，只进这个排行分）—— 类群与性别同样不制造数值优劣（ADR-021）</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 29 成就 · 已点亮
+def s29():
+    css = '''
+    .ach{position:absolute;left:10px;right:10px;top:158px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .ach h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .ach h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:11px}
+    .ac{border-radius:16px;padding:10px 4px 8px;text-align:center;background:#F5F9F4;border:1.5px solid #E4EFE2}
+    .ac .em{font-size:21px;line-height:1.1}
+    .ac .nm{display:block;font-size:9px;font-weight:700;color:#33422F;margin-top:5px}
+    .ac .rd{display:block;font-size:8px;color:#94A490;margin-top:2px}
+    .ac.no{background:#F4F6F4;border-style:dashed;border-color:#DDE5DC}
+    .ac.no .em{filter:grayscale(1);opacity:.45}
+    .ac.no .nm{color:#9AA79A}
+    '''
+    lit = [("🥚", "第一颗蛋", "+100💰"), ("🐣", "初次破壳", "+100💰"),
+           ("🧶", "玩具之友", "+80💰"), ("📱", "桌面全勤 7 天", "+30💎"),
+           ("🌳", "三代同堂", "+200💰"), ("🧬", "跨虫混血", "+150💰"),
+           ("⛰️", "后山访客", "+80💰"), ("🔟", "十连保底", "+100💰"),
+           ("🏡", "家在册满员", "+120💰"), ("⏱", "专注 100 分", "+30💎"),
+           ("💰", "小金库", "+80💰"), ("🛡️", "合规同行", "+50💰")]
+    dark = [("🦄", "首只灵兽"), ("🐉", "完整神兽形态"), ("👑", "全服前十"), ("🤝", "串门达人")]
+    cells = "".join(f'<div class="ac"><span class="em">{e}</span><span class="nm">{n}</span>'
+                    f'<span class="rd">{r}</span></div>' for e, n, r in lit)
+    dcells = "".join(f'<div class="ac no"><span class="em">{e}</span><span class="nm">{n}</span>'
+                     f'<span class="rd">未点亮</span></div>' for e, n in dark)
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="ach">
+      <h3>成就 <i>已点亮 12 / 16 · 奖励只发金币与钻石（§6.1）</i></h3>
+      <div class="agrid">{cells}{dcells}</div>
+      <div style="margin-top:12px;padding:9px 12px;border-radius:14px;background:#F0F7EF;
+        font-size:10px;color:#3C4F39;line-height:1.6">
+        成就的稀缺感来自<b>陪伴时长与家族厚度</b>，而不是抽卡运气 ——
+        所以「首只灵兽」「完整神兽形态」在这里只是目标，不是门槛</div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 30 设置 · 隐私与合规
+def s30():
+    css = '''
+    .set{position:absolute;left:10px;right:10px;top:150px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 16px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.22);overflow-y:auto}
+    .set h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .set h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .sgrp{font-size:10px;font-weight:800;color:#9AA79A;letter-spacing:1.2px;margin:12px 2px 5px}
+    .srow2{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #EDF3EC}
+    .srow2:last-of-type{border-bottom:none}
+    .srow2 .tx{flex:1;min-width:0}
+    .srow2 .tx b{display:block;font-size:12.5px;font-weight:700;color:#2A3A28}
+    .srow2 .tx i{font-style:normal;font-size:9.5px;color:#94A490;display:block;margin-top:2px;line-height:1.45}
+    .srow2 .st{flex:0 0 auto;padding:4px 10px;border-radius:10px;font-size:9.5px;font-weight:800}
+    .srow2 .chev{color:#B9C6B6;font-size:14px}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
+    {drawer_handle()}
+    <div class="set">
+      <h3>设置 <i>芽农小王 · Lv.12 养宠人 · 已陪伴 46 天</i></h3>
+
+      <div class="sgrp">桌宠（核心体验）</div>
+      <div class="srow2"><span class="tx"><b>悬浮窗权限</b>
+        <i>用途声明：桌面宠物展示 —— 不读取、不模拟、不越界（§3.6）</i></span>
+        <span class="st" style="background:#E8F5E9;color:#2E7D32">已开启 ✓</span></div>
+      <div class="srow2"><span class="tx"><b>常驻通知（保活）</b>
+        <i>Android 8+ 桌宠必须挂一条常驻通知才不被杀 —— 内容只有一句话，不推广告</i></span>
+        <span class="st" style="background:#E8F5E9;color:#2E7D32">已开启 ✓</span></div>
+      <div class="srow2"><span class="tx"><b>重新走一遍桌宠引导</b>
+        <i>拒绝过也没关系 —— 宠物开口 → 跳系统设置 → 跳出去（16~18 屏）随时可重看</i></span>
+        <span class="chev">›</span></div>
+
+      <div class="sgrp">声音</div>
+      <div class="srow2"><span class="tx"><b>音效</b>
+        <i>破壳声 · 蹦跳声 · 升级音（不做语音，不做对话 —— §3.5）</i></span>
+        <span class="st" style="background:#E8F5E9;color:#2E7D32">开</span></div>
+
+      <div class="sgrp">隐私与合规</div>
+      <div class="srow2"><span class="tx"><b>隐私政策</b>
+        <i>首启那份 —— 悬浮窗用途、不采集清单，随时可回看</i></span><span class="chev">›</span></div>
+      <div class="srow2"><span class="tx"><b>抽蛋概率公示</b>
+        <i>含保底综合概率 10.42% · 保底只到史诗 · 传说/神话无保底通道（§6.3.1）</i></span><span class="chev">›</span></div>
+      <div class="srow2"><span class="tx"><b>我的数据</b>
+        <i>可导出 · 可删除（合规红线第 10 条）· 全部数据本地存储</i></span><span class="chev">›</span></div>
+
+      <div class="sgrp">关于</div>
+      <div class="srow2"><span class="tx"><b>版本与用户协议</b></span><span class="chev">›</span></div>
+    </div>
+    '''
+
+
 SCREENS = [
     ("01", "家 · 主界面（无 Tab）", "打开 App = 家。场景即信息架构：宠物生活、搭话气泡、蛋在角落；唯一的常驻 HUD 是右缘抽屉把手（环 = 今日经验进度）。⭐ **在家最多同时站 6 只**（这里画满：两排各 3），左下角 chip 显示「在家 6/6 · 待命 3」。", "s01", "旧 01 首页（5-Tab + 功能宫格）整体作废"),
     ("02", "手势 · 抚摸", "在宠物身上长按/滑动 = 抚摸。涟漪 + 爱心 + 经验飘字就地反馈，没有「互动面板」页。", "s02", "旧 06 互动面板 → 删除"),
@@ -682,8 +1302,20 @@ SCREENS = [
     ("14", "开箱台 · 底部升起", "开箱从底部升起而不是跳页：**保底进度**（距史诗还差 12 抽）· 免费抽 · 金币补票（300 · 日限 1）· **十连**（可囤券攒够再开）· **概率公示入口**。⚠️ 公示写明「保底只到史诗，传说/神话无保底通道」。", "s14", "新增屏（U-13 拍板后补）"),
     ("15", "十连 · 结果横排", "只做十连：结果横排一次呈现。**十连保「稀有及以上」**（这里第 10 只就是被兜底抬上来的）—— 刻意**不保「史诗」**（那会让史诗+ 涨 35%）。拿到重复宠去融合，生育才是上限路径。", "s15", "新增屏（U-13 拍板后补）"),
     ("16", "桌宠引导 · 宠物自己开口", "**⭐ 这一步没有权限清单页、没有「下一步」向导** —— 是宠物自己开口请求（复用 00 §4.4 主动搭话）。它说「我想去你的桌面上住，这样你刷手机的时候也能看到我」，你只需要回答「好啊」或「以后再说」。**把系统权限翻译成一只宠物的请求**，是 U-11 拍板的核心。", "s16", "新增屏（U-11 拍板后补）"),
-    ("17", "桌宠授权 · 跳系统设置页", "悬浮窗权限（`SYSTEM_ALERT_WINDOW`）**给不了普通弹窗**，必须真的跳到系统设置页由用户手动打开。同时解释**用户最反感的那件事**：Android 8+ 要求桌宠挂一条常驻通知才不被杀 —— 产品语言说清楚「它就是那句话，不是广告」。四家 ROM 各自还有自启动 / 后台白名单 / 高耗电 / Doze，**按机型分别引导**。", "s17", "新增屏（U-11 拍板后补）"),
+    ("17", "桌宠授权 · 跳系统设置页", "悬浮窗权限（<code>SYSTEM_ALERT_WINDOW</code>）**给不了普通弹窗**，必须真的跳到系统设置页由用户手动打开。同时解释**用户最反感的那件事**：Android 8+ 要求桌宠挂一条常驻通知才不被杀 —— 产品语言说清楚「它就是那句话，不是广告」。四家 ROM 各自还有自启动 / 后台白名单 / 高耗电 / Doze，**按机型分别引导**。", "s17", "新增屏（U-11 拍板后补）"),
     ("18", "桌宠 · 跳出去 + 拒绝兜底", "授权后播放「**跳出去**」过渡仪式：宠物从「家」走向屏幕边缘 → 从边缘消失 → 出现在手机桌面，**是同一个它**（数据同一份、状态实时同步）。⭐ 同屏给出**拒绝授权后的兜底**：宠物说「那我先在家里陪你」，不惩罚、不反复弹，但抽屉里的入口**一直留着** —— 不能一次拒绝就永久静默。", "s18", "新增屏（U-11 拍板后补）"),
+    ("19", "首启 · 隐私政策与开场", "**全 App 唯一一次全屏阻断**（合规红线第 5 条：同意隐私政策前不初始化任何 SDK）。三条实话：悬浮窗只用于展示 / 不用无障碍服务（只能「演」不能「读」）/ 概率全公开。之后处处都是「家」。", "s19", "新增屏（补 00 §八「首次启动」）"),
+    ("20", "图鉴 · 五虫十八种", "抽屉「宠物图鉴」的落点（底部升起）：**18 种按五虫 + 不入十类分六组**，未收集显示灰格。⚠️ 「不入十类」不可抽（跨虫 4% / 异兽对 40%）；**灵兽不可抽**（ADR-017）。空态守 10.3：指向抽蛋，不放空白插画。", "s20", "新增屏（抽屉 8 条目落点补齐 · 1/6）"),
+    ("21", "族谱 · 血缘树", "抽屉「族谱」+ 档案浮卡「族谱」的落点（就地展开）：实线 = 血缘、虚线 = 配对；**称谓由血缘推导**，NPC 只标「生育搭档」不进称谓（§5.1）。高亮最大贡献血统 · 统计行 · 导出图片（§2.7 / §7.3）。", "s21", "新增屏（抽屉 8 条目落点补齐 · 2/6）"),
+    ("22", "仓库 · 道具与盲盒", "抽屉「仓库」的落点（底部升起）：六类收纳，与 §6.2 道具表逐一对应；玩具显示**耐久条**（G-08）。⚠️ 道具回收 = 售价 50%，**宠物不可售卖** —— 重复宠去融合（26 屏）。", "s22", "新增屏（抽屉 8 条目落点补齐 · 3/6）"),
+    ("23", "商店 · 道具与补给", "抽屉「商店 · 盲盒」的落点（底部升起）：门票（金币 300 日限 1 / 钻石 60）+ 道具 + **钻石充值档位**（§6.3 可选付费，含合规三件套）。所有道具都能靠任务拿到 —— 不付费不影响核心体验。", "s23", "新增屏（抽屉 8 条目落点补齐 · 4/6）"),
+    ("24", "配对广场 · 找搭档", "档案浮卡「配对生育」+ 00 §八「成年引导」的落点（底部升起）：**§2.5 七条前置条件做成 ✓ 清单**；真人优先（需对方确认）、NPC 补位（免确认，性别永远取反 —— U-09）。配对成功**双方各得一只后代**，宠不被拿走。", "s24", "新增屏（s08 断链补齐 · 配对 1/2）"),
+    ("25", "配对 · 双光效汇合", "§2.5 流程 3~4 的落点（就地浮现）：双光效汇合 → **双方各得一只后代**。基因 = 父母均值 ±15%；稀有度以 max(父母) 为基准漂移、**永不降级**；跨虫上漂 ×1.35 是刻意奖励社交。", "s25", "新增屏（s08 断链补齐 · 配对 2/2）"),
+    ("26", "融合 · 重复宠的去处", "十连结果页「去家族里融合」的落点（底部升起）：同物种 / 都已破壳 / 200 金币；印记满升档（5/8/12/20），溢出保留。⚠️ 副宠**入后山不可取回**（二次确认）· **永不产出灵兽**（ADR-017）· 神话不可作目标。", "s26", "新增屏（s15 断链补齐）"),
+    ("27", "后山小屋 · 隐居与召回", "抽屉「后山小屋」的落点（**走出边缘**而来 —— 全稿唯一离开「家」的场景）：到 Lv.60 **只提示不自动隐居**（U-07）；召回后先回「待命」；「召回」专指隐居回归（ADR-007），与「收起 / 放出」严格区分。空态守 10.3。", "s27", "新增屏（抽屉 8 条目落点补齐 · 5/6）"),
+    ("28", "排行榜 · 五榜", "档案浮卡「排行榜」的落点（底部升起）：战力 / 等级 / 亲密 / 世代 / 繁育五榜（§7.1），全服 / 好友切换。⚠️ **综合战力是智慧 / 魅力唯一参与计算的地方**（U-06），类群与性别不制造数值优劣（ADR-021）。", "s28", "新增屏（s08 断链补齐）"),
+    ("29", "成就 · 已点亮", "抽屉「成就」的落点（底部升起）：成就墙点亮态 / 未点亮灰格；**奖励只发金币与钻石**（§6.1 产出侧）。稀缺感来自陪伴时长与家族厚度，不来自抽卡运气。", "s29", "新增屏（抽屉 8 条目落点补齐 · 6/6）"),
+    ("30", "设置 · 隐私与合规", "抽屉「设置 · 隐私与合规」的落点（底部升起）：悬浮窗 / 常驻通知（保活解释）/**重走 16~18 引导**（U-11 第⑤条「保留再次引导」）/ 隐私政策 / 概率公示 / 数据可导出可删除（合规红线第 10 条）。", "s30", "新增屏（抽屉 8 条目落点补齐 · 设置）"),
 ]
 
 
@@ -726,6 +1358,7 @@ html,body{width:auto;height:auto;overflow:visible;background:#F2F6F2}
 h2.sec{font-size:20px;font-weight:700;margin:46px 0 6px;display:flex;align-items:center;gap:10px}
 h2.sec:before{content:"";width:5px;height:20px;border-radius:3px;background:#4CAF50}
 .sec-note{font-size:13px;color:#757575;margin-bottom:18px}
+.src{display:inline-block;font-family:Consolas,"Courier New",monospace;font-size:11.5px;color:#2E7D32;background:#EDF7EE;border:1px solid #C8E6C9;border-radius:5px;padding:0 5px;margin:0 2px}
 .card{background:#fff;border:1px solid #E7EFE8;border-radius:22px;padding:24px 28px;box-shadow:0 6px 22px rgba(23,59,31,.05)}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-top:20px}
 .pr{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:16px;background:#F7FAF6}
@@ -784,19 +1417,22 @@ footer{margin-top:44px;text-align:center;font-size:12.5px;color:#9E9E9E}
             ("09 我的 + 10 设置", "09 抽屉 · 家", "低频管理合并收纳；货币一起收进去。"),
             ("（无）", "10 夜晚 · 新增", "昼夜变化证明「家是活的」—— 场景不是壁纸。"),
             ("（无）", "11 家庭成员 · 12 上桌", "U-12 拍板后补：数量上限过去只写在文档表格里，**没有任何一屏能管「谁在家 / 谁上桌」**；这两屏把它变成看得见的动作。"),
-            ("（无）", "13 抽蛋入口 · 14 开箱台 · 15 十连", "U-13 拍板后补：抽蛋过去**只有算法、没有生意**（`blind_box` 甚至没有价格，也没有任何一屏能抽）；这三屏把「陪伴换抽 · 只做十连 · 公示口径」变成看得见的动作。"),
+            ("（无）", "13 抽蛋入口 · 14 开箱台 · 15 十连", "U-13 拍板后补：抽蛋过去**只有算法、没有生意**（<code>blind_box</code> 甚至没有价格，也没有任何一屏能抽）；这三屏把「陪伴换抽 · 只做十连 · 公示口径」变成看得见的动作。"),
         ))
 
     notes = "".join(f"<li>{x}</li>" for x in (
-        "<b>数值全部对齐代码</b>：互动经验 抚摸15 / 喂食60 / 玩耍105 / 训练150 / 清洁30；每日上限 50/20/15/8/10；任务 8 项 = EconomyRules.DailyTask。旧稿「全勤 735 金币」已修正 —— 金币合计 710（签到 100 + 任务 610），735 是经验。旧稿「Lv.26 需 18,370」已修正 —— expToNextLevel(26) = 6,238。",
-        "<b>任务口径</b>：每日签到 / 互动达人 / 大厨时间 / 玩伴时光 / 健身教练 / 干干净净 / 桌面陪伴 / 串门拜访（与代码逐一对应，不再自造「专注陪伴」任务）。",
-        "<b>心情与玩具</b>：02 屏没有心情条（U-02 未拍板，不再擅自定 0~100）；03 屏毛线球标注「耐久会掉」对应 G-08 待排期，仅为方向示意。",
-        "<b>今日进度</b>：唯一常驻 HUD 是抽屉把手上的进度环（07 屏 71% = 4,265/6,000）；顶部只有日期天气，没有货币。",
+        "<b>数值全部对齐代码（R2 出处标注）</b>：互动经验 抚摸15 / 喂食60 / 玩耍105 / 训练150 / 清洁30 <span class='src'>= GrowthRules.AttributeRules.interactionGain 的对应经验表</span>；每日上限 50/20/15/8/10 <span class='src'>= 各互动类型日限常量</span>；任务 8 项 <span class='src'>= EconomyRules.DailyTask</span>。旧稿「全勤 735 金币」已修正 —— 金币合计 710 <span class='src'>= EconomyRules 签到 100 + 任务 610</span>，735 是经验。旧稿「Lv.26 需 18,370」已修正 —— <span class='src'>= GrowthRules.expToNextLevel(26)</span> = 6,238。⚠️ <b>本稿所有数字均为示意</b>，改上游数值时以代码常量为准（R2：设计稿不复述真值，只标注出处）。",
+        "<b>任务口径</b>：每日签到 / 互动达人 / 大厨时间 / 玩伴时光 / 健身教练 / 干干净净 / 桌面陪伴 / 串门拜访（<span class='src'>= EconomyRules.DailyTask 的 8 项，逐一对应</span>，不再自造「专注陪伴」任务）。",
+        "<b>心情与玩具（L3 冻结后已更新）</b>：<b>全稿不放心情条</b> —— 理由已从「口径未定」变成「<b>刻意不显示</b>」：<code>mood</code> 是 <b>0~100 持久属性、只影响行为表现权重</b>（<code>U-02</code> 拍板），<b>不影响任何数值产出</b>，所以不该被做成一根让玩家盯着刷的条（守 ADR-021）。<b>毛线球「耐久会掉」已从「方向示意」变为事实</b> —— <code>G-08</code> 已落地：毛线球 <span class='src'>= ItemRegistry.toy_yarn</span>（80 金币 · 耐久 20）· 飞盘 <span class='src'>= ItemRegistry.toy_frisbee</span>（120 · 耐久 30），<code>ToyRules.wear</code> 每次玩耍 −1。",
+        "<b>今日进度</b>：唯一常驻 HUD 是抽屉把手上的进度环（07 屏 71% = 4,265/6,000 <span class='src'>= EconomyRules.DAILY_EXP_CAP</span>）；顶部只有日期天气，没有货币。",
         "<b>合规红线不变</b>：不使用无障碍服务、不读取其他应用信息、不模拟点击；概率公示入口保留在 04 屏。",
-        "<b>配对门槛</b>：Lv.26+ 且亲密度 ≥ 70（08 屏「亲密 78 ≥ 70」即为达标示意）。",
+        "<b>配对门槛</b>：Lv.26+ 且亲密度 ≥ 70 <span class='src'>= GrowthRules.PairingRules.requiredIntimacy</span>（08 屏「亲密 78 ≥ 70」即为达标示意）。",
         "<b>对接工程</b>：Phase 1.1 需按本稿重构 —— 单 Activity 场景壳 + 手势层 + 抽屉，Tab 布局废弃（docs/09 U-10 拍板稿）。",
-        "<b>抽蛋（U-13 拍板 · 2026-10-16）</b>：门票 = <b>陪伴换抽</b> —— 每日免费 <b>2 抽</b>（签到 1 + 任务 8/8 全清 1）· 金币 <b>300/个 · 日限 1</b> · 钻石 60/个 · 可囤券。只做<b>十连</b>（二十/五十连不做），<b>十连保「稀有及以上」</b>、刻意<b>不保史诗</b>。30 天 60 抽 ≈ 6.25 只史诗+ ≈ 刚好填满「家在册 6 只」。公示写死「保底只到史诗 · 传说与神话没有保底通道 · 综合概率（含保底）10.42%」。数值中枢 = <b>GachaRules</b>。",
-        "<b>数量口径（U-12 拍板 · 2026-10-16）</b>：<b>拥有不限 ⊃ 在家 6 ⊃ 桌面 3</b>，是<b>含包关系</b>（上桌的宠必须先在册）。「上桌」= <b>3 个槽位的名单</b>而非每只一个布尔；主宠 = 「在任何地方都优先表达的那只」、恒定占桌面 1 号槽位；入/出家动作叫「<b>放出 / 收起</b>」（与 ADR-007 的「隐居·召回」严格区分）。11 / 12 两屏就是这套口径的界面落点。",
+        "<b>抽蛋（U-13 拍板 · 2026-10-16）</b>：门票 = <b>陪伴换抽</b> —— 每日免费 <b>2 抽</b>（签到 1 + 任务 8/8 全清 1）· 金币 <b>300/个 · 日限 1</b> · 钻石 60/个 · 可囤券 <span class='src'>= GachaRules</span>。只做<b>十连</b>（二十/五十连不做），<b>十连保「稀有及以上」</b>、刻意<b>不保史诗</b>。30 天 60 抽 ≈ 6.25 只史诗+ ≈ 刚好填满「家在册 6 只」。公示写死「保底只到史诗 · 传说与神话没有保底通道 · 综合概率（含保底）10.42%」→ <span class='src'>= GachaRules.Disclosure.MUST_STATE</span>。",
+        "<b>数量口径（U-12 拍板 · 2026-10-16）</b>：<b>拥有不限 ⊃ 在家 6 ⊃ 桌面 3</b>，是<b>含包关系</b>（上桌的宠必须先在册）<span class='src'>= HomeSlots.MAX_HOME_PETS / MAX_DESKTOP_PETS</span>。「上桌」= <b>3 个槽位的名单</b>而非每只一个布尔；主宠 = 「在任何地方都优先表达的那只」、恒定占桌面 1 号槽位；入/出家动作叫「<b>放出 / 收起</b>」（与 ADR-007 的「隐居·召回」严格区分）。11 / 12 两屏就是这套口径的界面落点。",
+        "<b>落点闭环（v2.3 · 2026-10-16）</b>：抽屉 8 条目此前只有入口没有落点（断链）—— 本轮补齐 19~30 共 12 屏：19 首启隐私政策 <span class='src'>= 00 §八 + §十二红线 5</span> · 20 图鉴 <span class='src'>= 00 §2.1.1 五虫十八种</span> · 21 族谱 <span class='src'>= 00 §2.7/§7.3/§5.1</span> · 22 仓库 · 23 商店 <span class='src'>= 00 §6.2/§6.3</span> · 24/25 配对 <span class='src'>= 00 §2.5 七条前置 + §7.2</span> · 26 融合 <span class='src'>= 00 §2.6.1 + docs/10</span> · 27 后山小屋 <span class='src'>= 00 §2.8 + ADR-007</span> · 28 排行榜 <span class='src'>= 00 §7.1 + U-06</span> · 29 成就 · 30 设置。新增屏全部守 <b>02 §10.2 过渡规范</b>：底部升起 / 就地浮现，仅后山小屋用「走出边缘」。",
+        "<b>细节修正（v2.3 · 2026-10-16）</b>：① 01/11 两屏的「慢慢 / 小蓝 / 团子」物种与类群此前矛盾（01 画成狗/鸡/猫、11 标成鳞/昆/鳞）—— 现统一为 <b>慢慢=圆壳龟·昆虫 · 小蓝=小青蛇·鳞虫 · 团子=小龙崽·鳞虫</b>，kit 新增 turtle/snake/dragon 三种造型，图鉴「已收集 8 种 / 5 类群」与在册 9 只逐一对应；② 04 屏「还差 12 次」→「12 抽」（与 14 屏及 GachaRules 单位一致）；③ 06 屏新生「综合 62」→ <b>19</b>（62 是 08 屏 Lv.26 成年值，新生沿用属笔误）；④ 03 屏「训练沙袋」→ <b>铁哑铃</b>（§6.2 道具表里没有沙袋）；⑤ 09 屏图鉴补「8 种 / 5 类群」单位、新增「家庭成员」入口行（§4.1.2 要求的抽屉入口）。",
+        "<b>十连保底出处（R2）</b>：15 屏「保史诗会让史诗+ 涨 35%」<span class='src'>= GachaRules.kt L106：9.97% → 13.47%（+35%），tools/acquisition_sim.py 40 万次蒙卡</span>；「第 10 只兜底抬到稀有」<span class='src'>= GachaRules.TEN_PULL_FLOOR = RARE</span>。",
     ))
 
     html = f"""<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
@@ -805,8 +1441,8 @@ footer{margin-top:44px;text-align:center;font-size:12.5px;color:#9E9E9E}
 <div class="wrap">
   <header class="hero">
     <h1>萌芽宠物 SproutPet · 倒置 IA 设计稿 v2</h1>
-    <p>按 U-10 拍板方向重做：桌面场景即主界面，无 Tab 栏、手势直触、蛋长在家里、任务由宠物搭话驱动、管理收进抽屉。旧稿（design-export/）原样保留，可逐屏对照。数值全部取自代码，修正旧稿 2 处漂移。<br>⭐ <b>v2.2 补 3 屏</b>：U-12 拍板「<b>拥有不限 ⊃ 在家 6 ⊃ 桌面 3</b>」后，01 屏改为在家 6 只，并新增 11（家庭成员名册）· 12（上桌 3 个位置）；U-13 拍板「陪伴换抽 · 只做十连 · 公示口径」后再补 13（抽蛋入口）· 14（开箱台）· 15（十连结果）。</p>
-    <div class="chips"><span class="chip">15 屏界面</span><span class="chip">画布 390 × 844</span>
+    <p>按 U-10 拍板方向重做：桌面场景即主界面，无 Tab 栏、手势直触、蛋长在家里、任务由宠物搭话驱动、管理收进抽屉。旧稿（design-export/）原样保留，可逐屏对照。数值全部取自代码，修正旧稿 2 处漂移。<br>⭐ <b>v2.3 补 12 屏（对齐 L1 冻结版 00 §五/§七 与抽屉 8 条目）</b>：抽屉里「宠物图鉴 / 族谱 / 家庭成员 / 仓库 / 商店 / 成就 / 后山小屋 / 设置」此前只有入口没有落点（断链），配对与融合两条核心动线也只有浮卡文案没有界面 —— 现补 19（首启隐私政策）· 20（图鉴）· 21（族谱）· 22（仓库）· 23（商店）· 24/25（配对广场与双光效汇合）· 26（融合）· 27（后山小屋）· 28（排行榜）· 29（成就）· 30（设置）。<br>⭐ v2.2 补 3 屏：U-12 拍板「<b>拥有不限 ⊃ 在家 6 ⊃ 桌面 3</b>」后，01 屏改为在家 6 只，并新增 11（家庭成员名册）· 12（上桌 3 个位置）；U-13 拍板「陪伴换抽 · 只做十连 · 公示口径」后再补 13（抽蛋入口）· 14（开箱台）· 15（十连结果）。</p>
+    <div class="chips"><span class="chip">30 屏界面</span><span class="chip">画布 390 × 844</span>
       <span class="chip">无 Tab · 无互动面板 · 无任务清单</span><span class="chip">数值对齐 EconomyRules / GrowthRules</span>
       <span class="chip">2026-10-16</span></div>
   </header>
@@ -820,7 +1456,7 @@ footer{margin-top:44px;text-align:center;font-size:12.5px;color:#9E9E9E}
   <div class="screens">{"".join(cards)}</div>
 
   <h2 class="sec">新旧对照</h2>
-  <p class="sec-note">旧稿 10 屏 → 新稿 10 屏：两屏被删，一屏新增，其余重构为场景层。</p>
+  <p class="sec-note">旧稿 10 屏（design-export/）→ 新稿 30 屏：互动 / 任务 / 详情 / 设置全部化为场景层，抽屉 8 条目逐一落点。</p>
   <div class="card"><table class="cmp">
     <tr><th style="width:30%">旧稿（常规 Tab App）</th><th style="width:30%">新稿（倒置 IA）</th><th>为什么</th></tr>
     {cmp_rows}

@@ -295,6 +295,40 @@ object ItemRegistry {
             sources = listOf(ItemSource.DAILY_TASK, ItemSource.SHOP, ItemSource.ACTIVITY),
             shopPriceGold = com.sproutpet.core.domain.gacha.GachaRules.GOLD_PRICE_PER_BOX,
             shopPriceGem = com.sproutpet.core.domain.gacha.GachaRules.GEM_PRICE_PER_BOX
+        ),
+
+        // ===== 玩具（G-08 的修复点：此前 TOY 分类一件道具都没有） =====
+        /**
+         * 毛线球。玩耍（`InteractionType.PLAY`）的消耗物：每次玩耍消耗
+         * [ToyRules.WEAR_PER_PLAY] 点耐久（`InventoryItem.durability` 从此有了来源）。
+         *
+         * 价格与耐久来源：旧稿 `design-export/` 07 屏的提案（80 金币）被 `G-08` 落地时采纳。
+         */
+        ItemDefinition(
+            id = "toy_yarn",
+            name = "毛线球",
+            description = "玩耍时的最爱，耐久 20 次",
+            category = ItemCategory.TOY,
+            iconRes = "ic_item_yarn",
+            stackable = false,          // 有独立耐久，不可堆叠
+            consumable = false,         // 耐久耗尽才算用完，单次玩耍不消耗
+            effects = emptyList(),      // 效果由 InteractionType.PLAY 的结算承担（经验/亲密度/敏捷），道具本身无额外效果
+            sources = listOf(ItemSource.SHOP, ItemSource.BLIND_BOX),
+            shopPriceGold = 80
+        ),
+
+        /** 飞盘。更耐玩的进阶玩具（耐久 30），投掷互动的表现加成更高 */
+        ItemDefinition(
+            id = "toy_frisbee",
+            name = "飞盘",
+            description = "可以扔得很远，耐久 30 次",
+            category = ItemCategory.TOY,
+            iconRes = "ic_item_frisbee",
+            stackable = false,
+            consumable = false,
+            effects = emptyList(),
+            sources = listOf(ItemSource.SHOP, ItemSource.BLIND_BOX),
+            shopPriceGold = 120
         )
     )
 

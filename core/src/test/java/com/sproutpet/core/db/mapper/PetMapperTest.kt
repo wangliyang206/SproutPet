@@ -284,6 +284,28 @@ class PetMapperTest {
         gender = gender
     )
 
+    @Test
+    fun `slot fields and generation survive the round trip`() {
+        // G-05 / G-03：三槽位字段与世代都是"出生上下文决定、必须持久化"的成员，
+        // 漏映射时领域单测依然全绿（exotic_blood 事故的同款盲区）—— 所以必须在这里守住。
+        val original = samplePet().copy(
+            generation = 4, isMain = true, homeSlot = 2, desktopSlot = 0
+        )
+        val restored = PetMapper.toDomain(PetMapper.toEntity(original))
+        assertEquals(4, restored.generation)
+        assertEquals(true, restored.isMain)
+        assertEquals(2, restored.homeSlot)
+        assertEquals(0, restored.desktopSlot)
+    }
+
+    @Test
+    fun `entity generation defaults come from the domain model not the old literal one`() {
+        // G-03：此前 toEntity 默认 generation=1，族谱拿到恒定 1。
+        // 现在默认参数 = pet.generation（领域模型是真相源）。
+        val fifthGen = samplePet().copy(generation = 5)
+        assertEquals(5, PetMapper.toEntity(fifthGen).generation)
+    }
+
     private companion object {
         /** 与 [com.sproutpet.core.domain.pet.GrowthRules.ExoticBloodRules.MAX_BLOOD] 对齐 */
         const val GrowthRulesMaxBlood = 3

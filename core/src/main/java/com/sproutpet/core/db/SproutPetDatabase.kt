@@ -41,7 +41,8 @@ abstract class SproutPetDatabase : RoomDatabase() {
          * - V2：`pet` 表补 `exotic_blood`（ADR-023 灵血传承落库，见 [DbMigrations.MIGRATION_1_2]）
          * - V3：`pet` 表补 `deity_form`（ADR-026 神兽形态改为个体级、出生时结算，见 [DbMigrations.MIGRATION_2_3]）
          * - V4：`pet` 表补 `gender`（配对前置条件"一公一母"，见 [DbMigrations.MIGRATION_3_4]）
+         * - V5：`pet` 表补 `is_main` / `home_slot` / `desktop_slot`（U-12 三层数量链条，见 [DbMigrations.MIGRATION_4_5]）
          */
-        const val DB_VERSION = 4
+        const val DB_VERSION = 5
     }
 }

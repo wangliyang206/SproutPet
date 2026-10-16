@@ -193,6 +193,77 @@ object GrowthRules {
      * 双方各自保留宠物，各获得一只后代，互不影响归属。
      * 详见 docs/00-产品需求文档PRD.md §11.1。
      */
+    /**
+     * 世代规则（`G-03` 的修复点）。
+     *
+     * 此前 `generation` **只存不算**：`PetEntity.generation` 存在，
+     * 但全代码没有任何地方计算 `max(父, 母) + 1`，族谱排序与世代榜拿到恒为 1。
+     * 现在它是领域规则，孵化后代的用例**必须**用本函数算出世代再落库。
+     */
+    object GenerationRules {
+
+        /** 初代（盲盒直接开出的宠） */
+        const val FIRST_GENERATION = 1
+
+        /** 后代世代 = max(父, 母) + 1（docs/00 §2.6 的承诺） */
+        fun offspringGeneration(parentA: Pet, parentB: Pet): Int =
+            maxOf(parentA.generation, parentB.generation) + 1
+    }
+
+    /**
+     * 属性成长规则（`G-06` 的修复点：属性「只算一次」）。
+     *
+     * 此前 [PetAttributes.ofLevel] 只在孵化时以 level=1 调用一次，
+     * 之后升级 / 互动 / 道具**三条提升途径全部没有消费者** ——
+     * 属性面板是死水，`power` 永远停在出生值。
+     *
+     * 消费约定（L4/L6 的 UseCase 必须遵守）：
+     * - **升级**：调 [onLevelUp]（差量增长，保留互动/道具的既有加成）
+     * - **互动**：调 [interactionGain]（训练定向 / 玩耍间接）
+     * - **道具**：`ItemEffectApplier` 的 `AddAttribute`（钳制到 [PetAttributes.MAX_ATTRIBUTE]）
+     *
+     * ⚠️ `wisdom` / `charm` 是**纯展示属性**（`U-06` 拍板）—— 它们随本规则正常成长、
+     * 只进战力排行分，**不得**让它们影响经验效率或后代概率。
+     */
+    object AttributeRules {
+
+        /**
+         * 升级后的属性：在 [current] 上叠加「等级差的基准差量」。
+         *
+         * 为什么用**差量**而不是整算 `ofLevel(newLevel)`：整算会覆盖掉
+         * 互动与道具已经加上去的值（玩家会眼睁睁看着属性倒退）。
+         * 差量 = `ofLevel(new) - ofLevel(old)`，只把"这次升级应得的部分"加上去。
+         */
+        fun onLevelUp(
+            oldLevel: Int,
+            newLevel: Int,
+            rarity: Rarity,
+            tendency: AttributeTendency,
+            current: PetAttributes
+        ): PetAttributes {
+            require(newLevel >= oldLevel) { "等级不能倒退：$oldLevel → $newLevel" }
+            if (newLevel == oldLevel) return current
+            val delta = PetAttributes.ofLevel(newLevel, rarity, tendency) -
+                PetAttributes.ofLevel(oldLevel, rarity, tendency)
+            return current + delta
+        }
+
+        /**
+         * 互动带来的属性成长。
+         *
+         * 刻意**克制**：互动的主收益是经验与亲密度（[InteractionType]），属性只是副产物 ——
+         * 否则「训练刷属性」会变成数值游戏的主要路径，与治愈定位冲突。
+         * 只有**训练**（定向，力量为主）与**玩耍**（敏捷，副产物）给属性。
+         */
+        fun interactionGain(type: InteractionType): PetAttributes = when (type) {
+            InteractionType.TRAIN -> PetAttributes(strength = 2, agility = 1,
+                stamina = 0, wisdom = 0, charm = 0, intimacy = 0)
+            InteractionType.PLAY -> PetAttributes(agility = 1,
+                stamina = 0, strength = 0, wisdom = 0, charm = 0, intimacy = 0)
+            else -> PetAttributes.ZERO
+        }
+    }
+
     object PairingRules {
         /** 最低亲密度要求 */
         const val requiredIntimacy = 70

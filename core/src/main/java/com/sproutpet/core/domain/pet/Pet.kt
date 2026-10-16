@@ -112,8 +112,56 @@ data class Pet(
      * @see PetGender
      * @see canPairWith
      */
-    val gender: PetGender = PetGender.MALE
+    val gender: PetGender = PetGender.MALE,
+
+    /**
+     * 世代数：初代 1，后代 = max(父, 母) + 1。
+     *
+     * ⚠️ **`G-03` 的修复点**：此前该值**只存在数据库里、领域模型没有**，
+     * `PetMapper.toEntity` 默认永远写 1 —— 族谱排序、世代榜拿到的全是恒定 1。
+     * 现在它是领域模型的正式成员，计算规则见
+     * [GrowthRules.GenerationRules.offspringGeneration]。
+     *
+     * 必须持久化：它由"出生上下文"（父母的世代）决定，宠物自身推不出来。
+     */
+    val generation: Int = 1,
+
+    /**
+     * 是否主宠 —— 「**在任何地方都优先表达的那只**」（`U-12` 拍板）。
+     *
+     * 家与桌面共用同一属性（家也有搭话气泡，多只同时想说话必须有优先级）。
+     * **恒定占桌面 0 号槽位**（[HomeSlots.MAIN_DESKTOP_SLOT]）；想换主宠，
+     * 必须先回答「谁是新的主角」，不允许静默降级。
+     *
+     * 全局必须**恰好一只** —— 由 [HomeSlots.validate] 守住。
+     */
+    val isMain: Boolean = false,
+
+    /**
+     * 在「家」的站位槽位（`0..5`）；[HomeSlots.NO_SLOT]（-1）= 待命（不在家）。
+     *
+     * 三层链条「拥有不限 ⊃ 家在册 6 ⊃ 桌面 3」的中间层（`U-12`）。
+     * 「放出 / 收起」改变本字段；隐居宠不占槽位。
+     */
+    val homeSlot: Int = HomeSlots.NO_SLOT,
+
+    /**
+     * 手机桌面的槽位（`0..2`）；[HomeSlots.NO_SLOT] = 未上桌。
+     *
+     * 含包约束：**桌面 ⊆ 在家** —— 桌上的宠必须先在册。由 [HomeSlots.validate] 守住。
+     */
+    val desktopSlot: Int = HomeSlots.NO_SLOT
 ) {
+    /**
+     * 是否在「家」的在册名单里。
+     *
+     * ⚠️ 规则本体在 [HomeSlots.isAtHome]，这里只是可读别名 ——
+     * 绝不要写成 `HomeSlots.run { atHome }`，那会解析回本属性自身（无限递归）。
+     */
+    val atHome: Boolean get() = HomeSlots.isAtHome(this)
+
+    /** 是否在手机桌面上（规则本体 [HomeSlots.isOnDesktop]） */
+    val onDesktop: Boolean get() = HomeSlots.isOnDesktop(this)
     /** 升级所需经验 */
     val expToNext: Int get() = GrowthRules.expToNextLevel(level)
 

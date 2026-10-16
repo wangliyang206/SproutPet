@@ -175,6 +175,25 @@ data class PetEntity(
     @ColumnInfo(name = "deity_form", defaultValue = "0")
     val hasFullDeityForm: Boolean = false,
 
+    /**
+     * 是否主宠（`U-12`：恒占桌面 0 号槽位）。见 [com.sproutpet.core.domain.pet.HomeSlots]。
+     */
+    @ColumnInfo(name = "is_main", defaultValue = "0")
+    val isMain: Boolean = false,
+
+    /**
+     * 「家」的站位槽位（0~5），-1 = 待命（不在家）。见 [com.sproutpet.core.domain.pet.HomeSlots]。
+     */
+    @ColumnInfo(name = "home_slot", defaultValue = "-1")
+    val homeSlot: Int = -1,
+
+    /**
+     * 手机桌面槽位（0~2），-1 = 未上桌。
+     * 含包约束：`desktop_slot != -1 ⇒ home_slot != -1`（桌面 ⊆ 在家）。
+     */
+    @ColumnInfo(name = "desktop_slot", defaultValue = "-1")
+    val desktopSlot: Int = -1,
+
     // ===== 同步字段（Phase 6 云端使用） =====
     /** 服务端 ID，未同步时为 null */
     @ColumnInfo(name = "remote_id")

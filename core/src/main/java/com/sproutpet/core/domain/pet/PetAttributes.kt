@@ -31,6 +31,30 @@ data class PetAttributes(
     val totalBase: Int get() = stamina + strength + agility + wisdom + charm
 
     /**
+     * 按项相加（**intimacy 除外** —— 亲密度由互动维护，是"陪伴深度"的历史累计，
+     * 不随基础属性增长；见 docs/00 §4.3 的 `U-03` 口径）。
+     *
+     * 用于属性**差量**叠加：升级差量（[GrowthRules.AttributeRules.onLevelUp]）
+     * 与互动/道具加成（`G-06`）都通过它合并进当前值。
+     */
+    operator fun plus(delta: PetAttributes): PetAttributes = copy(
+        stamina = (stamina + delta.stamina).coerceIn(0, MAX_ATTRIBUTE),
+        strength = (strength + delta.strength).coerceIn(0, MAX_ATTRIBUTE),
+        agility = (agility + delta.agility).coerceIn(0, MAX_ATTRIBUTE),
+        wisdom = (wisdom + delta.wisdom).coerceIn(0, MAX_ATTRIBUTE),
+        charm = (charm + delta.charm).coerceIn(0, MAX_ATTRIBUTE)
+    )
+
+    /** 按项相减并钳制（`plus` 的逆运算；intimacy 同样不参与） */
+    operator fun minus(other: PetAttributes): PetAttributes = copy(
+        stamina = (stamina - other.stamina).coerceIn(0, MAX_ATTRIBUTE),
+        strength = (strength - other.strength).coerceIn(0, MAX_ATTRIBUTE),
+        agility = (agility - other.agility).coerceIn(0, MAX_ATTRIBUTE),
+        wisdom = (wisdom - other.wisdom).coerceIn(0, MAX_ATTRIBUTE),
+        charm = (charm - other.charm).coerceIn(0, MAX_ATTRIBUTE)
+    )
+
+    /**
      * 各项属性的**防溢出钳制上界**。
      *
      * ⚠️ 它**不是设计目标**，只防止算术溢出与脏数据。
@@ -44,6 +68,9 @@ data class PetAttributes(
      */
     companion object {
         const val MAX_ATTRIBUTE = 500
+
+        /** 全零属性（升级差量 / 互动加成的基底，见 [plus]） */
+        val ZERO = PetAttributes(0, 0, 0, 0, 0, 0)
 
         /**
          * ⚠️⚠️ **ADR-021 红线：本函数不得引入 `SpeciesFamily`（五虫类群）参数。**

@@ -55,11 +55,21 @@ object PetMapper {
         // 列 `is_retired` 只是供 DAO 走索引过滤的缓存。见 PetEntity 该列的说明。
         exoticBlood = entity.exoticBlood,
         hasFullDeityForm = entity.hasFullDeityForm,
-        gender = PetGender.fromId(entity.gender)
+        gender = PetGender.fromId(entity.gender),
+        generation = entity.generation,
+        isMain = entity.isMain,
+        homeSlot = entity.homeSlot,
+        desktopSlot = entity.desktopSlot
     )
 
-    /** Domain → Entity */
-    fun toEntity(pet: Pet, generation: Int = 1, existing: PetEntity? = null): PetEntity =
+    /**
+     * Domain → Entity。
+     *
+     * @param generation 世代兜底值；**默认取 `pet.generation`（领域模型是真相源）**。
+     *   显式传参仅用于"首次以父母世代落库后代"的场景（正常应先算好 `pet.generation`，
+     *   见 [com.sproutpet.core.domain.pet.GrowthRules.GenerationRules.offspringGeneration]）。
+     */
+    fun toEntity(pet: Pet, generation: Int = pet.generation, existing: PetEntity? = null): PetEntity =
         PetEntity(
             id = pet.id,
             ownerId = pet.ownerId,
@@ -89,12 +99,15 @@ object PetMapper {
             familyId = pet.familyId,
             parentIdA = pet.parentIdA,
             parentIdB = pet.parentIdB,
-            generation = existing?.generation ?: generation,
+            generation = generation,
             batchNo = pet.batchNo,
             isRetired = pet.isRetired,
             exoticBlood = pet.exoticBlood,
             hasFullDeityForm = pet.hasFullDeityForm,
             gender = pet.gender.id,
+            isMain = pet.isMain,
+            homeSlot = pet.homeSlot,
+            desktopSlot = pet.desktopSlot,
             remoteId = existing?.remoteId,
             updatedAt = System.currentTimeMillis(),
             isSynced = false

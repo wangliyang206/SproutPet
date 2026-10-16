@@ -110,5 +110,33 @@ object DbMigrations {
     }
 
     /** 全部迁移，按版本顺序交给 Room（见 [com.sproutpet.core.di.AppModule]） */
-    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+    /**
+     * V4 → V5：`U-12` 三层数量链条的三字段（`G-05`）。
+     *
+     * - `is_main`：是否主宠（恒占桌面 0 号）
+     * - `home_slot`：家在册槽位（0~5，-1 = 待命）
+     * - `desktop_slot`：桌面槽位（0~2，-1 = 未上桌）
+     *
+     * ## 默认值即迁移语义
+     *
+     * 三列默认值（false / -1 / -1）对存量宠语义 = 「都在待命」—— 这**不完全真实**
+     * （玩家此前看到的宠应该算"在家"），但槽位本身就是 `U-12` 拍板后才有的概念，
+     * 不存在"迁移前的正确值"。给存量数据的初值策略：
+     * **每只主人的最老一只宠进家 0 号位并设为主宠**（下方 SQL 的子查询），其余留在待命，
+     * 由用户在「家庭成员」里自行放出 —— 这与"第一次打开新版本"的引导一致。
+     */
+    val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE `pet` ADD COLUMN `is_main` INTEGER NOT NULL DEFAULT 0")
+            db.execSQL("ALTER TABLE `pet` ADD COLUMN `home_slot` INTEGER NOT NULL DEFAULT -1")
+            db.execSQL("ALTER TABLE `pet` ADD COLUMN `desktop_slot` INTEGER NOT NULL DEFAULT -1")
+            // 存量初值：每只主人的最老一只宠 → 家 0 号 + 主宠
+            db.execSQL(
+                "UPDATE `pet` SET `home_slot` = 0, `is_main` = 1 " +
+                    "WHERE `id` IN (SELECT MIN(`id`) FROM `pet` GROUP BY `owner_id`)"
+            )
+        }
+    }
+
+    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
 }

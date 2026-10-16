@@ -195,6 +195,7 @@ def pet_svg(species="chick", mood="happy", scale=1.0):
         "sleep": '<path d="M48 62 q2 2 4 0" stroke="#33261F" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
         "dizzy": '<ellipse cx="50" cy="62" rx="3.4" ry="2.6" fill="#7A4A3A"/>',
     }[mood]
+    head = ""  # 各物种分支可选覆盖（turtle/snake 不需要头部装饰）
     if species == "chick":
         head = ('<circle cx="42" cy="26" r="6" fill="#FF8A65"/><circle cx="50" cy="22.5" r="6.5" fill="#FF8A65"/>'
                 '<circle cx="58" cy="26" r="6" fill="#FF8A65"/>')
@@ -209,6 +210,29 @@ def pet_svg(species="chick", mood="happy", scale=1.0):
                  '<path d="M62 38 q4 -3 8 0" stroke="#BCAAA4" stroke-width="3" fill="none" stroke-linecap="round"/>'
                  '<path d="M84 62 q14 -2 10 -16" stroke="#C9B8AE" stroke-width="7" fill="none" stroke-linecap="round"/>')
         body, belly = "#D7CCC8", "#F1EBE8"
+    elif species == "turtle":
+        # 圆壳龟（昆虫）—— 背甲叠在上半身，脸留在外面
+        extra = ('<ellipse cx="50" cy="39" rx="26" ry="15" fill="#66BB6A"/>'
+                 '<path d="M32 45 h36 M40 28 v14 M50 24 v18 M60 28 v14" stroke="#4CAF50" '
+                 'stroke-width="2.2" stroke-linecap="round"/>'
+                 '<path d="M50 24 q1 -8 7 -9" stroke="#7CB342" stroke-width="2.4" fill="none" stroke-linecap="round"/>'
+                 '<path d="M85 74 q9 -3 5 -11" stroke="#7CB342" stroke-width="5.5" fill="none" stroke-linecap="round"/>')
+        body, belly = "#C5E1A5", "#F1F8E9"
+    elif species == "snake":
+        # 小青蛇（鳞虫）—— 身体盘成一段，舌头在左
+        extra = ('<path d="M18 68 q17 9 33 2 q16 -7 29 4" stroke="#66BB6A" stroke-width="9" '
+                 'fill="none" stroke-linecap="round"/>'
+                 '<path d="M24 62 q14 7 27 1" stroke="#A5D6A7" stroke-width="3" fill="none" stroke-linecap="round"/>'
+                 '<path d="M9 44 l-8 3.5 8 3.5 z" fill="#E57373"/>')
+        body, belly = "#A5D6A7", "#E8F5E9"
+    elif species == "dragon":
+        # 小龙崽（鳞虫）—— 双角 + 鳞片腮 + 尾
+        head = ('<path d="M30 30 l4 -15 11 9 z" fill="#4DB6AC"/><path d="M70 30 l-4 -15 -11 9 z" fill="#4DB6AC"/>'
+                '<path d="M45 20 q5 -11 10 0 z" fill="#26A69A"/>')
+        extra = ('<path d="M79 62 q15 -4 11 -18" stroke="#26A69A" stroke-width="7" fill="none" stroke-linecap="round"/>'
+                 '<ellipse cx="29" cy="47" rx="7" ry="4" fill="#B2DFDB"/>'
+                 '<ellipse cx="71" cy="47" rx="7" ry="4" fill="#B2DFDB"/>')
+        body, belly = "#80CBC4", "#E0F2F1"
     else:  # dog
         head = ('<ellipse cx="22" cy="46" rx="11" ry="17" fill="#D9A05B" transform="rotate(10 22 46)"/>'
                 '<ellipse cx="78" cy="46" rx="11" ry="17" fill="#D9A05B" transform="rotate(-10 78 46)"/>')

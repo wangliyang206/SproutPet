@@ -36,11 +36,17 @@ object HomeSlots {
     /** 主宠在桌面的固定槽位（0 号） */
     const val MAIN_DESKTOP_SLOT = 0
 
-    /** 宠物是否在「家」的在册名单里 */
-    val Pet.atHome: Boolean get() = homeSlot != NO_SLOT
+    /**
+     * 宠物是否在「家」的在册名单里。
+     *
+     * ⚠️ 这里刻意**用函数而不是扩展属性**：`Pet.atHome` 已经是 [Pet] 的成员，
+     * 若此处也叫 `Pet.atHome`，[Pet] 内部任何 `atHome` 引用都会解析回成员自身 ——
+     * 造成无限递归（曾真的 StackOverflow）。函数名不参与属性遮蔽，天然安全。
+     */
+    fun isAtHome(pet: Pet): Boolean = pet.homeSlot != NO_SLOT
 
-    /** 宠物是否在手机桌面上 */
-    val Pet.onDesktop: Boolean get() = desktopSlot != NO_SLOT
+    /** 宠物是否在手机桌面上（同 [isAtHome] 的命名理由） */
+    fun isOnDesktop(pet: Pet): Boolean = pet.desktopSlot != NO_SLOT
 
     /**
      * 校验一组宠物的槽位状态是否满足全部不变量。
@@ -50,11 +56,11 @@ object HomeSlots {
     fun validate(pets: List<Pet>): List<String> {
         val bad = mutableListOf<String>()
 
-        val atHome = pets.filter { it.atHome }
-        val onDesktop = pets.filter { it.onDesktop }
+        val atHome = pets.filter { isAtHome(it) }
+        val onDesktop = pets.filter { isOnDesktop(it) }
 
         // ① 含包约束：桌面 ⊆ 在家
-        onDesktop.filterNot { it.atHome }.forEach {
+        onDesktop.filterNot { isAtHome(it) }.forEach {
             bad += "${it.nickname}：在桌面(d=${it.desktopSlot})但不在家(h=${it.homeSlot})"
         }
 
@@ -83,7 +89,7 @@ object HomeSlots {
                 if (m.desktopSlot != MAIN_DESKTOP_SLOT) {
                     bad += "主宠桌面槽位应为 $MAIN_DESKTOP_SLOT，实际 ${m.desktopSlot}"
                 }
-                if (!m.atHome) bad += "主宠必须在家（主宠不可处于待命）"
+                if (!isAtHome(m)) bad += "主宠必须在家（主宠不可处于待命）"
             }
         }
 
@@ -92,7 +98,7 @@ object HomeSlots {
             .forEach { bad += "${it.nickname}：占桌面 0 号但不是主宠" }
 
         // ⑥ 隐居宠不占任何槽位（后山不等于家）
-        pets.filter { it.isRetired && (it.atHome || it.onDesktop) }
+        pets.filter { it.isRetired && (isAtHome(it) || isOnDesktop(it)) }
             .forEach { bad += "${it.nickname}：已隐居却仍占槽位（隐居宠不占在册名额）" }
 
         return bad
