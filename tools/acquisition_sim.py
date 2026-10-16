@@ -2,12 +2,14 @@
 """
 SproutPet 获取路径与周期测算
 
-目的：把「普通宠物 → 灵兽 / 异兽 / 神兽」的获取成本（配对次数、代数、天数）算清楚。
+目的：把「普通宠物 → 灵兽 / 异兽 / 神兽」的获取成本（配对次数、代数、天数）算清楚，
+      并覆盖**盲盒（抽蛋）**的概率与保底分布（第八节）。
 
 数值来源全部对齐 core 层代码：
   - core/domain/pet/Rarity.kt
   - core/domain/pet/GrowthRules.kt   (BreedingRules / ExoticBloodRules / PairingRules)
   - core/domain/pet/PetSpecies.kt
+  - core/domain/incubation/BlindBoxEngine.kt
 
 用法： python acquisition_sim.py
 """
@@ -54,6 +56,15 @@ AWAKEN_RATE = {0: 0.00, 1: 0.03, 2: 0.08, 3: 0.15}
 PITY_THRESHOLD = 20      # 连续这么多次「史诗及以上」配对未出灵兽后开始补偿
 PITY_STEP = 0.02         # 每次 +2%
 MAX_PITY_RATE = 0.40     # 封顶 40%
+
+# ── 三层宠物链条（U-12 拍板 · 2026-10-16）─────────────────────────────
+#   全部拥有（不限，永久保存） ⊃ 家在册（≤6，App 内场景显示）
+#                              ⊃ 桌面（≤3，系统悬浮窗 TYPE_APPLICATION_OVERLAY）
+# 「家」上限 6 是**产品决策**（不是技术限制）：家是自家 View 树节点，无窗口数约束，
+# 6 = 竖屏两排各 3 只、每只仍看得清的临界，同时也是**并行繁育线的上限**。
+# 因此 lanes 的场景必须覆盖到 6 —— 这是 ADR-024 的强制复算点。
+MAX_HOME_PETS = 6          # App 内「家」同时显示上限（在册）
+MAX_DESKTOP_PETS = 3       # 手机桌面同时显示上限（已确认）· 是「在册」的子集
 
 # PairingRules
 COOLDOWN_DAYS = 3          # 每只宠物两次配对之间的冷却（v2.1：7 → 3 天）
@@ -321,7 +332,7 @@ def report_pity_calibration():
     print("=" * 78)
     print("三之二、保底阈值校准（为什么是 20 / 2% / 40%）")
     print("=" * 78)
-    for lanes, label in ((1, "单线"), (3, "三线")):
+    for lanes, label in ((1, "单线"), (3, "三线"), (MAX_HOME_PETS, "六线")):
         s = sim_streak_at_hit(lanes=lanes)
         print(f"   [{label}] 命中时 EPIC+ 连击数：中位 {pct(s,0.5):3d} | p75 {pct(s,0.75):3d} | "
               f"p90 {pct(s,0.90):3d} | p95 {pct(s,0.95):3d} | p99 {pct(s,0.99):3d}")
@@ -332,7 +343,7 @@ def report_pity_calibration():
     saved = (PITY_THRESHOLD, PITY_STEP, MAX_PITY_RATE)
     for th, step, cap in ((30, 0.01, 0.25), (20, 0.02, 0.40), (12, 0.03, 0.50)):
         PITY_THRESHOLD, PITY_STEP, MAX_PITY_RATE = th, step, cap
-        for lanes in (1, 3):
+        for lanes in (1, 3, MAX_HOME_PETS):
             p, _ = sim_mutant_chain(lanes=lanes, use_pity=True, trials=60000)
             mark = "  ★ 已采纳" if th == 20 else ""
             print(f"   {f'{th}/{step}/{cap}':<18}{lanes:<4}{statistics.mean(p):>7.1f}"
@@ -384,7 +395,10 @@ def main():
     print(f"    （含 {MAX_OFFSPRING} 后代上限 + {COOLDOWN_DAYS} 天冷却 + S15 冷启动保底）")
     print("=" * 78)
     rows = {}
-    for lanes, label in ((1, "单线（1 只同时繁育）"), (3, "三线（桌面 3 只并行）")):
+    # lanes = 同时可繁育的宠只数。其上限由「家在册 ≤6」（U-12）决定，故必须覆盖到 6。
+    for lanes, label in ((1, "单线（1 只同时繁育）"),
+                         (3, "三线（3 只并行）"),
+                         (MAX_HOME_PETS, f"六线（家在册 {MAX_HOME_PETS} 只并行 · 现行上限）")):
         for use_pity in (False, True):
             pairings, gens = sim_mutant_chain(lanes=lanes, use_pity=use_pity)
             tag = "含保底" if use_pity else "无保底"
@@ -438,6 +452,7 @@ def main():
         ("灵兽·同虫线（1 线）", statistics.mean(same_g)),
         ("灵兽·跨虫线（1 线）", statistics.mean(cross_g)),
         (f"灵兽·{rows[3][0]}", statistics.mean(rows[3][2])),
+        (f"灵兽·{rows[MAX_HOME_PETS][0]}", statistics.mean(rows[MAX_HOME_PETS][2])),
         ("异兽·跨虫（3 线）", statistics.mean(g_cross)),
         ("异兽·异兽互配（已有异兽后）", statistics.mean(g_pair)),
     ]
@@ -481,11 +496,143 @@ def main():
     print("   → 神兽特征层（翎羽描边等部分特征）仍由 稀有度 >= 传说 提供，保持抽卡回报")
     print()
 
+    report_blind_box()
+
 
 def PetStageAdultNote():
     return (f"成年档({ADULT_LEVEL}级) + 亲密度≥{REQUIRED_INTIMACY} + "
             f"{PAIR_COST_GOLD} 金币 + 必须为不同主人")
 
+
+# ── 盲盒（抽蛋）──────────────────────────────────────────────────────────
+# BlindBoxEngine：加权随机 + 硬保底。数值对齐 core/domain/incubation/BlindBoxEngine.kt。
+# ⚠️ 两条必须被看见、且必须公示的事实：
+#   ① 保底只给到 EPIC，且触发后**计数归零** ——
+#      所以它对"想要传说/神话"**只是打断连击**，不是帮助；
+#   ② 因此传说与神话**没有任何保底通道**，纯自然概率。
+BOX_WEIGHTS = {COMMON: 1000, RARE: 400, EPIC: 120, LEGENDARY: 30, MYTHIC: 5, MUTANT: 0}
+BOX_PITY_THRESHOLD = 30    # BlindBoxEngine.PITY_THRESHOLD
+# ⚠️ 语义勘误（v2.0）：判定是 pityCount + 1 >= 30 → **第 30 抽**即保底位，
+#    即最多连续 29 抽不出。文档曾写"连续 30 次未出 → 第 31 次必出"，**晚 1 抽**。
+
+# ── 门票与节奏（U-13 拍板 · 2026-10-16 · 与 core/domain/gacha/GachaRules.kt 对齐）──
+# 定位：抽卡 = 素材供给，生育 = 上限路径。门票走「陪伴换抽」，不走「钱换抽」。
+GACHA_FREE_PER_DAY = 2       # 每日免费：签到 1 + 日常任务 8/8 全清 1
+GACHA_GOLD_PRICE = 300       # 金币补票价（个）—— 日限 1，钱买不来无限抽
+GACHA_GOLD_DAILY_LIMIT = 1
+GACHA_GEM_PRICE = 60         # 钻石通道（愿意付费的人不必等免费额度）
+GACHA_MAX_BATCH = 10         # 只做十连；二十 / 五十连不做
+GACHA_TEN_PULL_FLOOR = RARE  # 十连兜底：至少一只「稀有」—— 不保史诗（会 +35% 通胀）
+GOLD_PER_DAY_CAP = 1010      # EconomyRules.maxGoldPerDay：签到+任务 710 + 满额离线 300
+
+
+def box_p_table():
+    total = sum(BOX_WEIGHTS.values())
+    return {k: v / total for k, v in BOX_WEIGHTS.items()}
+
+
+def sim_first_of(target_p, trials=400000, pity=BOX_PITY_THRESHOLD,
+                 pity_gives_target=True, seed=20261016):
+    """抽到第一只目标档位所需抽数。
+
+    pity_gives_target=True  → 保底给的就是目标（用于"史诗及以上"）
+    pity_gives_target=False → 保底只给史诗并清零计数（用于"传说及以上"/"神话"）
+    """
+    rnd = random.Random(seed)
+    xs, pity_fires = [], 0
+    for _ in range(trials):
+        dry = 0
+        for n in range(1, 4000):
+            if dry + 1 >= pity:
+                pity_fires += 1
+                dry = 0
+                if pity_gives_target:
+                    xs.append(n)
+                    break
+                continue
+            if rnd.random() < target_p:
+                xs.append(n)
+                break
+            dry += 1
+        else:
+            xs.append(4000)
+    return xs, pity_fires
+
+
+def report_blind_box():
+    print("=" * 78)
+    print("八、盲盒（抽蛋）数值 —— BlindBoxEngine 概率与保底")
+    print("=" * 78)
+    P = box_p_table()
+    for i in range(6):
+        w = BOX_WEIGHTS[i]
+        note = "  ← 不可抽，仅遗传（ADR-017）" if w == 0 else ""
+        print(f"   {RARITY_NAME[i]:<4} weight={w:<5} 单抽 {P[i]*100:6.3f}%{note}")
+    p_epic = P[EPIC] + P[LEGENDARY] + P[MYTHIC]
+    p_leg = P[LEGENDARY] + P[MYTHIC]
+    p_myth = P[MYTHIC]
+    print(f"\n   权重合计 {sum(BOX_WEIGHTS.values())}（灵兽权重 0，永不进池）")
+    print(f"   史诗及以上 {p_epic*100:.3f}% | 传说及以上 {p_leg*100:.3f}% | 神话 {p_myth*100:.3f}%")
+    print()
+    print(f"   硬保底：{BOX_PITY_THRESHOLD} 抽内必出史诗及以上"
+          f"（第 {BOX_PITY_THRESHOLD} 抽为保底位 → 最多连续 {BOX_PITY_THRESHOLD-1} 抽不出）")
+    print("   ⚠️ 保底只给「史诗」且触发后计数归零 → 传说/神话 没有任何保底通道")
+
+    print()
+    print("   ── 到达第一只各档位的抽数分布（40 万次蒙卡）──")
+    exp_epic_plus = 10.0  # 由下面的"史诗及以上"一行覆盖
+    for label, p, gives in (("史诗及以上", p_epic, True),
+                            ("史诗及以上(无保底)", p_epic, False),
+                            ("传说及以上", p_leg, False),
+                            ("神话", p_myth, False)):
+        pity_arg = 10 ** 9 if "无保底" in label else BOX_PITY_THRESHOLD
+        xs, fires = sim_first_of(p, pity=pity_arg, pity_gives_target=gives)
+        print(f"   {label:<20} 期望 {statistics.mean(xs):7.2f} 抽 | 中位 {pct(xs,.5):4d} | "
+              f"p75 {pct(xs,.75):4d} | p90 {pct(xs,.90):4d} | "
+              f"p95 {pct(xs,.95):4d} | p99 {pct(xs,.99):4d}")
+        if label == "史诗及以上":
+            exp_epic_plus = statistics.mean(xs)
+            print(f"   {'':20} → 保底实际触发率 {fires/len(xs)*100:.2f}%"
+                  f" | 综合概率 {1/statistics.mean(xs)*100:.2f}%"
+                  f" ← 概率公示要披露的数")
+    print()
+
+    print("   ── 多连「至少一个 X」（无额外多连保底）──")
+    print(f"   {'连数':<8}{'≥1 史诗+':>12}{'≥1 传说+':>12}{'≥1 神话':>12}")
+    for k in (1, 10, 20, 50, 100):
+        print(f"   {k:<8}{1-(1-p_epic)**k:11.2%}{1-(1-p_leg)**k:12.2%}{1-(1-p_myth)**k:12.2%}")
+    print()
+
+    print("   ── 若给多连加保底，概率会通胀多少 ──")
+    b_epic = 10 * p_epic
+    g_epic = b_epic + (1 - p_epic) ** 10
+    p_rare_up = p_epic + P[RARE]
+    b_rare = 10 * p_rare_up
+    g_rare = b_rare + (1 - p_rare_up) ** 10
+    print(f"   十连保「稀有+」：产出率 {b_rare/10*100:.3f}% → {g_rare/10*100:.3f}%"
+          f"（+{(g_rare/b_rare-1)*100:.2f}% · 几乎免费，消掉 {(1-p_rare_up)**10*100:.2f}% 的全普通十连）")
+    print(f"   十连保「史诗+」：产出率 {p_epic*100:.3f}% → {g_epic/10*100:.3f}%"
+          f"（+{(g_epic/b_epic-1)*100:.1f}% · 稀缺感贬值三分之一）")
+    print("   → 多连保底是一把很利的刀：保「稀有」几乎免费，保「史诗」会通胀 35%")
+    print()
+
+    # ── 门票与节奏（U-13 拍板后新增）──
+    print("   ── 门票与节奏（U-13 拍板：陪伴换抽，不是钱换抽）──")
+    print(f"   每日免费 {GACHA_FREE_PER_DAY} 抽（签到 1 + 任务 8/8 全清 1）"
+          f" | 金币 {GACHA_GOLD_PRICE}/个 · 日限 {GACHA_GOLD_DAILY_LIMIT}"
+          f" | 钻石 {GACHA_GEM_PRICE}/个 | 可囤（盲盒可堆叠）")
+    free_30 = GACHA_FREE_PER_DAY * 30
+    pets_30 = free_30 / exp_epic_plus
+    print(f"   {free_30} 抽（30 天免费）÷ {exp_epic_plus:.1f}（每只史诗+的期望抽数）"
+          f" = {pets_30:.2f} 只史诗+")
+    print(f"   → 与「家在册 6 只」（U-12）的比值 {pets_30/6*100:.0f}%："
+          f"一个月慢慢填满家，而不是开服三天抽满")
+    print(f"   只做十连（{GACHA_MAX_BATCH} 连）：五十连 = {50*GACHA_GOLD_PRICE:,} 金币"
+          f" ≈ {50*GACHA_GOLD_PRICE/GOLD_PER_DAY_CAP:.1f} 天日收入上限，"
+          f"而家在册只有 6 个名额 → 不做")
+    print(f"   金币补票代价 {GACHA_GOLD_PRICE}/{GOLD_PER_DAY_CAP} = "
+          f"{GACHA_GOLD_PRICE/GOLD_PER_DAY_CAP:.2f} 天 → 当天收入就够补 1 抽（日限 1 锁住上限）")
+    print()
 
 
 if __name__ == "__main__":

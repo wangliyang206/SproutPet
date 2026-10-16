@@ -273,14 +273,28 @@ object ItemRegistry {
         ),
 
         // ===== 消耗品 =====
+        /**
+         * 神秘盲盒（抽蛋门票）。
+         *
+         * ⚠️ **两个价格都由 [GachaRules] 提供，此处不重复写数字** ——
+         * 修复前这里 `sources` 声明了 `SHOP` 而两个价格字段**双双是 `null`**，
+         * 属于"商店有卖、但没价"：任何商店 UI 都渲染不出来，
+         * 而"抽一次要花什么"在 13 份文档里也是空白（docs/09 `U-13` / `G-13`）。
+         *
+         * 金币价是**补票口**（日限 1），主要来源是每日免费 2 抽（签到 + 任务全清）。
+         * 见 [GachaRules]。
+         */
         ItemDefinition(
-            id = "blind_box",
+            id = com.sproutpet.core.domain.gacha.GachaRules.BOX_ITEM_ID,
             name = "神秘盲盒",
             description = "开启后随机获得一只宠物蛋",
             category = ItemCategory.CONSUMABLE,
             iconRes = "ic_item_box",
             rarity = com.sproutpet.core.domain.pet.Rarity.RARE,
-            sources = listOf(ItemSource.SHOP, ItemSource.ACTIVITY)
+            stackable = true,   // 可囤券：攒够十连再抽（U-13 ③）
+            sources = listOf(ItemSource.DAILY_TASK, ItemSource.SHOP, ItemSource.ACTIVITY),
+            shopPriceGold = com.sproutpet.core.domain.gacha.GachaRules.GOLD_PRICE_PER_BOX,
+            shopPriceGem = com.sproutpet.core.domain.gacha.GachaRules.GEM_PRICE_PER_BOX
         )
     )
 

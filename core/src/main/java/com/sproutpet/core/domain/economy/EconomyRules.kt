@@ -246,4 +246,16 @@ object EconomyRules {
      */
     val daysToAffordFusion: Double
         get() = com.sproutpet.core.domain.pet.FusionRules.costGold.toDouble() / maxGoldPerDay
+
+    /**
+     * 攒够一枚盲盒（金币价）需要几天。
+     *
+     * ⚠️ **它必须 < 1 天**：抽蛋的定位是「陪伴换抽」（每日免费
+     * [com.sproutpet.core.domain.gacha.GachaRules.FREE_DRAWS_PER_DAY] 抽），
+     * 金币只是补票口；如果补票要攒好几天，"当天想再抽一枚"就落空了。
+     * 同时日限 [com.sproutpet.core.domain.gacha.GachaRules.MAX_GOLD_PURCHASE_PER_DAY] 保证
+     * 钱买不来无限抽。
+     */
+    val daysToAffordBlindBox: Double
+        get() = com.sproutpet.core.domain.gacha.GachaRules.GOLD_PRICE_PER_BOX.toDouble() / maxGoldPerDay
 }

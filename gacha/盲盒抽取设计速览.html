@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>萌芽宠物 SproutPet · 盲盒（抽蛋）设计速览（已定稿）</title>
+<style>
+  :root{
+    --bg:#F6F9F4; --card:#FFFFFF; --line:#E4EFE2; --line2:#D3E4D0;
+    --accent:#3E8E4E; --accent2:#2F7A46; --soft:#EEF6EC;
+    --text:#22312A; --muted:#6B7F72; --warn:#C77A1E; --warnbg:#FFF6E6;
+    --bad:#B8432F; --badbg:#FDEDEA; --ok:#2F7A46; --okbg:#EDF7EE;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:15px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:820px;margin:0 auto;padding:48px 24px 96px}
+  header{margin-bottom:36px}
+  .kicker{font-size:12px;letter-spacing:.16em;color:var(--accent);font-weight:700;text-transform:uppercase}
+  h1{font-size:27px;line-height:1.35;margin:10px 0 8px;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px}
+  h2{font-size:17px;margin:40px 0 14px;padding-left:11px;border-left:4px solid var(--accent);line-height:1.4}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin-bottom:14px}
+  .card.q{border-left:4px solid var(--accent)}
+  .qtag{display:inline-block;font-size:12px;font-weight:700;color:var(--accent2);
+    background:var(--soft);border-radius:999px;padding:2px 10px;margin-bottom:8px}
+  .card p{margin:0 0 8px}
+  .card p:last-child{margin-bottom:0}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0 2px}
+  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line)}
+  th{font-size:12px;color:var(--muted);font-weight:600;background:#FAFCF9}
+  td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;
+    background:#F1F6EF;border:1px solid var(--line2);border-radius:5px;padding:1px 5px}
+  .hl{font-weight:700;color:var(--accent2)}
+  .warn{background:var(--warnbg);border:1px solid #F0DCB4;border-radius:12px;padding:14px 16px;margin:12px 0;font-size:14px}
+  .bad{background:var(--badbg);border:1px solid #F3D3CC;border-radius:12px;padding:14px 16px;margin:12px 0;font-size:14px}
+  .ok{background:var(--okbg);border:1px solid #CFE7D2;border-radius:12px;padding:14px 16px;margin:12px 0;font-size:14px}
+  .bars{margin:14px 0 4px}
+  .bar{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
+  .bar .lbl{width:96px;flex:none;color:var(--muted)}
+  .bar .track{flex:1;height:20px;background:#F1F6EF;border-radius:6px;overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,#7CC08A,#3E8E4E);border-radius:6px}
+  .bar .val{width:74px;flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+  ul{margin:8px 0;padding-left:20px}
+  li{margin-bottom:5px}
+  .foot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+  .files li{font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">SproutPet · 数值速览</div>
+  <h1>盲盒（抽蛋）：能抽吗、抽几次、多少抽出史诗</h1>
+  <div class="sub">2026-10-16 <b>已拍板并全部落地</b>（门票 = 陪伴换抽 · 只做十连 · 保稀有不保史诗 · 入口就地做）· 数值来源 <code>tools/acquisition_sim.py</code> 第八节（40 万次蒙卡）· 对应 <code>docs/09</code> v4.9（<b>U-13 / G-13 已收敛 §四</b>）</div>
+</header>
+
+<!-- Q1 -->
+<div class="card q">
+  <div class="qtag">问题 1 · 是不是可以抽蛋？ ✅ 能，且 UI 已补</div>
+  <p><b>能，而且算法早就写完了。</b><code>BlindBoxEngine.draw()</code> 已实现「加权随机 + 硬保底 + 档位钳制」，
+  孵化链路 <code>createEgg → hatch</code> 也在；本轮又补上 <code>drawMany()</code>（十连）与 <code>remainingToPity()</code>（保底进度）。</p>
+  <p><b>UI 本轮也补了 3 屏</b>：<code>design-v2/</code> 新增 <b>13 抽蛋入口（宠物叼回来）· 14 开箱台（底部升起）· 15 十连结果（横排）</b>。</p>
+</div>
+
+<!-- Q2 -->
+<div class="card q">
+  <div class="qtag">问题 2 · 怎么获取抽取次数？ ✅ 已定稿（陪伴换抽）</div>
+  <p>定稿前这里<b>在 13 份文档里是空白</b> —— 唯一写下来的来源是新用户那 1 个免费盲盒。</p>
+  <div class="bad">
+    <b>🔴 查到一个硬伤：</b><code>ItemRegistry</code> 里的 <code>blind_box</code> 声明了
+    <code>sources = [SHOP, ACTIVITY]</code>，但 <code>shopPriceGold</code> 与 <code>shopPriceGem</code>
+    <b>两个都是 <code>null</code></b> —— 「商店有卖、但没价」，商店 UI 直接渲染不出来。
+    同时 <code>docs/11 §四 金币消耗表</code>里<b>完全没有盲盒这一项</b>。
+  </div>
+  <p><b>✅ 已按建议定稿：门票走「陪伴换抽」，不走「钱换抽」</b>——本作是治愈陪伴，不是抽卡游戏。数值中枢 = <code>GachaRules</code>。</p>
+  <table>
+    <tr><th>来源</th><th class="n">数量</th><th>说明</th></tr>
+    <tr><td>新用户</td><td class="n">1 个</td><td>已有承诺</td></tr>
+    <tr><td><b>每日签到</b></td><td class="n">1 抽/天</td><td>零门槛，当日不用作废</td></tr>
+    <tr><td><b>日常任务 8/8 全清</b></td><td class="n">1 抽/天</td><td>把「认真陪伴一天」换成一次开箱</td></tr>
+    <tr><td>金币购买</td><td class="n">300 / 个 · 日限 1</td><td>兜底，不与配对费抢钱</td></tr>
+    <tr><td>钻石购买</td><td class="n">60 / 个</td><td>付费侧</td></tr>
+    <tr><td>活动 / 成就</td><td class="n">运营</td><td>神秘盲盒作为奖励</td></tr>
+  </table>
+  <div class="ok">
+    <b>为什么是「2 抽/天」：</b>30 天 ≈ <b>60 抽 ≈ 6 只史诗+</b>，
+    正好与 <b>「家在册 6 只」</b>（U-12 拍板的三层链条）节奏咬合 ——
+    一个月慢慢把家填满，而不是开服三天抽满、之后 30 天都在看重复宠。
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="card q">
+  <div class="qtag">问题 3 · 有没有攒够 10 / 20 / 50 次一起抽？ ✅ 只做十连</div>
+  <p>定稿前 <code>BlindBoxEngine</code> 只有单抽 <code>draw()</code>，连「距保底还剩 N 抽」的 helper 都没有。
+  本轮已补 <code>drawMany(count)</code>（<b>十连兜底写在引擎里，调用方没有漏加的机会</b>）与
+  <code>remainingToPity()</code> —— 与灵兽保底 <code>MutantPityRules.remainingToThreshold</code> 的不对称已消除。</p>
+  <p><b>✅ 已定稿：只做十连（<code>MAX_BATCH = 10</code>），二十 / 五十连不做；十连保「<b>稀有及以上</b>」，刻意不保「史诗」。</b>
+  盲盒可囤 —— 攒够 10 个再开完全允许。</p>
+  <table>
+    <tr><th>连数</th><th class="n">≥1 史诗+</th><th class="n">≥1 传说+</th><th class="n">≥1 神话</th></tr>
+    <tr><td>单抽</td><td class="n">9.97%</td><td class="n">2.25%</td><td class="n">0.32%</td></tr>
+    <tr><td>十连</td><td class="n">65.01%</td><td class="n">20.36%</td><td class="n">3.17%</td></tr>
+    <tr><td>二十连</td><td class="n">87.76%</td><td class="n">36.57%</td><td class="n">6.24%</td></tr>
+    <tr><td>五十连</td><td class="n">99.48%</td><td class="n">67.96%</td><td class="n">14.87%</td></tr>
+  </table>
+  <div class="warn">
+    <b>⚠️ 多连保底是一把很利的刀：</b><br>
+    · 十连保「<b>稀有</b>及以上」→ 产出率 35.691% → 35.812%，<b>只 +0.34%</b>，
+      却消掉了 <b>1.21% 的「十连全普通」</b>（最伤体验的那一档）。<b>几乎免费，建议做。</b><br>
+    · 十连保「<b>史诗</b>及以上」→ 产出率 9.968% → <b>13.467%（+35%）</b>，
+      <b>直接稀释 U-12 刚建立的三层稀缺结构。</b>不建议。
+  </div>
+  <p class="sub">五十连为什么不划算：每抽 300 金币时 50 连 = <b>15,000 金币 ≈ 15 天日收入上限</b>（1,010/天），
+  而且家在册只有 6 个名额，抽出来也放不下。</p>
+</div>
+
+<!-- Q4 -->
+<div class="card q">
+  <div class="qtag">问题 4 · 多少次可以抽到史诗？</div>
+  <div class="bars">
+    <div class="bar"><span class="lbl">史诗及以上</span><span class="track"><span class="fill" style="width:4%"></span></span><span class="val">9.6 抽</span></div>
+    <div class="bar"><span class="lbl">传说及以上</span><span class="track"><span class="fill" style="width:16%"></span></span><span class="val">45.6 抽</span></div>
+    <div class="bar"><span class="lbl">神话</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">320 抽</span></div>
+  </div>
+  <p class="sub">条形按「神话 = 100%」等比，所以史诗那一条几乎看不见 —— 这正是关键：
+  <b>史诗很便宜，神话很贵。</b></p>
+  <table>
+    <tr><th>档位</th><th class="n">单抽概率</th><th class="n">期望</th><th class="n">中位</th><th class="n">p90</th><th class="n">p95</th></tr>
+    <tr><td><b>史诗及以上</b></td><td class="n">9.968%</td><td class="n"><b>9.6 抽</b></td><td class="n">7 抽</td><td class="n">22 抽</td><td class="n">29 抽</td></tr>
+    <tr><td>传说及以上</td><td class="n">2.251%</td><td class="n">45.6 抽</td><td class="n">32 抽</td><td class="n">105 抽</td><td class="n">136 抽</td></tr>
+    <tr><td>神话</td><td class="n">0.322%</td><td class="n">320.4 抽</td><td class="n">222 抽</td><td class="n">740 抽</td><td class="n">961 抽</td></tr>
+  </table>
+  <p>保底是 <b>30 抽内必出史诗及以上</b>（第 30 抽为保底位，最多连续 29 抽不出）。
+  但保底<b>实际只触发 4.77%</b> —— 它修的是尾部（p99 由 44 抽压到 30 抽），中位几乎不动。</p>
+  <div class="bad">
+    <b>🔴 两条极易被误读、必须写进公示的事实：</b><br>
+    ① 保底<b>只到史诗</b>；<br>
+    ② 保底<b>触发后计数清零</b> —— 所以它对「想要传说 / 神话」的玩家，<b>只是打断了连击，不是帮助</b>。
+    <b>传说与神话没有任何保底通道。</b><br>
+    不写清楚，玩家一定会形成「抽多了总会出神话」的错误预期 —— 而神话期望是 <b>320 抽</b>。
+  </div>
+  <p class="sub">合规补充：中国区公示要披露的是<b>综合概率（含保底）= 10.42%</b>，不是基础概率 9.968% ——
+  这个数此前在文档和代码里都不存在。</p>
+</div>
+
+<h2>顺带修掉的一处口径漂移（X-16）</h2>
+<div class="card">
+  <p><code>docs/00 §2.1</code> 与 <code>docs/06 §2.2</code> 原写「连续 30 抽未出史诗及以上 → 第 <b>31</b> 抽必出」，
+  而代码 <code>pityTriggered = pityCount + 1 &gt;= PITY_THRESHOLD(30)</code> 实为<b>第 30 抽</b>即保底位。</p>
+  <p>已统一按<b>代码</b>口径 —— <b>对玩家更有利，不构成承诺缩水</b>。</p>
+</div>
+
+<h2>已拍板的 4 件事（U-13 · 2026-10-16，全按建议执行）</h2>
+<div class="card">
+  <ul>
+    <li><b>门票：</b><b>签到 1 + 任务 8/8 全清 1 = 每日 2 抽免费</b>；金币 300 · <b>日限 1</b>；钻石 60；<b>可囤券</b> ✅</li>
+    <li><b>多连：</b><b>只做十连</b>（二十 / 五十连不做）；<b>保底只到「稀有及以上」</b>（+0.34%），刻意不保史诗（那会 +35%） ✅</li>
+    <li><b>入口：</b><b>就地做，不做抽奖页</b> —— 宠物叼着盲盒走过来 / 场景角落「快递箱」长按开箱；十连 = 连开动画 + 结果横排 ✅（<code>design-v2/</code> 13 / 14 / 15 屏）</li>
+    <li><b>定位：</b><b>抽卡是素材供给，生育是上限路径</b> —— 灵兽不可抽（ADR-017）红线不变 ✅</li>
+    <li><b>公示：</b>「保底只到史诗 · 传说与神话没有保底通道 · 综合概率（含保底）10.42%」写死在 <code>GachaRules.Disclosure.MUST_STATE</code>，由 17 例单测守住 —— 删短就变红 ✅</li>
+  </ul>
+</div>
+
+<h2>本轮代码落地（core 226 例 / 0 失败）</h2>
+<div class="card files">
+  <ul>
+    <li><b>新增</b> <code>core/domain/gacha/GachaRules.kt</code> —— 抽蛋数值中枢：免费 2 抽/天 · 金币 300/日限 1 · 钻石 60 · <code>MAX_BATCH=10</code> · <code>TEN_PULL_FLOOR=RARE</code> · 抽数期望 · 可测的公示条款</li>
+    <li><code>ItemRegistry.blind_box</code> —— <b>补上两个价格</b>（修「商店有卖、但没价」的原始事故）+ <code>DAILY_TASK</code> 来源 + 显式 <code>stackable</code>；价格只在数值中枢定义一处</li>
+    <li><code>BlindBoxEngine</code> —— <code>drawMany()</code>（十连兜底在引擎内强制执行 · 批内保底计数连续传递 · 超过十连直接抛错）+ <code>remainingToPity()</code> + <code>Random</code> 注入</li>
+    <li><code>EconomyRules.daysToAffordBlindBox</code> —— 补票代价 0.30 天（&lt; 1 天）的锚点由 <code>GachaRulesTest</code> 守住</li>
+    <li><b>新增</b> <code>GachaRulesTest</code>（17 例）—— 含两条回归：① 盲盒必须真的能买到；② 十连兜底不得把史诗+ 产出率抬离综合概率 ±1pp</li>
+    <li><code>tools/acquisition_sim.py</code> §八 新增「门票与节奏」复算块</li>
+  </ul>
+</div>
+
+<h2>本次同步的文档（死链 0）</h2>
+<div class="card files">
+  <ul>
+    <li><code>docs/09</code> → <b>v4.9</b>：<b>U-13 / G-13 依「维护铁律」移出 §一 / §二 → 收入 §四</b>；§五 基线刷新（测试 226 例 + 门票 / 多连两行）</li>
+    <li><code>docs/00</code> → <b>v2.9</b>（§2.1 新增「门票 / 多连 / 入口 / 公示」四块 · §6.2 补价 · 新增 §6.3.1 公示必含条款）</li>
+    <li><code>docs/06</code> → <b>v1.8</b>（§2.2.2 多连<b>定稿</b>）</li>
+    <li><code>docs/08</code> → <b>v2.3</b>（§3.5 门票定稿）</li>
+    <li><code>docs/11</code> → <b>v1.2</b>（新增 §3.5 抽蛋门票产出 · §四 补价 · §五 补锚点）</li>
+    <li><code>docs/01</code> → <b>v2.7</b> · <code>docs/03</code> → <b>v1.8</b> · <code>docs/04</code> → <b>v3.2</b>（附录 A 五条日志）· <code>docs/05</code> → <b>v1.7</b>（坑表 +2 行）</li>
+    <li><code>design-v2/</code> → <b>v2.2（15 屏）</b>：新增 13 / 14 / 15 三屏 + 抽屉补「商店 · 盲盒」</li>
+  </ul>
+</div>
+
+<div class="foot">
+  所有数字可用 <code>python tools/acquisition_sim.py</code> 复算（纯标准库）。<br>
+  按 ADR-024：「任何影响获取成本的数值改动，必须先重跑该脚本，再同步 docs/08 与 docs/09 §五」。
+</div>
+
+</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.sproutpet.core.domain.incubation
 
+import com.sproutpet.core.domain.gacha.GachaRules
 import com.sproutpet.core.domain.pet.AttributeTendency
 import com.sproutpet.core.domain.pet.GrowthRules
 import com.sproutpet.core.domain.pet.Pet
@@ -21,7 +22,14 @@ data class BlindBoxResult(
     /** 本次使用的保底道具（若有） */
     val guaranteedBy: String? = null,
     /** 是否触发了幸运加成 */
-    val isLucky: Boolean = false
+    val isLucky: Boolean = false,
+    /**
+     * 是否由「十连保稀有」兜底提升而来（[BlindBoxEngine.drawMany]）。
+     *
+     * 用于文案："这一只本来可能是普通"。**不能与 [isLucky] 合并** ——
+     * 前者是"整批的最低保障"，后者是"单抽撞上了保底"，触发条件与话术都不同。
+     */
+    val flooredByBatch: Boolean = false
 )
 
 /**
@@ -36,6 +44,19 @@ object BlindBoxEngine {
     const val PITY_THRESHOLD = 30
 
     /**
+     * 距离下一次保底还剩几抽（供 UI 显示"距史诗保底还差 12 抽"）。
+     *
+     * ⚠️ 这条 helper 曾经**不存在** —— 而灵兽保底早有对称的
+     * `MutantPityRules.remainingToThreshold`。PRD §2.1 承诺保底进度"对用户可见"，
+     * 却没有能算出这个数的函数，做 UI 那天只能自己写一遍（于是就有了第二个真相源）。
+     *
+     * 语义：入参是**当前已连续未出高稀有的次数**，返回**还需要再抽几抽**才会触发保底。
+     * `pityCount = 0` → 30 抽；`pityCount = 18` → "还差 12 抽"。
+     */
+    fun remainingToPity(pityCount: Int): Int =
+        (PITY_THRESHOLD - pityCount).coerceAtLeast(0)
+
+    /**
      * 抽取宠物蛋。
      *
      * @param pityCount 当前保底计数（连续未出高稀有的次数）
@@ -43,12 +64,14 @@ object BlindBoxEngine {
      *                         ⚠️ 会被自动**钳制**到 [Rarity.maxDrawable]，**无法指定灵兽**
      *                         —— 防止有人用"灵兽保底券"绕开 ADR-017。
      * @param pool 可抽取的物种池，null 表示全部**可抽取**物种
+     * @param random 随机源。默认 [Random.Default]；测试注入固定种子即可复现。
      * @return 抽取结果，同时返回新的保底计数
      */
     fun draw(
         pityCount: Int = 0,
         guaranteedRarity: Rarity? = null,
-        pool: List<PetSpecies>? = null
+        pool: List<PetSpecies>? = null,
+        random: Random = Random.Default
     ): DrawOutcome {
         // 盲盒池只含可抽取物种（「不入十类之种」只能靠混血获得，不参与抽取）
         val defaultPool = PetSpecies.drawableEntries()
@@ -68,19 +91,19 @@ object BlindBoxEngine {
         val rarity = when {
             cappedGuarantee != null -> {
                 // 保底道具：不低于指定稀有度
-                val rolled = rollRarity()
+                val rolled = rollRarity(random)
                 if (rolled.id >= cappedGuarantee.id) rolled else cappedGuarantee
             }
             pityTriggered -> {
                 // 保底触发：至少史诗
-                val rolled = rollRarity()
+                val rolled = rollRarity(random)
                 if (rolled.isHighRarity) rolled else Rarity.EPIC
             }
-            else -> rollRarity()
+            else -> rollRarity(random)
         }
 
         // 2. 再决定物种（高稀有度下，稀有种族出现概率提升）
-        val species = rollSpecies(speciesPool, rarity)
+        val species = rollSpecies(speciesPool, rarity, random)
 
         // 3. 生成基因
         val genes = PetGenes.random()
@@ -100,16 +123,74 @@ object BlindBoxEngine {
     }
 
     /**
+     * 连抽（多连的核心 API）。
+     *
+     * ## 为什么必须由引擎来管"十连保底"，而不是让调用方拼十次 [draw]
+     *
+     * 本项目有一条反复出现的事故模式：**"规则写好了，但没有任何人调用它"**
+     * （`isFirstPet` 漏传、`MAX_FOCUS_BOOST_RATIO` 无人读取）。如果"十连必出稀有"
+     * 由 UI 层自己拼，那么换一个入口（活动页、跳过动画的快速连抽）就会漏掉它。
+     * 所以兜底**写在这里**，调用方没有"忘了加"的机会。
+     *
+     * ## 规则
+     *
+     * - 逐抽调用 [draw]，**保底计数在批内连续传递**（十连不是一个"保底重置点"）；
+     * - 当 `count >= GachaRules.TEN_PULL` 且整批**一只稀有及以上都没有**时，
+     *   把**最后一只**提升为 [GachaRules.TEN_PULL_FLOOR]（稀有）。
+     * - ⚠️ 兜底**不回滚保底计数** —— 提升发生在计数结算之后，
+     *   计数仍按"刚才那抽是普通的"来累计，**对玩家只会更有利，不会更差**。
+     *
+     * @param count 本批抽数，必须 `1..GachaRules.MAX_BATCH`（只做十连，见 `GachaRules.MAX_BATCH`）
+     * @throws IllegalArgumentException 抽数越界 —— 显式失败优于静默支持 50 连
+     */
+    fun drawMany(
+        count: Int,
+        pityCount: Int = 0,
+        guaranteedRarity: Rarity? = null,
+        pool: List<PetSpecies>? = null,
+        random: Random = Random.Default
+    ): MultiDrawOutcome {
+        require(count >= 1) { "连抽次数必须 ≥ 1，收到 $count" }
+        require(count <= GachaRules.MAX_BATCH) {
+            "单次最多连抽 ${GachaRules.MAX_BATCH} 次（只做十连），收到 $count"
+        }
+
+        val results = ArrayList<BlindBoxResult>(count)
+        var pity = pityCount
+        repeat(count) {
+            val outcome = draw(pity, guaranteedRarity, pool, random)
+            results += outcome.result
+            pity = outcome.newPityCount
+        }
+
+        val needsFloor = count >= GachaRules.TEN_PULL &&
+            results.none { it.rarity.id >= GachaRules.TEN_PULL_FLOOR.id }
+        if (needsFloor) {
+            val last = results.lastIndex
+            results[last] = results[last].copy(
+                rarity = GachaRules.TEN_PULL_FLOOR,
+                flooredByBatch = true
+            )
+        }
+
+        return MultiDrawOutcome(
+            results = results,
+            newPityCount = pity,
+            floorApplied = needsFloor
+        )
+    }
+
+    /**
      * 按权重随机稀有度。
      * 使用加权随机保证长期分布符合策划预期。
      *
      * 注意：**灵兽（MUTANT）权重为 0，不可抽取**，只能通过配对生育（含灵血传承）获得。
      */
-    fun rollRarity(): Rarity {
+    fun rollRarity(random: Random = Random.Default): Rarity {
         val drawable = Rarity.drawableEntries()
         val total = drawable.sumOf { it.baseWeight }
         if (total <= 0) return Rarity.COMMON
-        var roll = Random.nextInt(total)
+        var roll = random.nextInt(total)
         for (r in drawable) {
             roll -= r.baseWeight
             if (roll < 0) return r
@@ -121,11 +202,11 @@ object BlindBoxEngine {
      * 按稀有度加权抽取物种。
      * 高稀有度时，更倾向抽到"稀有种族"（此处简化为按种族索引偏移）。
      */
-    private fun rollSpecies(pool: List<PetSpecies>, rarity: Rarity): PetSpecies {
+    private fun rollSpecies(pool: List<PetSpecies>, rarity: Rarity, random: Random): PetSpecies {
         if (pool.size == 1) return pool.first()
         // 高稀有度时引入轻微偏移，让结果更有"惊喜感"
         val bias = if (rarity.isHighRarity) 1 else 0
-        val index = (Random.nextInt(pool.size) + bias * Random.nextInt(pool.size)) % pool.size
+        val index = (random.nextInt(pool.size) + bias * random.nextInt(pool.size)) % pool.size
         return pool[index]
     }
 
@@ -207,6 +288,19 @@ object BlindBoxEngine {
 data class DrawOutcome(
     val result: BlindBoxResult,
     val newPityCount: Int
+)
+
+/**
+ * 连抽（[BlindBoxEngine.drawMany]）的结果。
+ *
+ * @param results 逐抽结果，**顺序即动画顺序**
+ * @param newPityCount 整批结束后的保底计数
+ * @param floorApplied 本批是否触发了「十连保稀有」兜底（文案用：这一批的最低保障生效了）
+ */
+data class MultiDrawOutcome(
+    val results: List<BlindBoxResult>,
+    val newPityCount: Int,
+    val floorApplied: Boolean = false
 )
 
 /**
