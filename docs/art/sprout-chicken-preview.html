@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>萌芽鸡 · 矢量占位资源</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:40px 32px 64px; background:#F7F8FA; color:#212121;
+         font:14px/1.6 -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; }
+  h1 { font-size:24px; margin:0 0 6px; }
+  .sub { color:#757575; margin-bottom:8px; }
+  .note { max-width:920px; color:#757575; font-size:13px; }
+  h2 { font-size:16px; margin:36px 0 14px; padding-left:10px; border-left:3px solid #4CAF50; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:18px; }
+  .card { background:#fff; border-radius:14px; padding:14px 14px 16px;
+           box-shadow:0 1px 3px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.04); }
+  .art-wrap { background:#F7F8FA; border-radius:10px; padding:6px; }
+  svg.art { display:block; width:100%; height:auto; }
+  .meta { margin-top:10px; }
+  .title { font-weight:600; }
+  .state { color:#4CAF50; font-size:12px; margin-top:2px; }
+  code { font:12px/1.5 ui-monospace,Consolas,monospace; color:#616161; }
+  .sw { display:flex; align-items:center; gap:10px; }
+  .chips { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px;
+            background:#fff; border-radius:14px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .chip { width:34px; height:34px; border-radius:9px; border:1px solid rgba(0,0,0,.08); flex:none; }
+  table { border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden;
+           box-shadow:0 1px 3px rgba(0,0,0,.06); font-size:13px; }
+  th,td { padding:9px 14px; text-align:left; border-bottom:1px solid #EEEEEE; }
+  th { background:#FAFAFA; font-weight:600; }
+  tr:last-child td { border-bottom:none; }
+</style>
+</head>
+<body>
+  <h1>萌芽鸡 · 矢量占位资源</h1>
+  <div class="sub">Phase 1 帧动画占位（VectorDrawable）· 画布 200×200 · 地平线 y=176</div>
+  <p class="note">依据《02-宠物渲染方案》§2.3「同一骨骼，阶段靠缩放与部件显隐」与 §八 Phase 1 过渡方案绘制。
+  这九张是<strong>占位资源</strong>：轮廓刻意保持扁平、无渐变，便于美术在 Rive 里重建骨骼后整体替换。</p>
+
+  <h2>资源清单</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M134.00 142.00 C134.00 158.02 118.78 171.00 100.00 171.00 C81.22 171.00 66.00 158.02 66.00 142.00 C66.00 125.98 81.22 113.00 100.00 113.00 C118.78 113.00 134.00 125.98 134.00 142.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M132.00 102.00 C132.00 118.57 117.67 132.00 100.00 132.00 C82.33 132.00 68.00 118.57 68.00 102.00 C68.00 85.43 82.33 72.00 100.00 72.00 C117.67 72.00 132.00 85.43 132.00 102.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M70.00 76.00 C70.00 44.80 130.00 44.80 130.00 76.00 L122.50 76.00 L115.00 67.16 L107.50 76.00 L100.00 67.16 L92.50 76.00 L85.00 67.16 L77.50 76.00 L70.00 67.16 Z" fill="rgba(255,255,248,0.882)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 47.00 C101.00 42.33 101.00 37.67 100.00 33.00" fill="none" stroke="rgba(255,124,179,0.259)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 33.00 C108.68 38.05 116.49 31.50 113.02 22.07 C104.34 17.02 96.53 23.58 100.00 33.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M86.50 168.00 L91.50 168.00 C93.71 168.00 95.50 169.79 95.50 172.00 L95.50 172.00 C95.50 174.21 93.71 176.00 91.50 176.00 L86.50 176.00 C84.29 176.00 82.50 174.21 82.50 172.00 L82.50 172.00 C82.50 169.79 84.29 168.00 86.50 168.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M108.50 168.00 L113.50 168.00 C115.71 168.00 117.50 169.79 117.50 172.00 L117.50 172.00 C117.50 174.21 115.71 176.00 113.50 176.00 L108.50 176.00 C106.29 176.00 104.50 174.21 104.50 172.00 L104.50 172.00 C104.50 169.79 106.29 168.00 108.50 168.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M94.42 116.22 L105.58 116.22 L100.00 125.94 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M95.20 106.00 C95.20 110.53 91.53 114.20 87.00 114.20 C82.47 114.20 78.80 110.53 78.80 106.00 C78.80 101.47 82.47 97.80 87.00 97.80 C91.53 97.80 95.20 101.47 95.20 106.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M86.75 102.88 C86.75 104.33 85.58 105.51 84.13 105.51 C82.68 105.51 81.51 104.33 81.51 102.88 C81.51 101.43 82.68 100.26 84.13 100.26 C85.58 100.26 86.75 101.43 86.75 102.88 Z" fill="#FFFFFF" />
+  <path d="M121.20 106.00 C121.20 110.53 117.53 114.20 113.00 114.20 C108.47 114.20 104.80 110.53 104.80 106.00 C104.80 101.47 108.47 97.80 113.00 97.80 C117.53 97.80 121.20 101.47 121.20 106.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M112.75 102.88 C112.75 104.33 111.58 105.51 110.13 105.51 C108.68 105.51 107.51 104.33 107.51 102.88 C107.51 101.43 108.68 100.26 110.13 100.26 C111.58 100.26 112.75 101.43 112.75 102.88 Z" fill="#FFFFFF" />
+  <path d="M83.85 119.54 C84.42 122.25 81.82 125.09 78.04 125.89 C74.26 126.69 70.73 125.16 70.15 122.46 C69.58 119.75 72.18 116.91 75.96 116.11 C79.74 115.31 83.27 116.84 83.85 119.54 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M129.85 122.46 C129.27 125.16 125.74 126.69 121.96 125.89 C118.18 125.09 115.58 122.25 116.15 119.54 C116.73 116.84 120.26 115.31 124.04 116.11 C127.82 116.91 130.42 119.75 129.85 122.46 Z" fill="rgba(255,255,171,0.569)" />
+</svg></div>
+      <div class="meta">
+        <div class="title">萌芽鸡 · 幼崽</div>
+        <code>pet_sprout_chicken_baby.xml</code>
+        <div class="state">PetStage.BABY</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M136.80 151.75 C135.54 161.93 145.93 167.93 154.12 161.75 C155.38 151.57 144.99 145.57 136.80 151.75 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M136.80 151.75 C143.29 161.11 156.20 158.36 158.32 147.18 C151.83 137.82 138.92 140.56 136.80 151.75 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M70.50 134.42 C73.85 146.10 70.97 157.17 64.06 159.15 C57.16 161.13 48.85 153.26 45.50 141.58 C42.15 129.90 45.03 118.83 51.94 116.85 C58.84 114.87 67.15 122.74 70.50 134.42 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M154.50 141.58 C151.15 153.26 142.84 161.13 135.94 159.15 C129.03 157.17 126.15 146.10 129.50 134.42 C132.85 122.74 141.16 114.87 148.06 116.85 C154.97 118.83 157.85 129.90 154.50 141.58 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M140.00 136.00 C140.00 155.33 122.09 171.00 100.00 171.00 C77.91 171.00 60.00 155.33 60.00 136.00 C60.00 116.67 77.91 101.00 100.00 101.00 C122.09 101.00 140.00 116.67 140.00 136.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M135.00 92.00 C135.00 110.23 119.33 125.00 100.00 125.00 C80.67 125.00 65.00 110.23 65.00 92.00 C65.00 73.77 80.67 59.00 100.00 59.00 C119.33 59.00 135.00 73.77 135.00 92.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 60.00 C101.00 53.33 101.00 46.67 100.00 40.00" fill="none" stroke="rgba(255,124,179,0.259)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 40.00 C100.04 29.96 90.45 26.47 84.03 34.19 C83.99 44.23 93.57 47.72 100.00 40.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 40.00 C106.43 47.72 116.01 44.23 115.97 34.19 C109.55 26.47 99.96 29.96 100.00 40.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M84.25 168.00 L89.75 168.00 C92.10 168.00 94.00 169.90 94.00 172.25 L94.00 172.25 C94.00 174.60 92.10 176.50 89.75 176.50 L84.25 176.50 C81.90 176.50 80.00 174.60 80.00 172.25 L80.00 172.25 C80.00 169.90 81.90 168.00 84.25 168.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M110.25 168.00 L115.75 168.00 C118.10 168.00 120.00 169.90 120.00 172.25 L120.00 172.25 C120.00 174.60 118.10 176.50 115.75 176.50 L110.25 176.50 C107.90 176.50 106.00 174.60 106.00 172.25 L106.00 172.25 C106.00 169.90 107.90 168.00 110.25 168.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M94.11 108.01 L105.89 108.01 L100.00 118.27 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M93.60 96.00 C93.60 100.20 90.20 103.60 86.00 103.60 C81.80 103.60 78.40 100.20 78.40 96.00 C78.40 91.80 81.80 88.40 86.00 88.40 C90.20 88.40 93.60 91.80 93.60 96.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M85.77 93.11 C85.77 94.46 84.68 95.54 83.34 95.54 C82.00 95.54 80.91 94.46 80.91 93.11 C80.91 91.77 82.00 90.68 83.34 90.68 C84.68 90.68 85.77 91.77 85.77 93.11 Z" fill="#FFFFFF" />
+  <path d="M121.60 96.00 C121.60 100.20 118.20 103.60 114.00 103.60 C109.80 103.60 106.40 100.20 106.40 96.00 C106.40 91.80 109.80 88.40 114.00 88.40 C118.20 88.40 121.60 91.80 121.60 96.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M113.77 93.11 C113.77 94.46 112.68 95.54 111.34 95.54 C110.00 95.54 108.91 94.46 108.91 93.11 C108.91 91.77 110.00 90.68 111.34 90.68 C112.68 90.68 113.77 91.77 113.77 93.11 Z" fill="#FFFFFF" />
+  <path d="M82.83 111.34 C83.46 114.31 80.47 117.46 76.14 118.38 C71.82 119.30 67.81 117.63 67.17 114.66 C66.54 111.69 69.53 108.54 73.86 107.62 C78.18 106.70 82.19 108.37 82.83 111.34 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M132.83 114.66 C132.19 117.63 128.18 119.30 123.86 118.38 C119.53 117.46 116.54 114.31 117.17 111.34 C117.81 108.37 121.82 106.70 126.14 107.62 C130.47 108.54 133.46 111.69 132.83 114.66 Z" fill="rgba(255,255,171,0.569)" />
+</svg></div>
+      <div class="meta">
+        <div class="title">萌芽鸡 · 少年</div>
+        <code>pet_sprout_chicken_juvenile.xml</code>
+        <div class="state">PetStage.JUVENILE</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M142.32 147.35 C140.50 160.06 154.43 169.45 165.53 163.01 C167.35 150.30 153.42 140.91 142.32 147.35 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M142.32 147.35 C148.32 159.95 166.32 159.95 172.32 147.35 C166.32 134.75 148.32 134.75 142.32 147.35 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M142.32 147.35 C152.06 155.45 166.08 148.61 165.69 135.95 C155.95 127.85 141.93 134.69 142.32 147.35 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M68.27 125.36 C72.70 139.02 69.91 152.17 62.03 154.73 C54.16 157.29 44.17 148.29 39.73 134.64 C35.30 120.98 38.09 107.83 45.97 105.27 C53.84 102.71 63.83 111.71 68.27 125.36 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M160.27 134.64 C155.83 148.29 145.84 157.29 137.97 154.73 C130.09 152.17 127.30 139.02 131.73 125.36 C136.17 111.71 146.16 102.71 154.03 105.27 C161.91 107.83 164.70 120.98 160.27 134.64 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M146.00 128.00 C146.00 151.75 125.41 171.00 100.00 171.00 C74.59 171.00 54.00 151.75 54.00 128.00 C54.00 104.25 74.59 85.00 100.00 85.00 C125.41 85.00 146.00 104.25 146.00 128.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M138.00 76.00 C138.00 95.33 120.99 111.00 100.00 111.00 C79.01 111.00 62.00 95.33 62.00 76.00 C62.00 56.67 79.01 41.00 100.00 41.00 C120.99 41.00 138.00 56.67 138.00 76.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 40.00 C101.00 34.67 101.00 29.33 100.00 24.00" fill="none" stroke="rgba(255,124,179,0.259)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 24.00 C102.34 13.08 92.67 7.04 83.89 13.93 C81.55 24.85 91.21 30.89 100.00 24.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 24.00 C108.44 18.80 106.27 10.07 96.37 9.45 C87.93 14.64 90.10 23.38 100.00 24.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 24.00 C108.79 30.89 118.45 24.85 116.11 13.93 C107.33 7.04 97.66 13.08 100.00 24.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M82.00 167.00 L88.00 167.00 C90.49 167.00 92.50 169.01 92.50 171.50 L92.50 171.50 C92.50 173.99 90.49 176.00 88.00 176.00 L82.00 176.00 C79.51 176.00 77.50 173.99 77.50 171.50 L77.50 171.50 C77.50 169.01 79.51 167.00 82.00 167.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M112.00 167.00 L118.00 167.00 C120.49 167.00 122.50 169.01 122.50 171.50 L122.50 171.50 C122.50 173.99 120.49 176.00 118.00 176.00 L112.00 176.00 C109.51 176.00 107.50 173.99 107.50 171.50 L107.50 171.50 C107.50 169.01 109.51 167.00 112.00 167.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M93.49 89.59 L106.51 89.59 L100.00 100.93 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M93.00 80.00 C93.00 84.42 89.42 88.00 85.00 88.00 C80.58 88.00 77.00 84.42 77.00 80.00 C77.00 75.58 80.58 72.00 85.00 72.00 C89.42 72.00 93.00 75.58 93.00 80.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M84.76 76.96 C84.76 78.37 83.61 79.52 82.20 79.52 C80.79 79.52 79.64 78.37 79.64 76.96 C79.64 75.55 80.79 74.40 82.20 74.40 C83.61 74.40 84.76 75.55 84.76 76.96 Z" fill="#FFFFFF" />
+  <path d="M123.00 80.00 C123.00 84.42 119.42 88.00 115.00 88.00 C110.58 88.00 107.00 84.42 107.00 80.00 C107.00 75.58 110.58 72.00 115.00 72.00 C119.42 72.00 123.00 75.58 123.00 80.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M114.76 76.96 C114.76 78.37 113.61 79.52 112.20 79.52 C110.79 79.52 109.64 78.37 109.64 76.96 C109.64 75.55 110.79 74.40 112.20 74.40 C113.61 74.40 114.76 75.55 114.76 76.96 Z" fill="#FFFFFF" />
+  <path d="M81.31 94.23 C82.00 97.47 78.84 100.89 74.25 101.87 C69.66 102.84 65.37 101.01 64.69 97.77 C64.00 94.53 67.16 91.11 71.75 90.13 C76.34 89.16 80.63 90.99 81.31 94.23 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M135.31 97.77 C134.63 101.01 130.34 102.84 125.75 101.87 C121.16 100.89 118.00 97.47 118.69 94.23 C119.37 90.99 123.66 89.16 128.25 90.13 C132.84 91.11 136.00 94.53 135.31 97.77 Z" fill="rgba(255,255,171,0.569)" />
+</svg></div>
+      <div class="meta">
+        <div class="title">萌芽鸡 · 成年</div>
+        <code>pet_sprout_chicken_adult.xml</code>
+        <div class="state">PetStage.ADULT</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M145.08 146.90 C142.68 161.02 158.76 173.57 171.87 167.83 C174.27 153.72 158.20 141.16 145.08 146.90 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M145.08 146.90 C150.31 161.42 171.70 164.43 180.73 151.91 C175.50 137.39 154.11 134.38 145.08 146.90 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M145.08 146.90 C155.73 156.19 173.54 148.99 174.75 134.91 C164.10 125.63 146.29 132.82 145.08 146.90 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M65.10 125.87 C70.20 139.88 68.02 153.54 60.23 156.37 C52.45 159.21 42.00 150.14 36.90 136.13 C31.80 122.12 33.98 108.46 41.77 105.63 C49.55 102.79 60.00 111.86 65.10 125.87 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M163.10 136.13 C158.00 150.14 147.55 159.21 139.77 156.37 C131.98 153.54 129.80 139.88 134.90 125.87 C140.00 111.86 150.45 102.79 158.23 105.63 C166.02 108.46 168.20 122.12 163.10 136.13 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M149.00 128.00 C149.00 151.20 127.06 170.00 100.00 170.00 C72.94 170.00 51.00 151.20 51.00 128.00 C51.00 104.80 72.94 86.00 100.00 86.00 C127.06 86.00 149.00 104.80 149.00 128.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M138.00 76.00 C138.00 94.78 120.99 110.00 100.00 110.00 C79.01 110.00 62.00 94.78 62.00 76.00 C62.00 57.22 79.01 42.00 100.00 42.00 C120.99 42.00 138.00 57.22 138.00 76.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 43.00 C101.00 37.67 101.00 32.33 100.00 27.00" fill="none" stroke="rgba(255,124,179,0.259)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 27.00 C91.29 19.91 80.89 25.91 82.68 37.00 C91.39 44.09 101.79 38.09 100.00 27.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 27.00 C98.04 37.99 107.91 43.69 116.45 36.50 C118.41 25.51 108.54 19.81 100.00 27.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 27.00 C100.23 17.03 91.20 13.74 84.96 21.53 C84.74 31.50 93.76 34.79 100.00 27.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 27.00 C106.05 34.85 114.51 31.78 114.10 21.87 C108.04 14.02 99.59 17.09 100.00 27.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M80.50 167.00 L87.50 167.00 C89.99 167.00 92.00 169.01 92.00 171.50 L92.00 171.50 C92.00 173.99 89.99 176.00 87.50 176.00 L80.50 176.00 C78.01 176.00 76.00 173.99 76.00 171.50 L76.00 171.50 C76.00 169.01 78.01 167.00 80.50 167.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M112.50 167.00 L119.50 167.00 C121.99 167.00 124.00 169.01 124.00 171.50 L124.00 171.50 C124.00 173.99 121.99 176.00 119.50 176.00 L112.50 176.00 C110.01 176.00 108.00 173.99 108.00 171.50 L108.00 171.50 C108.00 169.01 110.01 167.00 112.50 167.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M93.80 89.80 L106.20 89.80 L100.00 100.60 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M92.00 80.00 C92.00 83.87 88.87 87.00 85.00 87.00 C81.13 87.00 78.00 83.87 78.00 80.00 C78.00 76.13 81.13 73.00 85.00 73.00 C88.87 73.00 92.00 76.13 92.00 80.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M84.79 77.34 C84.79 78.58 83.79 79.58 82.55 79.58 C81.31 79.58 80.31 78.58 80.31 77.34 C80.31 76.10 81.31 75.10 82.55 75.10 C83.79 75.10 84.79 76.10 84.79 77.34 Z" fill="#FFFFFF" />
+  <path d="M122.00 80.00 C122.00 83.87 118.87 87.00 115.00 87.00 C111.13 87.00 108.00 83.87 108.00 80.00 C108.00 76.13 111.13 73.00 115.00 73.00 C118.87 73.00 122.00 76.13 122.00 80.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M114.79 77.34 C114.79 78.58 113.79 79.58 112.55 79.58 C111.31 79.58 110.31 78.58 110.31 77.34 C110.31 76.10 111.31 75.10 112.55 75.10 C113.79 75.10 114.79 76.10 114.79 77.34 Z" fill="#FFFFFF" />
+  <path d="M80.31 95.23 C81.00 98.47 77.84 101.89 73.25 102.87 C68.66 103.84 64.37 102.01 63.69 98.77 C63.00 95.53 66.16 92.11 70.75 91.13 C75.34 90.16 79.63 91.99 80.31 95.23 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M136.31 98.77 C135.63 102.01 131.34 103.84 126.75 102.87 C122.16 101.89 119.00 98.47 119.69 95.23 C120.37 91.99 124.66 90.16 129.25 91.13 C133.84 92.11 137.00 95.53 136.31 98.77 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M71.00 63.00 C75.67 58.33 80.33 58.33 85.00 63.00" fill="none" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M115.00 63.00 C119.67 58.33 124.33 58.33 129.00 63.00" fill="none" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+</svg></div>
+      <div class="meta">
+        <div class="title">萌芽鸡 · 长者</div>
+        <code>pet_sprout_chicken_elder.xml</code>
+        <div class="state">PetStage.ELDER</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M143.24 141.35 C141.42 154.06 155.35 163.45 166.45 157.01 C168.27 144.30 154.34 134.91 143.24 141.35 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M143.24 141.35 C149.24 153.95 167.24 153.95 173.24 141.35 C167.24 128.75 149.24 128.75 143.24 141.35 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M143.24 141.35 C152.98 149.45 167.00 142.61 166.61 129.95 C156.87 121.85 142.85 128.69 143.24 141.35 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M66.72 114.05 C74.04 125.76 74.27 138.81 67.25 143.20 C60.22 147.59 48.60 141.66 41.28 129.95 C33.96 118.24 33.73 105.19 40.75 100.80 C47.78 96.41 59.40 102.34 66.72 114.05 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M158.72 129.95 C151.40 141.66 139.78 147.59 132.75 143.20 C125.73 138.81 125.96 125.76 133.28 114.05 C140.60 102.34 152.22 96.41 159.25 100.80 C166.27 105.19 166.04 118.24 158.72 129.95 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M147.00 122.00 C147.00 145.75 125.96 165.00 100.00 165.00 C74.04 165.00 53.00 145.75 53.00 122.00 C53.00 98.25 74.04 79.00 100.00 79.00 C125.96 79.00 147.00 98.25 147.00 122.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M138.00 70.00 C138.00 89.33 120.99 105.00 100.00 105.00 C79.01 105.00 62.00 89.33 62.00 70.00 C62.00 50.67 79.01 35.00 100.00 35.00 C120.99 35.00 138.00 50.67 138.00 70.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 34.00 C101.00 28.67 101.00 23.33 100.00 18.00" fill="none" stroke="rgba(255,124,179,0.259)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 18.00 C102.34 7.08 92.67 1.04 83.89 7.93 C81.55 18.85 91.21 24.89 100.00 18.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 18.00 C99.34 7.98 89.53 5.17 83.66 13.31 C84.32 23.34 94.13 26.15 100.00 18.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 18.00 C108.79 24.89 118.45 18.85 116.11 7.93 C107.33 1.04 97.66 7.08 100.00 18.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 18.00 C105.87 26.15 115.68 23.34 116.34 13.31 C110.47 5.17 100.66 7.98 100.00 18.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M82.00 162.00 L88.00 162.00 C90.49 162.00 92.50 164.01 92.50 166.50 L92.50 166.50 C92.50 168.99 90.49 171.00 88.00 171.00 L82.00 171.00 C79.51 171.00 77.50 168.99 77.50 166.50 L77.50 166.50 C77.50 164.01 79.51 162.00 82.00 162.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M112.00 162.00 L118.00 162.00 C120.49 162.00 122.50 164.01 122.50 166.50 L122.50 166.50 C122.50 168.99 120.49 171.00 118.00 171.00 L112.00 171.00 C109.51 171.00 107.50 168.99 107.50 166.50 L107.50 166.50 C107.50 164.01 109.51 162.00 112.00 162.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M93.49 83.59 L106.51 83.59 L100.00 94.93 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M77.00 76.80 C82.33 69.07 87.67 69.07 93.00 76.80" fill="none" stroke="rgba(255,78,52,0.180)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M107.00 76.80 C112.33 69.07 117.67 69.07 123.00 76.80" fill="none" stroke="rgba(255,78,52,0.180)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M81.31 88.23 C82.00 91.47 78.84 94.89 74.25 95.87 C69.66 96.84 65.37 95.01 64.69 91.77 C64.00 88.53 67.16 85.11 71.75 84.13 C76.34 83.16 80.63 84.99 81.31 88.23 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M135.31 91.77 C134.63 95.01 130.34 96.84 125.75 95.87 C121.16 94.89 118.00 91.47 118.69 88.23 C119.37 84.99 123.66 83.16 128.25 84.13 C132.84 85.11 136.00 88.53 135.31 91.77 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M44.00 54.25 C28.05 43.80 37.40 33.35 44.00 42.15 C50.60 33.35 59.95 43.80 44.00 54.25 Z" fill="rgba(255,255,138,0.502)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M158.00 40.38 C145.68 32.30 152.90 24.23 158.00 31.02 C163.10 24.23 170.32 32.30 158.00 40.38 Z" fill="rgba(255,255,138,0.502)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+</svg></div>
+      <div class="meta">
+        <div class="title">萌芽鸡 · 开心</div>
+        <code>pet_sprout_chicken_happy.xml</code>
+        <div class="state">PetRenderState.Petted</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M136.80 149.40 C132.58 160.15 142.58 170.51 153.47 166.66 C157.69 155.92 147.69 145.56 136.80 149.40 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M136.80 149.40 C146.32 155.64 157.26 148.26 155.04 137.10 C145.52 130.85 134.58 138.23 136.80 149.40 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M63.42 96.13 C75.60 103.74 82.15 115.22 78.05 121.78 C73.95 128.33 60.76 127.48 48.58 119.87 C36.40 112.26 29.85 100.78 33.95 94.22 C38.05 87.67 51.24 88.52 63.42 96.13 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M151.42 119.87 C139.24 127.48 126.05 128.33 121.95 121.78 C117.85 115.22 124.40 103.74 136.58 96.13 C148.76 88.52 161.95 87.67 166.05 94.22 C170.15 100.78 163.60 112.26 151.42 119.87 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M140.00 126.00 C140.00 154.72 122.09 178.00 100.00 178.00 C77.91 178.00 60.00 154.72 60.00 126.00 C60.00 97.28 77.91 74.00 100.00 74.00 C122.09 74.00 140.00 97.28 140.00 126.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M134.00 68.00 C134.00 89.54 118.78 107.00 100.00 107.00 C81.22 107.00 66.00 89.54 66.00 68.00 C66.00 46.46 81.22 29.00 100.00 29.00 C118.78 29.00 134.00 46.46 134.00 68.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 28.00 C101.00 22.67 101.00 17.33 100.00 12.00" fill="none" stroke="rgba(255,124,179,0.259)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 12.00 C101.19 0.90 90.94 -4.10 82.92 3.67 C81.74 14.77 91.98 19.77 100.00 12.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 12.00 C109.02 18.58 118.47 12.21 115.75 1.38 C106.73 -5.20 97.28 1.17 100.00 12.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M84.50 176.00 L89.50 176.00 C91.71 176.00 93.50 177.79 93.50 180.00 L93.50 180.00 C93.50 182.21 91.71 184.00 89.50 184.00 L84.50 184.00 C82.29 184.00 80.50 182.21 80.50 180.00 L80.50 180.00 C80.50 177.79 82.29 176.00 84.50 176.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M110.50 176.00 L115.50 176.00 C117.71 176.00 119.50 177.79 119.50 180.00 L119.50 180.00 C119.50 182.21 117.71 184.00 115.50 184.00 L110.50 184.00 C108.29 184.00 106.50 182.21 106.50 180.00 L106.50 180.00 C106.50 177.79 108.29 176.00 110.50 176.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M105.50 88.00 C105.50 91.77 103.04 94.82 100.00 94.82 C96.96 94.82 94.50 91.77 94.50 88.00 C94.50 84.23 96.96 81.18 100.00 81.18 C103.04 81.18 105.50 84.23 105.50 88.00 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M94.00 72.00 C94.00 76.97 89.97 81.00 85.00 81.00 C80.03 81.00 76.00 76.97 76.00 72.00 C76.00 67.03 80.03 63.00 85.00 63.00 C89.97 63.00 94.00 67.03 94.00 72.00 Z" fill="#FFFFFF" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M88.78 70.38 C88.78 72.47 87.09 74.16 85.00 74.16 C82.91 74.16 81.22 72.47 81.22 70.38 C81.22 68.29 82.91 66.60 85.00 66.60 C87.09 66.60 88.78 68.29 88.78 70.38 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M124.00 72.00 C124.00 76.97 119.97 81.00 115.00 81.00 C110.03 81.00 106.00 76.97 106.00 72.00 C106.00 67.03 110.03 63.00 115.00 63.00 C119.97 63.00 124.00 67.03 124.00 72.00 Z" fill="#FFFFFF" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M118.78 70.38 C118.78 72.47 117.09 74.16 115.00 74.16 C112.91 74.16 111.22 72.47 111.22 70.38 C111.22 68.29 112.91 66.60 115.00 66.60 C117.09 66.60 118.78 68.29 118.78 70.38 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M154.00 48.00 C161.20 57.00 161.20 67.00 154.00 67.00 C146.80 67.00 146.80 57.00 154.00 48.00 Z" fill="rgba(255,79,195,0.969)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+</svg></div>
+      <div class="meta">
+        <div class="title">萌芽鸡 · 被拎起</div>
+        <code>pet_sprout_chicken_grabbed.xml</code>
+        <div class="state">PetRenderState.Grabbed / Dragging</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M145.08 156.20 C146.02 168.83 160.68 174.17 169.51 165.09 C168.58 152.46 153.92 147.13 145.08 156.20 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M145.08 156.20 C151.06 167.18 165.38 165.68 168.95 153.69 C162.97 142.71 148.65 144.21 145.08 156.20 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M66.48 141.42 C71.32 151.35 69.21 162.34 61.77 165.98 C54.32 169.61 44.36 164.50 39.52 154.58 C34.68 144.65 36.79 133.66 44.23 130.02 C51.68 126.39 61.64 131.50 66.48 141.42 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M160.48 154.58 C155.64 164.50 145.68 169.61 138.23 165.98 C130.79 162.34 128.68 151.35 133.52 141.42 C138.36 131.50 148.32 126.39 155.77 130.02 C163.21 133.66 165.32 144.65 160.48 154.58 Z" fill="rgba(255,255,193,0.027)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M149.00 140.00 C149.00 159.88 127.06 176.00 100.00 176.00 C72.94 176.00 51.00 159.88 51.00 140.00 C51.00 120.12 72.94 104.00 100.00 104.00 C127.06 104.00 149.00 120.12 149.00 140.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M136.00 88.00 C136.00 105.67 119.88 120.00 100.00 120.00 C80.12 120.00 64.00 105.67 64.00 88.00 C64.00 70.33 80.12 56.00 100.00 56.00 C119.88 56.00 136.00 70.33 136.00 88.00 Z" fill="rgba(255,255,213,0.310)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 57.00 C101.00 53.00 101.00 49.00 100.00 45.00" fill="none" stroke="rgba(255,124,179,0.259)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 45.00 C93.39 37.35 83.24 41.04 83.09 51.16 C89.70 58.81 99.85 55.11 100.00 45.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 45.00 C99.96 55.04 109.55 58.53 115.97 50.81 C116.01 40.77 106.43 37.28 100.00 45.00 Z" fill="rgba(255,76,175,0.314)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M93.80 100.80 L106.20 100.80 L100.00 111.60 Z" fill="rgba(255,255,152,0.000)" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M78.60 90.15 C83.53 95.58 88.47 95.58 93.40 90.15" fill="none" stroke="rgba(255,78,52,0.180)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M106.60 90.15 C111.53 95.58 116.47 95.58 121.40 90.15" fill="none" stroke="rgba(255,78,52,0.180)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M81.83 105.34 C82.46 108.31 79.47 111.46 75.14 112.38 C70.82 113.30 66.81 111.63 66.17 108.66 C65.54 105.69 68.53 102.54 72.86 101.62 C77.18 100.70 81.19 102.37 81.83 105.34 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M133.83 108.66 C133.19 111.63 129.18 113.30 124.86 112.38 C120.53 111.46 117.54 108.31 118.17 105.34 C118.81 102.37 122.82 100.70 127.14 101.62 C131.47 102.54 134.46 105.69 133.83 108.66 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M138.00 60.00 L147.36 60.00 L138.00 72.00 L147.36 72.00" fill="none" stroke="rgba(255,144,164,0.682)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M155.00 42.00 L166.70 42.00 L155.00 57.00 L166.70 57.00" fill="none" stroke="rgba(255,144,164,0.682)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M172.00 22.00 L186.04 22.00 L172.00 40.00 L186.04 40.00" fill="none" stroke="rgba(255,144,164,0.682)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+</svg></div>
+      <div class="meta">
+        <div class="title">萌芽鸡 · 睡着</div>
+        <code>pet_sprout_chicken_sleep.xml</code>
+        <div class="state">PetRenderState.Sleeping</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M152.00 168.00 C152.00 173.52 128.72 178.00 100.00 178.00 C71.28 178.00 48.00 173.52 48.00 168.00 C48.00 162.48 71.28 158.00 100.00 158.00 C128.72 158.00 152.00 162.48 152.00 168.00 Z" fill="rgba(255,200,230,0.788)" />
+  <path d="M146.00 108.00 C146.00 140.03 125.41 166.00 100.00 166.00 C74.59 166.00 54.00 140.03 54.00 108.00 C54.00 75.97 74.59 50.00 100.00 50.00 C125.41 50.00 146.00 75.97 146.00 108.00 Z" fill="rgba(255,255,248,0.882)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M88.46 84.92 C89.78 88.55 87.06 92.88 82.39 94.58 C77.72 96.28 72.87 94.71 71.54 91.08 C70.22 87.45 72.94 83.12 77.61 81.42 C82.28 79.72 87.13 81.29 88.46 84.92 Z" fill="rgba(255,255,224,0.510)" />
+  <path d="M132.67 126.66 C131.60 130.95 125.96 133.23 120.06 131.76 C114.17 130.29 110.26 125.63 111.33 121.34 C112.40 117.05 118.04 114.77 123.94 116.24 C129.83 117.71 133.74 122.37 132.67 126.66 Z" fill="rgba(255,255,224,0.510)" />
+  <path d="M111.00 152.00 C111.00 155.31 107.87 158.00 104.00 158.00 C100.13 158.00 97.00 155.31 97.00 152.00 C97.00 148.69 100.13 146.00 104.00 146.00 C107.87 146.00 111.00 148.69 111.00 152.00 Z" fill="rgba(255,255,224,0.510)" />
+  <path d="M90.66 71.84 C92.53 77.61 91.08 83.27 87.40 84.46 C83.72 85.66 79.22 81.94 77.34 76.16 C75.47 70.39 76.92 64.73 80.60 63.54 C84.28 62.34 88.78 66.06 90.66 71.84 Z" fill="#FFFFFF" />
+</svg></div>
+      <div class="meta">
+        <div class="title">蛋 · 孵化中</div>
+        <code>pet_egg_common.xml</code>
+        <div class="state">PetRenderState.Incubating</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="art-wrap"><svg class="art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M152.00 168.00 C152.00 173.52 128.72 178.00 100.00 178.00 C71.28 178.00 48.00 173.52 48.00 168.00 C48.00 162.48 71.28 158.00 100.00 158.00 C128.72 158.00 152.00 162.48 152.00 168.00 Z" fill="rgba(255,200,230,0.788)" />
+  <path d="M56.00 106.00 C56.00 148.00 144.00 148.00 144.00 106.00 L133.00 106.00 L122.00 99.00 L111.00 106.00 L100.00 99.00 L89.00 106.00 L78.00 99.00 L67.00 106.00 L56.00 99.00 Z" fill="rgba(255,255,248,0.882)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M78.00 47.00 C88.80 60.50 88.80 75.50 78.00 75.50 C67.20 75.50 67.20 60.50 78.00 47.00 Z" fill="rgba(255,255,245,0.616)" />
+  <path d="M122.00 47.00 C132.80 60.50 132.80 75.50 122.00 75.50 C111.20 75.50 111.20 60.50 122.00 47.00 Z" fill="rgba(255,255,245,0.616)" />
+  <path d="M96.00 88.00 L106.00 74.00 L100.00 58.00 L112.00 42.00 L108.00 24.00" fill="none" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M107.90 62.95 C98.14 41.02 138.34 23.13 148.10 45.05 L141.40 48.03 L131.93 44.81 L128.00 54.00 L118.53 50.77 L114.60 59.97 L105.14 56.74 Z" fill="rgba(255,255,248,0.882)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M61.28 32.05 C70.18 17.80 95.62 33.70 86.72 47.95 L82.48 45.30 L80.76 38.61 L74.00 40.00 L72.28 33.31 L65.52 34.70 L63.80 28.01 Z" fill="rgba(255,255,248,0.882)" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+</svg></div>
+      <div class="meta">
+        <div class="title">蛋 · 破壳中</div>
+        <code>pet_egg_cracked.xml</code>
+        <div class="state">PetRenderState.Hatching</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>阶段差异（同一骨骼）</h2>
+  <table>
+    <tr><th>阶段</th><th>体型</th><th>头顶芽</th><th>尾羽</th><th>附加</th></tr>
+    <tr><td>幼崽 BABY</td><td>最小最圆，头身比≈1:1</td><td>单叶</td><td>无</td><td>顶着蛋壳碎片</td></tr>
+    <tr><td>少年 JUVENILE</td><td>略高</td><td>双叶</td><td>2 根</td><td>—</td></tr>
+    <tr><td>成年 ADULT</td><td>基准体型</td><td>三叶</td><td>3 根</td><td>—</td></tr>
+    <tr><td>长者 ELDER</td><td>与成年同骨骼、略宽</td><td>四叶下垂</td><td>4 根更长</td><td>眉羽 + 喙下胡羽</td></tr>
+  </table>
+
+  <h2>色板</h2>
+  <div class="chips"><div class="sw"><div class="chip" style="background:rgba(255,255,213,0.310)"></div><span>体羽<br><code>FFD54F</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,255,193,0.027)"></div><span>体羽暗部<br><code>FFC107</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,255,224,0.510)"></div><span>体羽高光<br><code>FFE082</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,255,152,0.000)"></div><span>喙/脚<br><code>FF9800</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,76,175,0.314)"></div><span>嫩芽<br><code>4CAF50</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,93,64,0.216)"></div><span>描边<br><code>5D4037</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,255,171,0.569)"></div><span>腮红<br><code>FFAB91</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,255,248,0.882)"></div><span>蛋壳<br><code>FFF8E1</code></span></div><div class="sw"><div class="chip" style="background:rgba(255,200,230,0.788)"></div><span>草窝<br><code>C8E6C9</code></span></div></div>
+
+  <h2>接入说明</h2>
+  <p class="note">
+    文件已落在 <code>app/src/main/res/drawable/</code>，命名遵循《02-宠物渲染方案》§5.1 的
+    <code>pet_{speciesId}_{stage}</code> 规则，可直接被 <code>PetAssetResolver</code> 解析。<br>
+    重新生成：<code>python tools/gen_pet_placeholder_vectors.py</code>
+    —— 手工改 XML 会在下次生成时被覆盖，比例调整请改脚本里的 <code>STAGES</code> / <code>ACTIONS</code> 参数表。
+  </p>
+</body>
+</html>
