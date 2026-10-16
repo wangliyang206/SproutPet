@@ -247,6 +247,7 @@ def s09():
         ("🌳", "#EAF4EA", "族谱", "三代血缘 · 称谓已生成", ""),
         ("🎒", "#FFF3E0", "仓库", "道具 23 件 · 盲盒 ×3", ""),
         ("🛍️", "#FFF8E1", "商店 · 盲盒", "今日免费 2 抽 · 金币 300 日限 1", '<span class="cnt">2</span>'),
+        ("📱", "#E3F2FD", "桌面宠物", "桌面 3 只 · 主宠恒占 1 号 · 可换可收回", '<span class="cnt">3/3</span>'),
         ("🏆", "#F6EBFA", "成就", "已点亮 12 枚", ""),
         ("⛰️", "#E0F2F1", "后山小屋", "1 位长辈隐居 · 可随时召回", ""),
         ("⚙️", "#ECEFF1", "设置 · 隐私与合规", "悬浮窗声明 · 概率公示", ""),
@@ -539,6 +540,131 @@ def s15():
 
 
 # ---------------------------------------------------------------- 渲染 + 归档
+
+# ---------------------------------------------------------------- 16 桌宠引导 · 宠物自己开口
+def s16():
+    css = '''
+    .ask{position:absolute;left:14px;right:14px;bottom:20px;background:rgba(255,255,255,.95);
+      backdrop-filter:blur(8px);border-radius:20px;padding:14px 15px 13px;
+      box-shadow:0 10px 26px rgba(30,60,30,.16)}
+    .ask .from{font-size:10.5px;font-weight:800;color:#2E7D32;letter-spacing:.5px}
+    .ask .q{font-size:14px;font-weight:700;color:#24391F;line-height:1.55;margin:6px 0 12px}
+    .ask .q i{font-style:normal;font-size:10.5px;font-weight:500;color:#8CA089;display:block;
+      margin-top:6px;line-height:1.5}
+    .ask .btns{display:flex;gap:8px}
+    .ask .btns b{flex:1;text-align:center;padding:11px;border-radius:14px;font-size:12.5px}
+    .ask .yes{background:#4CAF50;color:#fff;box-shadow:0 5px 14px rgba(76,175,80,.32)}
+    .ask .no{background:#EEF5EE;color:#5B6B58}
+    .notpage{position:absolute;left:14px;top:56px;right:14px;background:rgba(255,255,255,.88);
+      border-radius:14px;padding:9px 12px;font-size:10.5px;color:#5B6B58;line-height:1.55}
+    .notpage b{color:#2E7D32}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}">{DAYCHIP}{drawer_handle(pct=48)}
+    <div class="notpage">⭐ 这一步<b>没有权限清单页</b>、没有「下一步」向导 ——
+      是<b>宠物自己开口请求</b>（复用 00 §4.4 主动搭话）</div>
+    {rays(146, 168, 156, "rgba(255,236,170,.42)")}
+    {pet("小豆芽", 26, 132, 252, 118, "chick", "joy", badge="👑")}
+    {bubble("我想去你的桌面上住～", 92, 206, tail="left")}
+    <div class="ask">
+      <div class="from">小豆芽 · 主宠</div>
+      <div class="q">「我想去你的桌面上住，这样你刷手机的时候也能看到我。」
+        <i>桌面是它的第二个家 —— 你在别的 App 里忙，它也在旁边待着</i></div>
+      <div class="btns"><b class="yes">好啊，带它去</b><b class="no">以后再说</b></div>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 17 桌宠授权 · 跳系统设置页
+def s17():
+    css = '''
+    .sys{position:absolute;left:12px;right:12px;top:58px;bottom:126px;background:#F7F8F7;
+      border-radius:22px;padding:14px;box-shadow:0 14px 34px rgba(20,40,20,.24);overflow:hidden}
+    .sbar{display:flex;align-items:center;gap:7px;font-size:11px;color:#7A8A78;margin-bottom:12px}
+    .sbar b{color:#2A3A28;font-size:12px}
+    .srow{display:flex;align-items:center;gap:10px;padding:13px 12px;background:#fff;border-radius:14px;
+      border:1px solid #E8EDE7;margin-bottom:9px}
+    .srow .tx{flex:1;min-width:0}
+    .srow .tx b{display:block;font-size:12.5px;color:#24391F}
+    .srow .tx i{font-style:normal;font-size:10px;color:#94A490;line-height:1.5;display:block;margin-top:3px}
+    .wico{flex:0 0 22px;height:17px;border:2.5px solid #5B6B58;border-radius:4px;position:relative}
+    .wico::before{content:"";position:absolute;left:-2.5px;right:-2.5px;top:-2.5px;height:6px;
+      background:#5B6B58;border-radius:2px 2px 0 0}
+    .srow .tx i .em{color:#2E7D32;font-weight:700;font-style:normal}
+    .sw{flex:0 0 42px;height:24px;border-radius:13px;background:#4CAF50;position:relative}
+    .sw::after{content:"";position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;
+      background:#fff}
+    .rom{position:absolute;left:12px;right:12px;bottom:16px;background:rgba(255,255,255,.95);
+      border-radius:18px;padding:12px 13px;font-size:10.5px;color:#5B6B58;line-height:1.6;
+      box-shadow:0 8px 22px rgba(20,40,20,.14)}
+    .rom b{color:#2E7D32}
+    .rom .tag{display:inline-block;padding:3px 8px;border-radius:9px;background:#EEF5EE;font-size:10px;
+      font-weight:700;color:#2E7D32;margin:5px 4px 0 0}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(18,34,20,.42)"></div>
+    <div class="sys">
+      <div class="sbar">⚙️ <b>系统设置</b> · 应用 · 萌芽宠物</div>
+      <div class="srow"><span class="wico"></span>
+        <span class="tx"><b>显示在其他应用的上层</b>
+          <i>允许萌芽宠物显示在别的 App 上方 —— 这是宠物能站在桌面上的<span class='em'>唯一</span>办法</i></span>
+        <span class="sw"></span></div>
+      <div class="srow"><span style="font-size:19px">🔔</span>
+        <span class="tx"><b>通知权限</b>
+          <i>Android 8+ 要求桌宠挂一条常驻通知才不被系统杀掉。内容就是「小豆芽在你桌面上陪着你」
+          —— <span class='em'>不推送广告、不打扰</span></i></span>
+        <span class="sw"></span></div>
+      <div style="font-size:10.5px;color:#8A968A;padding:2px 4px;line-height:1.6">
+        ⚠️ 这里是<b>真的系统设置页</b>，不是我们造的假页面 —— 悬浮窗权限<b>给不了普通弹窗</b>，
+        必须跳出去由用户手动打开
+      </div>
+    </div>
+    <div class="rom">
+      <b>四家 ROM 的额外一关（按机型分别引导，不写死一套文案）</b><br>
+      <span class="tag">小米 · 自启动</span><span class="tag">华为 · 应用启动管理</span>
+      <span class="tag">OPPO · 允许后台运行</span><span class="tag">vivo · 后台高耗电</span><br>
+      <span style="color:#8A968A">另外还有 Doze 电池优化白名单（不然系统会定期清掉悬浮窗）；
+      拒绝也没关系 —— 见下一屏的兜底</span>
+    </div>
+    '''
+
+
+# ---------------------------------------------------------------- 18 桌宠 · 跳出去 + 拒绝兜底
+def s18():
+    css = '''
+    .edge{position:absolute;top:0;bottom:0;right:0;width:3px;
+      background:linear-gradient(180deg,rgba(76,175,80,0),rgba(76,175,80,.6),rgba(76,175,80,0))}
+    .go{position:absolute;right:14px;top:132px;width:158px;border-radius:18px;
+      background:rgba(255,255,255,.92);padding:10px 12px;font-size:10.5px;color:#5B6B58;line-height:1.6}
+    .go b{color:#2E7D32;font-size:12px}
+    .fallback{position:absolute;left:14px;right:180px;bottom:104px;border-radius:15px;
+      background:rgba(255,251,240,.95);border:1.5px solid #F1E3C2;padding:10px 12px;
+      font-size:10.5px;color:#8A6100;line-height:1.55}
+    .steps{position:absolute;left:14px;right:14px;bottom:16px;display:flex;gap:7px}
+    .steps .s{flex:1;background:rgba(255,255,255,.9);border-radius:15px;padding:9px 8px;
+      font-size:9.5px;color:#5B6B58;line-height:1.45;text-align:center}
+    .steps .s b{display:block;font-size:10.5px;color:#2E7D32;margin-bottom:3px}
+    .steps .s.cur{background:#4CAF50}
+    .steps .s.cur b,.steps .s.cur{color:#fff}
+    '''
+    return css, f'''
+    <img class="bg" src="{BG_DAY}">{DAYCHIP}{drawer_handle(pct=48)}
+    <div class="edge"></div>
+    {rays(296, 244, 134, "rgba(255,236,170,.5)")}
+    {pet("小豆芽", 26, 228, 268, 112, "chick", "joy", badge="👑")}
+    <div class="go"><b>它走出去了</b><br>从「家」走向屏幕边缘 → 从边缘消失 → 出现在你的手机桌面。
+      <b>是同一个它</b>，不是复制品（数据同一份、状态实时同步）</div>
+    <div class="fallback">若刚才点了「<b>以后再说</b>」：宠物会说「<b>那我先在家里陪你</b>」——
+      不惩罚、不反复弹窗，但抽屉里的「桌面宠物」入口<b>一直留着</b>，随时能再来一次</div>
+    <div class="steps">
+      <div class="s"><b>1 请求</b>宠物开口<br>（16 屏）</div>
+      <div class="s"><b>2 授权</b>跳系统设置<br>（17 屏）</div>
+      <div class="s cur"><b>3 跳出去</b>过渡仪式<br>（本屏）</div>
+      <div class="s"><b>4 管理</b>抽屉「桌面宠物」<br>（12 屏）</div>
+    </div>
+    '''
+
+
 SCREENS = [
     ("01", "家 · 主界面（无 Tab）", "打开 App = 家。场景即信息架构：宠物生活、搭话气泡、蛋在角落；唯一的常驻 HUD 是右缘抽屉把手（环 = 今日经验进度）。⭐ **在家最多同时站 6 只**（这里画满：两排各 3），左下角 chip 显示「在家 6/6 · 待命 3」。", "s01", "旧 01 首页（5-Tab + 功能宫格）整体作废"),
     ("02", "手势 · 抚摸", "在宠物身上长按/滑动 = 抚摸。涟漪 + 爱心 + 经验飘字就地反馈，没有「互动面板」页。", "s02", "旧 06 互动面板 → 删除"),
@@ -555,6 +681,9 @@ SCREENS = [
     ("13", "抽蛋 · 宠物叼回来", "**抽蛋入口就在家里**：宠物叼着一个盲盒走过来（或场景角落的快递箱长按即开）。没有抽奖页、没有二级菜单 —— 口袋里永远有「今天还有 2 抽免费」的确定感。", "s13", "新增屏（U-13 拍板后补）"),
     ("14", "开箱台 · 底部升起", "开箱从底部升起而不是跳页：**保底进度**（距史诗还差 12 抽）· 免费抽 · 金币补票（300 · 日限 1）· **十连**（可囤券攒够再开）· **概率公示入口**。⚠️ 公示写明「保底只到史诗，传说/神话无保底通道」。", "s14", "新增屏（U-13 拍板后补）"),
     ("15", "十连 · 结果横排", "只做十连：结果横排一次呈现。**十连保「稀有及以上」**（这里第 10 只就是被兜底抬上来的）—— 刻意**不保「史诗」**（那会让史诗+ 涨 35%）。拿到重复宠去融合，生育才是上限路径。", "s15", "新增屏（U-13 拍板后补）"),
+    ("16", "桌宠引导 · 宠物自己开口", "**⭐ 这一步没有权限清单页、没有「下一步」向导** —— 是宠物自己开口请求（复用 00 §4.4 主动搭话）。它说「我想去你的桌面上住，这样你刷手机的时候也能看到我」，你只需要回答「好啊」或「以后再说」。**把系统权限翻译成一只宠物的请求**，是 U-11 拍板的核心。", "s16", "新增屏（U-11 拍板后补）"),
+    ("17", "桌宠授权 · 跳系统设置页", "悬浮窗权限（`SYSTEM_ALERT_WINDOW`）**给不了普通弹窗**，必须真的跳到系统设置页由用户手动打开。同时解释**用户最反感的那件事**：Android 8+ 要求桌宠挂一条常驻通知才不被杀 —— 产品语言说清楚「它就是那句话，不是广告」。四家 ROM 各自还有自启动 / 后台白名单 / 高耗电 / Doze，**按机型分别引导**。", "s17", "新增屏（U-11 拍板后补）"),
+    ("18", "桌宠 · 跳出去 + 拒绝兜底", "授权后播放「**跳出去**」过渡仪式：宠物从「家」走向屏幕边缘 → 从边缘消失 → 出现在手机桌面，**是同一个它**（数据同一份、状态实时同步）。⭐ 同屏给出**拒绝授权后的兜底**：宠物说「那我先在家里陪你」，不惩罚、不反复弹，但抽屉里的入口**一直留着** —— 不能一次拒绝就永久静默。", "s18", "新增屏（U-11 拍板后补）"),
 ]
 
 
