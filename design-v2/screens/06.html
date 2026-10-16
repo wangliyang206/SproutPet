@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:390px;height:844px;overflow:hidden;background:#DFF0DF}
+.stage{position:relative;width:390px;height:844px;overflow:hidden;
+  font-family:"Microsoft YaHei","PingFang SC",sans-serif;color:#2A3328;
+  -webkit-font-smoothing:antialiased}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+.abs{position:absolute}
+
+/* ---- 顶部：极简，不挂货币 ---- */
+.daychip{top:14px;left:14px;display:flex;align-items:center;gap:7px;padding:7px 13px;
+  background:rgba(255,255,255,.72);backdrop-filter:blur(8px);border-radius:18px;
+  font-size:12.5px;font-weight:600;color:#33502F;box-shadow:0 2px 10px rgba(30,60,30,.10)}
+.daychip i{font-style:normal;font-weight:400;color:#6B7F68}
+
+/* ---- 抽屉把手：右缘，唯一的常驻 HUD ---- */
+.handle{top:50%;right:0;transform:translateY(-50%);width:30px;padding:14px 0 12px;
+  background:rgba(255,255,255,.82);backdrop-filter:blur(8px);
+  border-radius:16px 0 0 16px;box-shadow:-2px 2px 12px rgba(30,60,30,.14);
+  display:flex;flex-direction:column;align-items:center;gap:5px}
+.handle .bar{width:13px;height:2.4px;border-radius:2px;background:#4E6B4A}
+.handle .lb{font-size:8.5px;color:#6B7F68;writing-mode:vertical-rl;letter-spacing:2px;margin-top:2px}
+.ring{position:relative;width:20px;height:20px;margin-bottom:1px}
+.ring svg{position:absolute;inset:0}
+.ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:8px;color:#2E7D32}
+
+/* ---- 搭话气泡 ---- */
+.bubble{position:absolute;background:rgba(255,255,255,.94);border-radius:16px;
+  padding:9px 13px;font-size:13px;font-weight:500;color:#2E3B2C;line-height:1.45;
+  box-shadow:0 6px 18px rgba(30,60,30,.16);max-width:200px}
+.bubble:after{content:"";position:absolute;bottom:-6px;left:26px;width:12px;height:12px;
+  background:inherit;transform:rotate(45deg);border-radius:2px}
+.bubble.r:after{left:auto;right:26px}
+.bubble .act{display:inline-flex;align-items:center;gap:4px;margin-top:7px;padding:5px 11px;
+  background:#4CAF50;color:#fff;border-radius:12px;font-size:11.5px;font-weight:600}
+.bubble .act.ghost{background:rgba(76,175,80,.12);color:#2E7D32}
+.bubble.done{color:#8FA08C}
+.bubble.done .ok{display:inline-flex;width:15px;height:15px;border-radius:50%;background:#4CAF50;
+  color:#fff;font-size:10px;align-items:center;justify-content:center;margin-right:5px}
+
+/* ---- 宠物名牌 ---- */
+.plate{position:absolute;display:flex;flex-direction:column;align-items:center;gap:3px}
+.plate .nm{display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(255,255,255,.85);
+  backdrop-filter:blur(6px);border-radius:12px;font-size:11px;font-weight:600;color:#33502F;
+  box-shadow:0 2px 8px rgba(30,60,30,.12)}
+.plate .nm i{font-style:normal;font-weight:400;color:#7C8E79}
+.plate .badge{padding:2px 7px;background:#FFB300;color:#5D3F00;border-radius:8px;
+  font-size:9px;font-weight:700}
+
+/* ---- 飘字 / 反馈 ---- */
+.floaty{position:absolute;font-weight:800;
+  text-shadow:0 2px 6px rgba(255,255,255,.95),0 0 14px rgba(255,255,255,.9),0 1px 3px rgba(255,255,255,.9)}
+.floaty.exp{font-size:21px;color:#2E7D32}
+.floaty.inti{font-size:14px;color:#E76A6A}
+.chipctx{position:absolute;padding:7px 13px;background:rgba(255,255,255,.88);
+  backdrop-filter:blur(8px);border-radius:16px;font-size:12px;font-weight:600;color:#33502F;
+  box-shadow:0 3px 12px rgba(30,60,30,.14)}
+.chipctx i{font-style:normal;font-weight:400;color:#7C8E79}
+
+/* ---- 蛋 ---- */
+.eggtag{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px}
+.eggtag .lb{padding:4px 10px;background:rgba(255,255,255,.85);border-radius:11px;
+  font-size:10.5px;font-weight:600;color:#33502F;box-shadow:0 2px 8px rgba(30,60,30,.14)}
+
+/* ---- 底部提示（onboarding，一周后消失） ---- */
+.foot-hint{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:11.5px;
+  color:rgba(38,60,35,.62);text-shadow:0 1px 4px rgba(255,255,255,.8);padding:0 14px;line-height:1.4}
+.foot-hint b{color:#2E5B2A}
+
+/* ---- 底部抽层（孵化片） ---- */
+.sheet{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(255,255,255,.96);
+  backdrop-filter:blur(14px);border-radius:26px;padding:10px 18px 20px;
+  box-shadow:0 -8px 40px rgba(20,45,20,.22)}
+.sheet .grip{width:40px;height:4.5px;border-radius:3px;background:#D8E2D6;margin:0 auto 12px}
+.sheet h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+.sheet h3 i{font-style:normal;font-size:12px;font-weight:500;color:#7C8E79}
+.srow{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid #EDF3EC}
+.srow:last-child{border-bottom:none}
+.srow .ic{flex:0 0 40px;height:40px;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;font-size:19px}
+.srow .tx{flex:1;min-width:0}
+.srow .tx b{display:block;font-size:13.5px;font-weight:700;color:#2A3A28}
+.srow .tx i{font-style:normal;font-size:11px;color:#8A9A87}
+.srow .go{flex:0 0 auto;padding:7px 14px;border-radius:14px;background:#E8F5E9;color:#2E7D32;
+  font-size:12px;font-weight:700}
+.srow .go.warn{background:#FFF3E0;color:#B26A00}
+
+/* ---- 模态卡（揭晓 / 起名 / 档案浮卡） ---- */
+.modal-mask{position:absolute;inset:0;background:rgba(22,42,24,.46);backdrop-filter:blur(3px)}
+.card{position:absolute;left:18px;right:18px;background:#fff;border-radius:26px;
+  box-shadow:0 24px 60px rgba(15,40,18,.35)}
+.rarity{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:12px;
+  font-size:11.5px;font-weight:800;color:#fff}
+.dot{width:7px;height:7px;border-radius:50%}
+.kv{display:flex;flex-wrap:wrap;gap:7px}
+.kv span{padding:5px 10px;border-radius:11px;background:#F2F7F1;font-size:11.5px;
+  font-weight:600;color:#44553F}
+.kv span i{font-style:normal;color:#93A48F;margin-left:3px;font-weight:500}
+.btn{display:block;width:100%;padding:13px;border-radius:18px;background:#4CAF50;color:#fff;
+  font-size:15.5px;font-weight:800;text-align:center;letter-spacing:1px;
+  box-shadow:0 8px 20px rgba(76,175,80,.35)}
+.btn.ghost{background:#EEF5EE;color:#2E7D32;box-shadow:none;font-size:13px;font-weight:600}
+
+/* ---- 抽屉（右缘拉出） ---- */
+.drawer{position:absolute;top:0;right:0;bottom:0;width:318px;background:rgba(252,254,251,.97);
+  backdrop-filter:blur(16px);border-radius:26px 0 0 26px;
+  box-shadow:-14px 0 44px rgba(15,40,18,.28);padding:22px 20px 18px}
+.drawer .scrim-l{position:absolute;top:0;bottom:0;left:-390px;width:390px;background:rgba(22,42,24,.38)}
+.me{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.me .av{width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,#A5D6A7,#4CAF50);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 4px 12px rgba(76,175,80,.3)}
+.me .tx b{display:block;font-size:15px;font-weight:800;color:#26382A}
+.me .tx i{font-style:normal;font-size:11px;color:#8A9A87}
+.wallet{display:flex;gap:9px;margin-bottom:16px}
+.wallet .w{flex:1;padding:10px 12px;border-radius:16px;background:#F3F8F2}
+.wallet .w i{display:block;font-style:normal;font-size:10px;color:#8A9A87;margin-bottom:2px}
+.wallet .w b{font-size:15.5px;font-weight:800;color:#3A4A36}
+.mrow{display:flex;align-items:center;gap:12px;padding:12.5px 4px;border-bottom:1px solid #EEF3EC}
+.mrow:last-of-type{border-bottom:none}
+.mrow .ic{flex:0 0 36px;height:36px;border-radius:12px;background:#EAF4EA;display:flex;
+  align-items:center;justify-content:center;font-size:17px}
+.mrow .tx{flex:1;min-width:0}
+.mrow .tx b{display:block;font-size:13.5px;font-weight:700;color:#2A3A28}
+.mrow .tx i{font-style:normal;font-size:10.5px;color:#94A490}
+.mrow .chev{color:#B9C6B6;font-size:15px}
+.mrow .cnt{padding:2px 8px;border-radius:9px;background:#E8F5E9;color:#2E7D32;font-size:10px;font-weight:700}
+.dtitle{font-size:11px;font-weight:700;color:#9AA79A;letter-spacing:2px;margin:4px 2px 2px}
+
+/* ---- 六维 ---- */
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat{padding:9px 4px 7px;border-radius:13px;background:#F4F8F3;text-align:center}
+.stat i{display:block;font-style:normal;font-size:10px;color:#8FA08B;margin-bottom:1px}
+.stat b{font-size:16px;font-weight:800;color:#33422F}
+.stat.pw i{color:#C98F00}
+.stat.pw{background:#FFF7E6}
+.stat.pw b{color:#A66F00}
+
+/* ---- 手势（涟漪 + 指尖） ---- */
+.ripple{position:absolute;border-radius:50%;border:2.5px solid rgba(255,255,255,.9);
+  box-shadow:0 0 18px rgba(255,255,255,.5), inset 0 0 12px rgba(255,255,255,.35)}
+.ripple.g{border-color:rgba(76,175,80,.75);box-shadow:0 0 18px rgba(76,175,80,.45)}
+.heart{position:absolute;font-size:16px;filter:drop-shadow(0 2px 4px rgba(200,60,60,.25))}
+.zzz{position:absolute;font-weight:800;color:rgba(90,110,160,.75);text-shadow:0 1px 4px rgba(255,255,255,.6)}
+
+/* ---- 托盘（拖拽源） ---- */
+.tray{position:absolute;left:12px;right:64px;bottom:14px;display:flex;gap:8px;
+  padding:10px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-radius:20px;
+  box-shadow:0 10px 30px rgba(25,55,25,.2)}
+.tray .it{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;
+  border-radius:14px;background:#F5F9F4}
+.tray .it .em{font-size:21px;line-height:1}
+.tray .it b{font-size:9.5px;color:#44553F;font-weight:700}
+.tray .it i{font-style:normal;font-size:8.5px;color:#94A490}
+.tray .tip{position:absolute;top:-30px;left:12px;padding:5px 11px;background:rgba(46,125,50,.92);
+  color:#fff;border-radius:12px;font-size:10.5px;font-weight:600}
+.ghostitem{position:absolute;font-size:30px;filter:drop-shadow(0 6px 10px rgba(40,70,40,.35))}
+
+/* ---- 光效 ---- */
+.glowdot{position:absolute;border-radius:50%}
+.spark{position:absolute;color:#FFE082;text-shadow:0 0 8px rgba(255,224,130,.9)}
+.vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 42%,transparent 55%,rgba(20,40,20,.28))}
+</style></head><body><div class="stage">
+    <img class="bg" src="../assets/bg-home-night.png"><div class="modal-mask" style="background:rgba(18,36,22,.5)"></div>
+    <div class="abs" style="left:115px;top:96px;width:160px;height:160px;background:repeating-conic-gradient(from 8deg,rgba(255,236,170,.42) 0 7deg,transparent 7deg 15deg);border-radius:50%;-webkit-mask-image:radial-gradient(closest-side,#000 18%,transparent 72%)"></div>
+    <span class="glowdot" style="left:70px;top:120px;width:10px;height:10px;background:radial-gradient(circle,rgba(255,240,170,.9) 0 40%,transparent 75%)"></span><span class="glowdot" style="left:300px;top:110px;width:12px;height:12px;background:radial-gradient(circle,rgba(255,240,170,.9) 0 40%,transparent 75%)"></span><span class="glowdot" style="left:52px;top:300px;width:8px;height:8px;background:radial-gradient(circle,rgba(255,240,170,.9) 0 40%,transparent 75%)"></span><span class="glowdot" style="left:330px;top:262px;width:9px;height:9px;background:radial-gradient(circle,rgba(255,240,170,.9) 0 40%,transparent 75%)"></span><span class="glowdot" style="left:90px;top:96px;width:7px;height:7px;background:radial-gradient(circle,rgba(255,240,170,.9) 0 40%,transparent 75%)"></span>
+    <div class="abs" style="left:135px;top:108px"><svg viewBox="0 0 100 100" width="120.0" height="120.0"><ellipse cx="50" cy="93" rx="27" ry="5.5" fill="rgba(30,55,30,.18)"/><circle cx="42" cy="26" r="6" fill="#FF8A65"/><circle cx="50" cy="22.5" r="6.5" fill="#FF8A65"/><circle cx="58" cy="26" r="6" fill="#FF8A65"/><ellipse cx="50" cy="57" rx="31" ry="29" fill="#FFD54F"/><ellipse cx="50" cy="66" rx="19" ry="16" fill="#FFF8E1"/><path d="M62 55 l10 -2 -8.5 7 z" fill="#FFB300"/><path d="M64 61 l8 -0.5 -6.5 5 z" fill="#FFA000"/><ellipse cx="20" cy="58" rx="9" ry="13" fill="#FFCA28" transform="rotate(14 20 58)"/><ellipse cx="80" cy="58" rx="9" ry="13" fill="#FFCA28" transform="rotate(-14 80 58)"/><ellipse cx="31" cy="61" rx="5" ry="3" fill="rgba(255,138,128,.5)"/><ellipse cx="69" cy="61" rx="5" ry="3" fill="rgba(255,138,128,.5)"/><path d="M35 52 q5 -6 10 0" stroke="#33261F" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M55 52 q5 -6 10 0" stroke="#33261F" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M44 60 q6 7 12 0 z" fill="#7A4A3A"/></svg></div>
+    <span class="heart" style="left:150px;top:120px;font-size:11px;opacity:0.8">❤️</span><span class="heart" style="left:244px;top:140px;font-size:13px;opacity:0.9">❤️</span><span class="heart" style="left:210px;top:104px;font-size:9px;opacity:0.6">❤️</span>
+    <div class="card abs" style="bottom:40px;padding:20px 22px 18px">
+      <div style="font-size:12px;font-weight:700;color:#4CAF50;letter-spacing:2px;margin-bottom:8px">宠物档案 · 世代 1</div>
+      <div class="kv" style="margin-bottom:12px"><span>羽虫</span><span style="background:#F6EBFA;color:#9C27B0">史诗</span><span>公</span></div>
+      <div class="stats" style="margin-bottom:14px"><div class="stat"><i>体力</i><b>12</b></div><div class="stat"><i>力量</i><b>9</b></div><div class="stat"><i>敏捷</i><b>14</b></div><div class="stat"><i>智慧</i><b>8</b></div><div class="stat"><i>魅力</i><b>13</b></div><div class="stat pw"><i>综合</i><b>62</b></div></div>
+      <div style="font-size:11px;color:#5B6B58;margin-bottom:6px">给它起个名字 —— 这是你们故事的第一步</div>
+      <div style="padding:12px 14px;border:2px solid #4CAF50;border-radius:15px;font-size:17px;font-weight:800;color:#26382A;margin-bottom:12px">小豆芽<span style="display:inline-block;width:2px;height:17px;background:#4CAF50;vertical-align:-3px;margin-left:3px"></span></div>
+      <span class="btn">确认，欢迎回家</span>
+    </div>
+    </div></body></html>
