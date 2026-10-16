@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  桌宠技术验证用的占位"宠物"。
+
+  故意做成高对比的实心圆 + 白描边，是为了在真机上肉眼看清：
+  1. 窗口是否真的透明（不该有任何底色）
+  2. 命中区域与可见区域是否一致（描边即窗口边界）
+  正式宠物资源由 Rive 提供，此处仅为验证占位。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#E64CAF50" />
+    <stroke
+        android:width="3dp"
+        android:color="#FFFFFFFF" />
+</shape>

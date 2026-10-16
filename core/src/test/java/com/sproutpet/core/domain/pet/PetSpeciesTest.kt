@@ -178,6 +178,47 @@ class PetSpeciesTest {
     }
 
     @Test
+    fun `the five worms use every possible tendency triple`() {
+        // ADR-021 的**可达成形式**。
+        //
+        // 直觉上会希望"五个类群的倾向组合两两不同"，但那**数学上做不到**：
+        // 只有 4 种倾向，从中取 3 个的三元子集总共只有 C(4,3) = 4 个，而类群有 5 个 ——
+        // 鸽笼原理下必然有两个类群重合（当前是 鳞虫 与 毛虫）。
+        //
+        // 所以要守的不变量是「**多样性达到理论上限**」：
+        // 5 个类群必须把全部 4 个三元子集都用上。
+        // 若有人把某个物种的倾向改成"更顺手"的值，导致只用上 3 种组合，
+        // 类群就更容易被间接编码进数值分布 —— 这条测试会立刻报错。
+        //
+        // 📌 本测试是本轮审计的产物：文档 00 §2.1.1 / 07 §4.1 曾把
+        // 泡泡蛙写成「敏捷」、蜜蜜蜂写成「均衡」。按那份文档实现，
+        // 蠃虫与羽虫的组合会相同、昆虫与羽虫的组合也会相同 ——
+        // 即**只剩 2 种组合**，多样性直接掉一半。
+        val tendencies = AttributeTendency.entries
+        val allTriples: Set<Set<AttributeTendency>> = tendencies
+            .flatMap { a ->
+                tendencies.flatMap { b ->
+                    tendencies.mapNotNull { c ->
+                        setOf(a, b, c).takeIf { it.size == 3 }
+                    }
+                }
+            }
+            .toSet()
+
+        val used = SpeciesFamily.FIVE_WORMS
+            .map { family -> PetSpecies.byFamily(family).map { it.tendency }.toSet() }
+            .toSet()
+
+        assertEquals(
+            "五个类群的倾向组合没有用满全部 4 个可能的三元子集：" +
+                "用得上的只有 ${used.size} 个（应达到理论上限 ${allTriples.size} 个），" +
+                "类群会更明显地被间接编码进数值分布（ADR-021）",
+            allTriples,
+            used
+        )
+    }
+
+    @Test
     fun `species distribution across the five worms is balanced`() {
         SpeciesFamily.FIVE_WORMS.forEach { family ->
             assertEquals(
@@ -190,7 +231,7 @@ class PetSpeciesTest {
 }
 
 /**
- * 稀有度体系测试：6 档、异兽不可抽取。
+ * 稀有度体系测试：6 档、灵兽不可抽取。
  */
 class RarityTest {
 

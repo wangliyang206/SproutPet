@@ -2,6 +2,7 @@ package com.sproutpet.core.di
 
 import android.content.Context
 import androidx.room.Room
+import com.sproutpet.core.db.DbMigrations
 import com.sproutpet.core.db.SproutPetDatabase
 import dagger.Module
 import dagger.Provides
@@ -31,11 +32,23 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): SproutPetDatabase =
-        Room.databaseBuilder(context, SproutPetDatabase::class.java, DB_NAME)
-            // 开发期允许破坏性迁移；上线前必须改为 addMigrations(...)
-            .fallbackToDestructiveMigration()
-            .build()
+    fun provideDatabase(@ApplicationContext context: Context): SproutPetDatabase {
+        val builder = Room.databaseBuilder(context, SproutPetDatabase::class.java, DB_NAME)
+            .addMigrations(*DbMigrations.ALL)
+
+        // ⚠️ 仅 DEBUG 兜底，正式包绝不挂载。
+        //
+        // 正式包缺失迁移时必须**崩溃（fail fast）**，而不是静默清库：
+        // 清空用户数据是不可逆的（族谱/灵血/世代无法重建），
+        // 更危险的是它会把「字段没落库」这类事故伪装成「数据正常」——
+        // 清库后老行没了，读取端看不到异常，问题被藏起来直到上线。
+        //
+        // 若将来新增迁移，务必同步补 DbMigrations 与迁移测试（见 docs/03 §5）。
+        if (com.sproutpet.core.BuildConfig.DEBUG) {
+            builder.fallbackToDestructiveMigration()
+        }
+        return builder.build()
+    }
 
     @Provides
     @Singleton

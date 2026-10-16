@@ -4,6 +4,7 @@ import com.sproutpet.core.domain.pet.AttributeTendency
 import com.sproutpet.core.domain.pet.GrowthRules
 import com.sproutpet.core.domain.pet.Pet
 import com.sproutpet.core.domain.pet.PetAttributes
+import com.sproutpet.core.domain.pet.PetGender
 import com.sproutpet.core.domain.pet.PetGenes
 import com.sproutpet.core.domain.pet.PetSpecies
 import com.sproutpet.core.domain.pet.PetStage
@@ -38,7 +39,9 @@ object BlindBoxEngine {
      * 抽取宠物蛋。
      *
      * @param pityCount 当前保底计数（连续未出高稀有的次数）
-     * @param guaranteedRarity 保底道具指定的最低稀有度，null 表示无
+     * @param guaranteedRarity 保底道具指定的最低稀有度，null 表示无。
+     *                         ⚠️ 会被自动**钳制**到 [Rarity.maxDrawable]，**无法指定灵兽**
+     *                         —— 防止有人用"灵兽保底券"绕开 ADR-017。
      * @param pool 可抽取的物种池，null 表示全部**可抽取**物种
      * @return 抽取结果，同时返回新的保底计数
      */
@@ -47,19 +50,26 @@ object BlindBoxEngine {
         guaranteedRarity: Rarity? = null,
         pool: List<PetSpecies>? = null
     ): DrawOutcome {
-        // 盲盒池只含可抽取物种（异种只能靠混血获得，不参与抽取）
+        // 盲盒池只含可抽取物种（「不入十类之种」只能靠混血获得，不参与抽取）
         val defaultPool = PetSpecies.drawableEntries()
         val speciesPool = (pool ?: defaultPool)
             .filter { it.isDrawable }
             .ifEmpty { defaultPool }
 
+        // ⚠️ 安全钳制：保底指定档位**不得高于「可抽取的最高档」**。
+        // 若有人传 Rarity.MUTANT（灵兽），会被压到 MYTHIC ——
+        // 否则一张"灵兽保底券"就能绕开 ADR-017（灵兽只能遗传、不可抽取）。
+        val cappedGuarantee = guaranteedRarity?.let {
+            if (it.isDrawable) it else Rarity.maxDrawable
+        }
+
         // 1. 先决定稀有度
         val pityTriggered = pityCount + 1 >= PITY_THRESHOLD
         val rarity = when {
-            guaranteedRarity != null -> {
+            cappedGuarantee != null -> {
                 // 保底道具：不低于指定稀有度
                 val rolled = rollRarity()
-                if (rolled.id >= guaranteedRarity.id) rolled else guaranteedRarity
+                if (rolled.id >= cappedGuarantee.id) rolled else cappedGuarantee
             }
             pityTriggered -> {
                 // 保底触发：至少史诗
@@ -82,7 +92,7 @@ object BlindBoxEngine {
                 species = species,
                 rarity = rarity,
                 genes = genes,
-                guaranteedBy = if (guaranteedRarity != null) "guarantee" else null,
+                guaranteedBy = if (cappedGuarantee != null) "guarantee" else null,
                 isLucky = pityTriggered
             ),
             newPityCount = isNewPityCount
@@ -93,7 +103,7 @@ object BlindBoxEngine {
      * 按权重随机稀有度。
      * 使用加权随机保证长期分布符合策划预期。
      *
-     * 注意：**异兽（MUTANT）权重为 0，不可抽取**，只能通过配对生育获得。
+     * 注意：**灵兽（MUTANT）权重为 0，不可抽取**，只能通过配对生育（含灵血传承）获得。
      */
     fun rollRarity(): Rarity {
         val drawable = Rarity.drawableEntries()
@@ -122,16 +132,27 @@ object BlindBoxEngine {
     /**
      * 根据抽取结果创建一只处于「蛋」阶段的宠物。
      *
+     * 性别在这里**随机分配**（[PetGender.random]），此后永不改变 ——
+     * 落在"开蛋"而非"破壳"这一刻，是为了让中途重启 / 迁移都不会让性别漂移。
+     *
      * @param ownerId 主人 ID
      * @param batchNo 盲盒批次号
+     * @param isFirstPet 是否为该用户的**首只宠物**。首只额外缩短孵化时长，
+     *                   保证当天就能玩到（ADR-013 首日体验优先）。
+     *                   ⚠️ 调用方**必须显式传 `true`**，默认值是 `false` ——
+     *                   这里没有"自动判断是否首只"的能力（那需要查库）。
+     *                   曾经因为调用方漏传，`hatchDurationOf(isFirstPet)` 的减半
+     *                   分支从未被执行过（文档承诺过但实际没生效）。
      */
     fun createEgg(
         ownerId: Long,
         result: BlindBoxResult,
         batchNo: String,
-        now: Long = System.currentTimeMillis()
+        isFirstPet: Boolean = false,
+        now: Long = System.currentTimeMillis(),
+        random: Random = Random.Default
     ): Pet {
-        val hatchDuration = GrowthRules.hatchDurationOf(result.rarity)
+        val hatchDuration = GrowthRules.hatchDurationOf(result.rarity, isFirstPet)
         return Pet(
             id = 0L, // 由数据库自增分配
             ownerId = ownerId,
@@ -153,7 +174,8 @@ object BlindBoxEngine {
             familyId = null,
             parentIdA = null,
             parentIdB = null,
-            batchNo = batchNo
+            batchNo = batchNo,
+            gender = PetGender.random(random)
         )
     }
 
@@ -213,12 +235,31 @@ object IncubationEngine {
      *
      * 设计意图：把"等待"变成"陪伴"，提升留存。
      *
+     * ⚠️ **抵扣比例只有一处定义**（`GrowthRules.FOCUS_BOOST_RATIO`）。
+     * 本文件曾私自定义过一个同值的 `private const FOCUS_BOOST_RATE`，
+     * 属于"同一数值两处定义"—— 改一处忘一处就会静默不一致，已删除。
+     *
      * @param focusMs 本次陪伴时长
      * @return 可抵扣的孵化时间
      */
-    fun focusBoostMs(focusMs: Long): Long = (focusMs * FOCUS_BOOST_RATE).toLong()
+    fun focusBoostMs(focusMs: Long): Long = (focusMs * GrowthRules.FOCUS_BOOST_RATIO).toLong()
 
-    private const val FOCUS_BOOST_RATE = 0.5f
+    /**
+     * 计算自然加速，并施加**单颗蛋的抵扣上限**。
+     *
+     * ⚠️ 这是 `GrowthRules.MAX_FOCUS_BOOST_RATIO`（"每颗蛋最多抵扣 50%"）的**唯一执法点**。
+     * 该常量此前**从未被任何代码读取** —— 也就是 PRD §2.2 承诺的上限形同不存在，
+     * 玩家理论上可以用"专注陪伴"把整颗蛋的孵化时间全部抵掉。
+     *
+     * @param focusMs 累计陪伴时长
+     * @param remainingMs 该蛋**剩余的**自然孵化时间（用于算上限）
+     * @return 实际可抵扣的毫秒数（不会超过 `剩余 × MAX_FOCUS_BOOST_RATIO`）
+     */
+    fun focusBoostMs(focusMs: Long, remainingMs: Long): Long {
+        if (focusMs <= 0L || remainingMs <= 0L) return 0L
+        val cap = (remainingMs * GrowthRules.MAX_FOCUS_BOOST_RATIO).toLong()
+        return focusBoostMs(focusMs).coerceAtMost(cap)
+    }
 
     /**
      * 孵化进度分段描述，用于界面文案。

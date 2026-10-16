@@ -53,6 +53,34 @@
                 android:value="desktop_pet" />
         </service>
 
+        <!-- ═══════════ 调试：桌宠技术验证（Phase 3 定案后可整段删除）═══════════ -->
+        <!-- 用途：验证「全屏透明窗口 + 触摸穿透」在真机上的可行组合，为 ADR-014 提供实测依据 -->
+        <activity
+            android:name=".debug.DesktopPetProbeActivity"
+            android:exported="false"
+            android:label="@string/probe_title"
+            android:theme="@style/Theme.SproutPet" />
+
+        <service
+            android:name=".debug.ProbeFloatingService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="desktop_pet_probe" />
+        </service>
+
+        <!-- 日志分享：让验证面板能把 probe 日志发出去（仅暴露 files/probe 目录） -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!-- 工作管理器：孵化/成长的后台计时（Phase 2 实现） -->
         <provider
             android:name="androidx.startup.InitializationProvider"

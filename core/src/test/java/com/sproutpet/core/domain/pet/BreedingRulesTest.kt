@@ -11,8 +11,8 @@ import org.junit.Test
  *
  * 覆盖 docs/06-物种与稀有度设计.md §4 的三条硬约束：
  * 1. 永不降级超过 1 档
- * 2. 永不 100% 继承（除异兽 90%）
- * 3. 异兽只能由「史诗及以上」的父母产出
+ * 2. 永不 100% 继承（除灵兽 90%）
+ * 3. 灵兽只能由「史诗及以上」的父母产出
  */
 class BreedingRulesTest {
 
@@ -45,7 +45,7 @@ class BreedingRulesTest {
                 GrowthRules.BreedingRules.PairingKind.EXOTIC_PAIR,
                 random
             )
-            assertTrue("异兽×异兽产出了 ${child.displayName}", child.id >= Rarity.MYTHIC.id)
+            assertTrue("灵兽×灵兽产出了 ${child.displayName}", child.id >= Rarity.MYTHIC.id)
         }
     }
 
@@ -83,7 +83,7 @@ class BreedingRulesTest {
         assertTrue("传说占比 $ratio 应接近 5%", ratio in 0.03..0.07)
     }
 
-    // ─────────── 硬约束 3：异兽的获得门槛 ───────────
+    // ─────────── 硬约束 3：灵兽的获得门槛 ───────────
 
     @Test
     fun `common parents never produce mutant`() {
@@ -94,7 +94,7 @@ class BreedingRulesTest {
                 GrowthRules.BreedingRules.PairingKind.SAME_FAMILY,
                 random
             )
-            assertFalse("普通家庭不应产出异兽", child == Rarity.MUTANT)
+            assertFalse("普通家庭不应产出灵兽", child == Rarity.MUTANT)
         }
     }
 
@@ -111,7 +111,7 @@ class BreedingRulesTest {
                 ) == Rarity.MUTANT
             ) mutant++
         }
-        assertEquals("史诗家庭产出异兽概率应约 2%", 0.02, mutant.toDouble() / total, 0.006)
+        assertEquals("史诗家庭产出灵兽概率应约 2%", 0.02, mutant.toDouble() / total, 0.006)
     }
 
     @Test

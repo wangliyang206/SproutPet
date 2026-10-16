@@ -12,12 +12,26 @@
     <color name="color_error">#FFF44336</color>
     <color name="color_info">#FF2196F3</color>
 
-    <!-- 稀有度 -->
+    <!-- 稀有度（6 档，见 Rarity.kt / docs/06-物种与稀有度设计.md） -->
     <color name="rarity_common">#FF9E9E9E</color>
     <color name="rarity_rare">#FF2196F3</color>
     <color name="rarity_epic">#FF9C27B0</color>
     <color name="rarity_legendary">#FFFF9800</color>
     <color name="rarity_mythic">#FFF44336</color>
+    <!-- 灵兽（稀有度第 6 档）：不可抽取，仅由配对生育 + 灵血传承产生。
+         刻意跳出「灰→蓝→紫→橙→红」的色阶序列，用荧光青表示"不在此色阶内"（呼应 ADR-017）。
+         ⚠️ 这是**稀有度轴**的颜色，与物种轴的「异兽（不入十类之种）」无关 -->
+    <color name="rarity_mutant">#FF00E5FF</color>
+
+    <!-- 五虫类群色（族谱图例 / 图鉴分页 / 宠物卡面虫属标识，见 PetSpecies.SpeciesFamily）
+         取"物之色"：蠃虫取水色，鳞虫取碧色，毛虫取土色，羽虫取朱色，昆虫取草木色。
+         「不入十类之种」不属五虫，故不取物之色，而以夜空靛蓝示"化外"（星狐 / 月兔 / 荧波） -->
+    <color name="family_luo">#FF4FC3F7</color>
+    <color name="family_lin">#FF26A69A</color>
+    <color name="family_mao">#FFBCAAA4</color>
+    <color name="family_yu">#FFFF8A65</color>
+    <color name="family_kun">#FF9CCC65</color>
+    <color name="family_uncategorized">#FF5C6BC0</color>
 
     <!-- 中性 -->
     <color name="text_primary">#FF212121</color>

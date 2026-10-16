@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FileProvider 可分享路径声明。
+
+  用途：让「桌宠技术验证」面板能把日志文件分享出去（微信 / 邮件 / 任意 App），
+  这样测试者只需点一个按钮，日志就能送到分析者手里。
+
+  路径对应 Context.getExternalFilesDir("probe")
+  → 实际位置 /sdcard/Android/data/<包名>/files/probe/
+
+  ⚠️ 仅声明 probe 子目录，不暴露整个外部私有目录。
+-->
+<paths>
+    <external-files-path
+        name="probe_logs"
+        path="probe/" />
+</paths>

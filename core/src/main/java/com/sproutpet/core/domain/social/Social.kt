@@ -111,8 +111,15 @@ data class Pairing(
     /** 生育冷却是否结束 */
     fun canBreedNow(now: Long = System.currentTimeMillis()): Boolean =
         status == PairingStatus.PAIRED &&
-                offspringCount < com.sproutpet.core.domain.pet.GrowthRules.PairingRules.maxOffspring &&
+                // NPC 伴侣后代上限更小（默认 3，真人为 5），引导用户去找真人配对。
+                offspringCount < com.sproutpet.core.domain.pet.GrowthRules.PairingRules
+                    .maxOffspringFor(partnerIsNpc) &&
                 now - lastBreedAt >= com.sproutpet.core.domain.pet.GrowthRules.PairingRules.cooldownMs
+
+    /** 本次配对的剩余后代名额 */
+    val remainingOffspring: Int
+        get() = (com.sproutpet.core.domain.pet.GrowthRules.PairingRules
+            .maxOffspringFor(partnerIsNpc) - offspringCount).coerceAtLeast(0)
 
     /** 生育冷却剩余毫秒 */
     fun breedCooldownRemainMs(now: Long = System.currentTimeMillis()): Long {

@@ -37,6 +37,26 @@ android {
     }
 }
 
+/**
+ * Room schema 导出。
+ *
+ * `SproutPetDatabase` 上早已标了 `exportSchema = true`，但**没有配置输出目录** ——
+ * 这是个"空承诺"：既没有 `core/schemas/`，也没有任何 JSON，`MigrationTestHelper`
+ * 因此根本无法使用（它必须拿 schema JSON 做校验基准）。
+ *
+ * 现在把导出目录固定为 `core/schemas/`，每次版本号变化都会生成
+ * `core/schemas/com.sproutpet.core.db.SproutPetDatabase/<version>.json`。
+ *
+ * ⚠️ **生成物必须提交到版本库** —— 它是迁移测试的校验基准，不进库等于没导。
+ *
+ * 📌 历史限制：V1~V3 期间未开启导出，所以 **1~3.json 不存在，且无法补**
+ * （Room 用 identityHash 校验，手写 JSON 必然对不上）。
+ * 也就是说迁移测试的基线**从 V4 开始**。
+ */
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
     // AndroidX Core
     api(libs.androidx.core.ktx)

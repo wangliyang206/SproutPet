@@ -20,7 +20,29 @@ enum class PetStage(val id: Int, val displayName: String) {
     /** 蛋：盲盒开出后、孵化完成前 */
     EGG(0, "蛋"),
 
-    /** 破壳中：孵化倒计时归零后的过渡动画阶段（约 3 秒） */
+    /**
+     * 破壳中：孵化倒计时归零后的**过渡动画**（约 3 秒）。
+     *
+     * ## ⚠️ 这是一个「**保留位**」，不是真实的持久化阶段（D-02 决策）
+     *
+     * - `GrowthRules.stageOf(level)` **永不返回它**
+     * - `BlindBoxEngine.hatch()` 直接 `EGG → BABY`，不经过它
+     * - 换句话说：**没有任何代码路径会把它写进数据库**
+     *
+     * 破壳那 3 秒的表现由渲染层的 `PetRenderState.Hatching` 负责 —— 那是**表现层状态**，
+     * 不该占用业务层的阶段枚举。
+     *
+     * ## 那为什么不干脆删掉？
+     *
+     * 因为**删了会让后面所有档位整体前移**（BABY 从 2 变 1、ADULT 从 4 变 3…），
+     * 而 `pet.stage` 列里已经写着旧编号 —— 存量宠物会被系统性错读成别的阶段。
+     * 要安全删除必须先做一次全表 remap 迁移，风险远大于留一个空位。
+     *
+     * 所以定论是：**保留 id=1 作为不可写入的保留位，并把"禁止落库"写成测试**。
+     * 什么时候真的要做全表 remap 迁移了，再顺手把它收掉。
+     *
+     * @see PetStageTest
+     */
     HATCHING(1, "破壳中"),
 
     /** 幼崽：刚破壳，体型最小，互动能力弱 */
@@ -43,12 +65,6 @@ enum class PetStage(val id: Int, val displayName: String) {
 
     /** 是否可以配对生育（成年或长者；隐居后不再参与） */
     val canPair: Boolean get() = this == ADULT || this == ELDER
-
-    /** 是否可以生育（与 [canPair] 同义，保留语义化命名） */
-    val canBreed: Boolean get() = canPair
-
-    /** 是否在桌面上可展示 */
-    val isOnDesktop: Boolean get() = isHatched && this != RETIRED
 
     companion object {
         fun fromId(id: Int): PetStage = entries.firstOrNull { it.id == id } ?: EGG

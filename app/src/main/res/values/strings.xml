@@ -19,12 +19,30 @@
     <string name="incubating">孵化中…</string>
     <string name="incubate_speed_up">加速孵化</string>
 
-    <!-- 成长 -->
+    <!-- 成长阶段（须与 PetStage.kt 完全一致：EGG/HATCHING/BABY/JUVENILE/ADULT/ELDER/RETIRED） -->
     <string name="growth_stage_egg">蛋</string>
+    <string name="growth_stage_hatching">破壳</string>
     <string name="growth_stage_baby">幼崽</string>
-    <string name="growth_stage_teen">少年</string>
+    <string name="growth_stage_juvenile">少年</string>
     <string name="growth_stage_adult">成年</string>
     <string name="growth_stage_elder">长者</string>
+    <string name="growth_stage_retired">隐居</string>
+
+    <!-- 稀有度（6 档，须与 Rarity.kt 一致） -->
+    <string name="rarity_common">普通</string>
+    <string name="rarity_rare">稀有</string>
+    <string name="rarity_epic">史诗</string>
+    <string name="rarity_legendary">传说</string>
+    <string name="rarity_mythic">神话</string>
+    <string name="rarity_mutant">灵兽</string>
+
+    <!-- 五虫类群（须与 SpeciesFamily 一致，顺序即《西游记》原话：蠃鳞毛羽昆） -->
+    <string name="family_luo">蠃虫</string>
+    <string name="family_lin">鳞虫</string>
+    <string name="family_mao">毛虫</string>
+    <string name="family_yu">羽虫</string>
+    <string name="family_kun">昆虫</string>
+    <string name="family_uncategorized">不入十类</string>
 
     <!-- 社交 -->
     <string name="ranking_title">排行榜</string>
@@ -38,4 +56,8 @@
     <string name="loading">加载中…</string>
     <string name="empty_data">暂无数据</string>
     <string name="network_error">网络异常，请稍后重试</string>
+
+    <!-- 调试：桌宠技术验证（Phase 3 定案后可删） -->
+    <string name="probe_title">桌宠技术验证</string>
+    <string name="probe_entry">桌宠验证</string>
 </resources>

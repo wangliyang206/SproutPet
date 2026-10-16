@@ -77,7 +77,7 @@ sealed interface ItemEffect {
     /** 增加亲密度 */
     data class AddIntimacy(val value: Int) : ItemEffect
 
-    /** 定向增加属性 */
+    /** 定点增加属性（体力也走这里 —— 见下方说明） */
     data class AddAttribute(val attribute: AttributeType, val value: Int) : ItemEffect
 
     /** 提升孵化保底稀有度（使用后开出的宠物稀有度不低于该值） */
@@ -86,17 +86,29 @@ sealed interface ItemEffect {
     /** 直接推进到指定阶段（用于"生长加速"高级道具） */
     data class AdvanceStage(val stage: PetStage) : ItemEffect
 
-    /** 恢复体力 */
-    data class RestoreStamina(val value: Int) : ItemEffect
-
-    /** 增加金币 */
+    /**
+     * 增加金币。
+     *
+     * 📌 **曾经有一个 `RestoreStamina`，已删除。**
+     * 体力（`stamina`）是**属性**而不是资源（见 [AttributeType.STAMINA]），
+     * 所以"恢复体力"与"增加体力属性"是同一件事 —— 用 [AddAttribute] 表达即可，
+     * 单独留一个效果类型只会让人以为存在"体力值"这个概念。
+     */
     data class AddGold(val amount: Int) : ItemEffect
 
     /** 增加双方好感度（社交道具） */
     data class AddAffection(val value: Int) : ItemEffect
 }
 
-/** 可提升的属性类型 */
+/**
+ * 可提升的属性类型。
+ *
+ * ⚠️ **`STAMINA` 是属性，不是"体力值"资源**（这条曾长期含糊，见 docs/09 U-01）。
+ * 它随等级/稀有度/倾向成长，作用是"提高每日互动次数上限"，
+ * **没有"消耗体力""体力不足无法互动"这类机制** ——
+ * 那会制造"现在不能玩"的负反馈，与「治愈陪伴」的定位冲突。
+ * 防刷由 `GrowthRules.DAILY_EXP_CAP` 与各互动的 `dailyLimit` 负责，不靠体力门槛。
+ */
 enum class AttributeType(val displayName: String) {
     STAMINA("体力"),
     STRENGTH("力量"),

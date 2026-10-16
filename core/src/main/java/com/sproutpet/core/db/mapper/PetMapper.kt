@@ -3,6 +3,7 @@ package com.sproutpet.core.db.mapper
 import com.sproutpet.core.db.entity.PetEntity
 import com.sproutpet.core.domain.pet.Pet
 import com.sproutpet.core.domain.pet.PetAttributes
+import com.sproutpet.core.domain.pet.PetGender
 import com.sproutpet.core.domain.pet.PetGenes
 import com.sproutpet.core.domain.pet.PetSpecies
 import com.sproutpet.core.domain.pet.PetStage
@@ -50,7 +51,11 @@ object PetMapper {
         parentIdA = entity.parentIdA,
         parentIdB = entity.parentIdB,
         batchNo = entity.batchNo,
-        isRetired = entity.isRetired
+        // ⚠️ 不映射 entity.isRetired：`Pet.isRetired` 现在是 **stage 的派生值**（单一真相源），
+        // 列 `is_retired` 只是供 DAO 走索引过滤的缓存。见 PetEntity 该列的说明。
+        exoticBlood = entity.exoticBlood,
+        hasFullDeityForm = entity.hasFullDeityForm,
+        gender = PetGender.fromId(entity.gender)
     )
 
     /** Domain → Entity */
@@ -87,6 +92,9 @@ object PetMapper {
             generation = existing?.generation ?: generation,
             batchNo = pet.batchNo,
             isRetired = pet.isRetired,
+            exoticBlood = pet.exoticBlood,
+            hasFullDeityForm = pet.hasFullDeityForm,
+            gender = pet.gender.id,
             remoteId = existing?.remoteId,
             updatedAt = System.currentTimeMillis(),
             isSynced = false

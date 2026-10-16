@@ -18,7 +18,7 @@ data class PetAttributes(
     val agility: Int = 10,
     /** 智慧：影响学习类互动与经验获取效率 */
     val wisdom: Int = 10,
-    /** 魅力：影响社交、结婚成功率与排行榜人气 */
+    /** 魅力：影响社交、配对成功率与排行榜人气 */
     val charm: Int = 10,
     /** 亲密度：与主人之间的羁绊，0~100（独立于其他属性） */
     val intimacy: Int = 0
@@ -30,10 +30,20 @@ data class PetAttributes(
     /** 四项基础属性总和 */
     val totalBase: Int get() = stamina + strength + agility + wisdom + charm
 
-    /** 各项属性上限 */
+    /**
+     * 各项属性的**防溢出钳制上界**。
+     *
+     * ⚠️ 它**不是设计目标**，只防止算术溢出与脏数据。
+     * 实际能到的最高值：`(6 + 60×2) × 2.40 × 1.40 = 423`
+     * （60 级 × 灵兽 × 力量倾向的力量项）。
+     *
+     * 历史上这里写的是 `1000`，且文档据此描述"属性取值范围 0~1000" ——
+     * 那会让后续做属性相关玩法的人**按 1000 设计**，直接偏一个数量级。
+     * 现改为 500（略高于真实上界，留出后续加成的余量）。
+     * `PetAttributesTest` 有断言守住"真实上界不得超过它"。
+     */
     companion object {
-        const val MAX_ATTRIBUTE = 1000
-        const val MAX_INTIMACY = 100
+        const val MAX_ATTRIBUTE = 500
 
         /**
          * ⚠️⚠️ **ADR-021 红线：本函数不得引入 `SpeciesFamily`（五虫类群）参数。**
