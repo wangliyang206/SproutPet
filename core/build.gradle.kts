@@ -41,6 +41,14 @@ android {
             isIncludeAndroidResources = true
         }
     }
+
+    sourceSets {
+        // MigrationTestHelper 从 assets 读 schema JSON（<db-class-name>/<version>.json），
+        // 把 schema 导出目录挂到 test assets 上，纯 JVM 单测即可跑迁移校验。
+        getByName("test") {
+            assets.srcDirs("$projectDir/schemas")
+        }
+    }
 }
 
 /**
@@ -122,6 +130,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.room.testing)
     testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.monitor)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

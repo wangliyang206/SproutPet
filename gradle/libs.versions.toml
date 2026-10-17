@@ -41,6 +41,8 @@ coil = "2.5.0"
 
 junit = "4.13.2"
 junitExt = "1.1.5"
+androidxTestCore = "1.5.0"
+androidxTestMonitor = "1.6.1"
 espresso = "3.5.1"
 mockk = "1.13.8"
 turbine = "1.0.0"
@@ -115,6 +117,8 @@ utilcodex = { group = "com.blankj", name = "utilcodex", version.ref = "utilcodex
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
+androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidxTestCore" }
+androidx-test-monitor = { group = "androidx.test", name = "monitor", version.ref = "androidxTestMonitor" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
