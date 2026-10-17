@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 孵化底部抽层（design-v2 屏⑤）：倒计时 + 专注陪伴 / 道具加速 / 好友助力 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_round"
+    android:orientation="vertical"
+    android:paddingHorizontal="18dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="20dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4.5dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_sheet_grip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/incubate_sheet_title"
+            android:textColor="@color/scene_text"
+            android:textSize="16.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_sheet_countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/brand_primary_dark"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="04:32" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_sheet_stage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/scene_hint"
+        android:textSize="12sp"
+        tools:text="里面好像有心跳声" />
+
+    <!-- 专注陪伴（就地开始，陪伴时长按比例抵扣孵化时间） -->
+    <include
+        android:id="@+id/row_focus"
+        layout="@layout/view_sheet_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- 道具加速（道具系统 G-08 未排期，Phase 1 占位） -->
+    <include
+        android:id="@+id/row_item"
+        layout="@layout/view_sheet_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- 好友助力（社交属 Phase 7，占位） -->
+    <include
+        android:id="@+id/row_friend"
+        layout="@layout/view_sheet_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

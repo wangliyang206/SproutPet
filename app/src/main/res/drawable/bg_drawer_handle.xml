@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 右缘抽屉把手：左侧圆角、贴右缘（见 design-v2 .handle） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#D1FFFFFF" />
+    <corners
+        android:topLeftRadius="16dp"
+        android:bottomLeftRadius="16dp"
+        android:topRightRadius="0dp"
+        android:bottomRightRadius="0dp" />
+</shape>

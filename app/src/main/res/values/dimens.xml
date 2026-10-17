@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- design-v2 圆角体系（见 kit.py：sheet/card 26px · chip 16px · 小圆角 12px） -->
+    <dimen name="radius_card">26dp</dimen>
+    <dimen name="radius_chip">16dp</dimen>
+    <dimen name="radius_small">12dp</dimen>
+
+    <!-- 场景宠物 -->
+    <dimen name="scene_pet_size">120dp</dimen>
+    <dimen name="scene_egg_size">72dp</dimen>
+
+    <!-- 右缘把手 -->
+    <dimen name="drawer_handle_width">30dp</dimen>
+    <dimen name="drawer_width">318dp</dimen>
+</resources>

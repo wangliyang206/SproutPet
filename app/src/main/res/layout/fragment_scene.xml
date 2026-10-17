@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 全屏生活场景（倒置 IA · design-v2 屏①/屏⑩）：昼夜背景 + 宠物层 + 角落的蛋 + 右缘把手 -->
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- ═══ 场景主内容 ═══ -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 昼夜背景（随真实时间切换，1.04 倍放大防视差露边） -->
+        <ImageView
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleX="1.04"
+            android:scaleY="1.04"
+            android:scaleType="centerCrop"
+            android:contentDescription="@null" />
+
+        <!-- 宠物站位层（动态添加，坐标取自 core ScenePetLayout.homeLayout） -->
+        <FrameLayout
+            android:id="@+id/pet_layer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- 气泡 / 飘字特效层 -->
+        <FrameLayout
+            android:id="@+id/effect_layer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- 顶部日签（唯一顶部 HUD，不挂货币） -->
+        <TextView
+            android:id="@+id/tv_day_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_chip_white"
+            android:paddingHorizontal="13dp"
+            android:paddingVertical="7dp"
+            android:textColor="@color/scene_text"
+            android:textSize="12.5sp"
+            android:textStyle="bold"
+            tools:text="相伴第 1 天"
+            xmlns:tools="http://schemas.android.com/tools" />
+
+        <!-- 角落的蛋（含标签；开箱 / 孵化 / 破壳的唯一直接入） -->
+        <include
+            android:id="@+id/scene_egg"
+            layout="@layout/view_scene_egg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="18dp"
+            android:layout_marginBottom="86dp" />
+
+        <!-- 右缘抽屉把手（唯一常驻 HUD） -->
+        <LinearLayout
+            android:id="@+id/drawer_handle"
+            android:layout_width="@dimen/drawer_handle_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:background="@drawable/bg_drawer_handle"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingVertical="13dp">
+
+            <View
+                android:layout_width="13dp"
+                android:layout_height="2.4dp"
+                android:background="@color/scene_sub" />
+            <View
+                android:layout_width="13dp"
+                android:layout_height="2.4dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/scene_sub" />
+            <View
+                android:layout_width="13dp"
+                android:layout_height="2.4dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/scene_sub" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/drawer_handle_label"
+                android:textColor="@color/scene_hint"
+                android:textSize="8.5sp" />
+        </LinearLayout>
+
+        <!-- 底部引导提示（新用户可见，有宠物后隐藏） -->
+        <TextView
+            android:id="@+id/tv_foot_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:paddingHorizontal="14dp"
+            android:text="@string/scene_foot_hint"
+            android:textColor="#9E263C23"
+            android:textSize="11.5sp" />
+
+    </FrameLayout>
+
+    <!-- ═══ 右缘抽屉内容（HomeDrawerFragment） ═══ -->
+    <FrameLayout
+        android:id="@+id/drawer_container"
+        android:layout_width="@dimen/drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@drawable/bg_drawer_panel" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

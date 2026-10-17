@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 孵化抽层的通用条目行（图标 + 标题/描述 + 操作钮，见 design-v2 .srow） -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="12dp">
+
+    <TextView
+        android:id="@+id/tv_row_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_kv_chip"
+        android:gravity="center"
+        android:textSize="19sp"
+        tools:text="🌿" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_row_title"
+            style="@style/SheetRowTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="专注陪伴" />
+        <TextView
+            android:id="@+id/tv_row_desc"
+            style="@style/SheetRowDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="陪它一会儿，孵化会加快" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_row_go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_btn_ghost"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="7dp"
+        android:text="@string/incubate_go"
+        android:textColor="@color/brand_primary_dark"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+</LinearLayout>

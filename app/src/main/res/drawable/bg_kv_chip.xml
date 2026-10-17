@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 属性 kv 小 chip（揭晓卡 / 起名卡，见 design-v2 .kv span） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/scene_kv_bg" />
+    <corners android:radius="11dp" />
+</shape>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 右缘抽屉内容（design-v2 屏⑨）：用户卡 + 货币收纳 + 功能入口（主界面不挂货币） -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="never">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="22dp"
+        android:paddingBottom="18dp">
+
+        <!-- 用户卡 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/bg_circle_primary"
+                android:gravity="center"
+                android:text="🌱"
+                android:textSize="22sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_drawer_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/drawer_me_default"
+                    android:textColor="@color/scene_text"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tv_drawer_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/scene_hint"
+                    android:textSize="11sp"
+                    tools:text="第 1 只宠物陪伴中" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 货币收纳（金币/钻石数值属 Phase 2 经济系统，先占位 0） -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="9dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_kv_chip"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/drawer_wallet_gold"
+                    android:textColor="@color/scene_hint"
+                    android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/tv_wallet_gold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/scene_text"
+                    android:textSize="15.5sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_kv_chip"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/drawer_wallet_diamond"
+                    android:textColor="@color/scene_hint"
+                    android:textSize="10sp" />
+                <TextView
+                    android:id="@+id/tv_wallet_diamond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/scene_text"
+                    android:textSize="15.5sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 宠物区入口 -->
+        <TextView style="@style/DrawerSection" android:text="@string/drawer_section_pet" />
+        <include android:id="@+id/entry_codex" layout="@layout/view_drawer_entry" />
+        <include android:id="@+id/entry_family" layout="@layout/view_drawer_entry" />
+        <include android:id="@+id/entry_bag" layout="@layout/view_drawer_entry" />
+        <include android:id="@+id/entry_desktop" layout="@layout/view_drawer_entry" />
+
+        <!-- 更多入口 -->
+        <TextView style="@style/DrawerSection" android:text="@string/drawer_section_more" />
+        <include android:id="@+id/entry_achievement" layout="@layout/view_drawer_entry" />
+        <include android:id="@+id/entry_hill" layout="@layout/view_drawer_entry" />
+        <include android:id="@+id/entry_settings" layout="@layout/view_drawer_entry" />
+    </LinearLayout>
+</ScrollView>

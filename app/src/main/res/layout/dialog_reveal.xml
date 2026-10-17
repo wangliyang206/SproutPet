@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 开箱揭晓模态卡（design-v2 屏④）：稀有度 + 物种/虫属/性别/世代 + 保底进度 + 概率公示 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_round"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="22dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reveal_title"
+        android:textColor="@color/scene_text"
+        android:textSize="16.5sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/iv_reveal_egg"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="14dp"
+        android:contentDescription="@null"
+        tools:src="@drawable/pet_egg_cracked" />
+
+    <!-- 稀有度徽章（底色按档位着色） -->
+    <TextView
+        android:id="@+id/tv_reveal_rarity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_kv_chip"
+        android:paddingHorizontal="11dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/white"
+        android:textSize="11.5sp"
+        android:textStyle="bold"
+        tools:text="稀有"
+        tools:backgroundTint="@color/rarity_rare" />
+
+    <TextView
+        android:id="@+id/tv_reveal_species"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/scene_text"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        tools:text="萌芽鸡" />
+
+    <!-- 属性 chips：虫属 / 性别 / 世代 -->
+    <LinearLayout
+        android:id="@+id/row_reveal_kv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_reveal_family"
+            style="@style/RevealKv"
+            tools:text="羽虫" />
+        <TextView
+            android:id="@+id/tv_reveal_gender"
+            style="@style/RevealKv"
+            tools:text="公" />
+        <TextView
+            android:id="@+id/tv_reveal_generation"
+            style="@style/RevealKv"
+            tools:text="第 1 世代" />
+    </LinearLayout>
+
+    <!-- 保底进度 / 幸运提示 -->
+    <TextView
+        android:id="@+id/tv_reveal_pity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/scene_sub"
+        android:textSize="11.5sp"
+        tools:text="距史诗保底还差 12 抽" />
+
+    <!-- 概率公示（合规要求可见） -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/reveal_probability"
+        android:textColor="@color/scene_hint"
+        android:textSize="10.5sp" />
+
+    <TextView
+        android:id="@+id/btn_reveal_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_btn_primary"
+        android:gravity="center"
+        android:paddingVertical="13dp"
+        android:text="@string/reveal_btn_home"
+        android:textColor="@color/white"
+        android:textSize="15.5sp"
+        android:textStyle="bold" />
+</LinearLayout>

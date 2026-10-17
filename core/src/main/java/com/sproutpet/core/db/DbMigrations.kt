@@ -138,5 +138,63 @@ object DbMigrations {
         }
     }
 
-    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+    /**
+     * V5 → V6：Phase 2 数据与成长系统 —— 新增 `user` 表与 `inventory_item` 表。
+     *
+     * ## user 表
+     * 本地单机账号（Phase 2 落地，docs/03 §3.2）。把 Phase 1 暂存在 DataStore 的
+     * `owner_id` / `pity_count` 正式迁移到这里：保底计数是账号级概念，必须有持久化表承接。
+     *
+     * ## inventory_item 表
+     * 背包（docs/03 §3.3）。玩具因有独立耐久，**不设** `UNIQUE(owner_id, item_id)`，
+     * 堆叠逻辑由仓库层在可堆叠道具上做合并。
+     *
+     * 两张表都是全新表，存量数据无影响（对老用户就是「多了两个空表」）。
+     */
+    val MIGRATION_5_6: Migration = object : Migration(5, 6) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `user` (
+                    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    `nickname` TEXT NOT NULL,
+                    `avatar` TEXT,
+                    `gold` INTEGER NOT NULL DEFAULT 0,
+                    `gem` INTEGER NOT NULL DEFAULT 0,
+                    `level` INTEGER NOT NULL DEFAULT 1,
+                    `exp` INTEGER NOT NULL DEFAULT 0,
+                    `pity_count` INTEGER NOT NULL DEFAULT 0,
+                    `total_draw_count` INTEGER NOT NULL DEFAULT 0,
+                    `last_login_at` INTEGER,
+                    `created_at` INTEGER NOT NULL,
+                    `remote_id` TEXT,
+                    `updated_at` INTEGER NOT NULL,
+                    `is_synced` INTEGER NOT NULL DEFAULT 0
+                )
+                """.trimIndent()
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_user_remote_id` ON `user`(`remote_id`)")
+
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `inventory_item` (
+                    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    `owner_id` INTEGER NOT NULL,
+                    `item_id` TEXT NOT NULL,
+                    `count` INTEGER NOT NULL DEFAULT 0,
+                    `durability` INTEGER,
+                    `acquired_at` INTEGER NOT NULL,
+                    `expire_at` INTEGER,
+                    `updated_at` INTEGER NOT NULL,
+                    `is_synced` INTEGER NOT NULL DEFAULT 0
+                )
+                """.trimIndent()
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_inventory_item_owner_id_item_id` ON `inventory_item`(`owner_id`, `item_id`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_inventory_item_item_id` ON `inventory_item`(`item_id`)")
+        }
+    }
+
+    /** 全部迁移，按版本顺序交给 Room（见 [com.sproutpet.core.di.AppModule]） */
+    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
 }

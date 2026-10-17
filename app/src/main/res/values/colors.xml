@@ -33,6 +33,18 @@
     <color name="family_kun">#FF9CCC65</color>
     <color name="family_uncategorized">#FF5C6BC0</color>
 
+    <!-- 场景（design-v2 倒置 IA，见 design-v2/kit.py） -->
+    <color name="scene_text">#FF2A3328</color>
+    <color name="scene_sub">#FF5B6B58</color>
+    <color name="scene_hint">#FF9AA79A</color>
+    <color name="scene_chip_bg">#B8FFFFFF</color>
+    <color name="scene_card_bg">#F7FFFFFF</color>
+    <color name="scene_scrim">#782A3620</color>
+    <color name="scene_sheet_bg">#F5FFFFFF</color>
+    <color name="scene_kv_bg">#FFF2F7F1</color>
+    <color name="scene_btn_ghost_bg">#FFEEF5EE</color>
+    <color name="scene_grip">#FFD8E2D6</color>
+
     <!-- 中性 -->
     <color name="text_primary">#FF212121</color>
     <color name="text_secondary">#FF757575</color>

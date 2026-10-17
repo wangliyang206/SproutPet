@@ -2,8 +2,12 @@ package com.sproutpet.core.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.sproutpet.core.db.entity.InventoryItemDao
+import com.sproutpet.core.db.entity.InventoryItemEntity
 import com.sproutpet.core.db.entity.PetEntity
 import com.sproutpet.core.db.entity.PetDao
+import com.sproutpet.core.db.entity.UserDao
+import com.sproutpet.core.db.entity.UserEntity
 
 /**
  * 应用本地数据库。
@@ -23,7 +27,9 @@ import com.sproutpet.core.db.entity.PetDao
  */
 @Database(
     entities = [
-        PetEntity::class
+        PetEntity::class,
+        UserEntity::class,
+        InventoryItemEntity::class
     ],
     version = SproutPetDatabase.DB_VERSION,
     exportSchema = true
@@ -31,6 +37,10 @@ import com.sproutpet.core.db.entity.PetDao
 abstract class SproutPetDatabase : RoomDatabase() {
 
     abstract fun petDao(): PetDao
+
+    abstract fun userDao(): UserDao
+
+    abstract fun inventoryItemDao(): InventoryItemDao
 
     companion object {
         /**
@@ -42,7 +52,8 @@ abstract class SproutPetDatabase : RoomDatabase() {
          * - V3：`pet` 表补 `deity_form`（ADR-026 神兽形态改为个体级、出生时结算，见 [DbMigrations.MIGRATION_2_3]）
          * - V4：`pet` 表补 `gender`（配对前置条件"一公一母"，见 [DbMigrations.MIGRATION_3_4]）
          * - V5：`pet` 表补 `is_main` / `home_slot` / `desktop_slot`（U-12 三层数量链条，见 [DbMigrations.MIGRATION_4_5]）
+         * - V6：新增 `user` 表与 `inventory_item` 表（Phase 2 数据与成长系统，见 [DbMigrations.MIGRATION_5_6]）
          */
-        const val DB_VERSION = 5
+        const val DB_VERSION = 6
     }
 }

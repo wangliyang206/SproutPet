@@ -60,4 +60,91 @@
     <!-- 调试：桌宠技术验证（Phase 3 定案后可删） -->
     <string name="probe_title">桌宠技术验证</string>
     <string name="probe_entry">桌宠验证</string>
+
+    <!-- ═══ Phase 1 · 倒置 IA 场景（design-v2） ═══ -->
+    <!-- 场景日签 -->
+    <string name="scene_day_chip">相伴第 %1$d 天</string>
+    <string name="scene_day_chip_new">今天是我们相遇的日子</string>
+    <string name="scene_foot_hint">摸摸它会有回应 · 角落的蛋可以开出新伙伴</string>
+
+    <!-- 蛋 / 开箱 -->
+    <string name="scene_egg_tag_free">免费领盲盒</string>
+    <string name="scene_egg_tag_incubating">孵化中</string>
+    <string name="scene_egg_tag_ready">可以破壳啦！</string>
+    <string name="reveal_title">开箱揭晓</string>
+    <string name="reveal_species_unknown">？？？</string>
+    <string name="reveal_kv_gender">性别</string>
+    <string name="reveal_kv_generation">第 %1$d 世代</string>
+    <string name="reveal_pity">距史诗保底还差 %1$d 抽</string>
+    <string name="reveal_pity_triggered">本次触发了保底！</string>
+    <string name="reveal_lucky">幸运加成触发，本来可能只是普通</string>
+    <string name="reveal_probability">概率公示：普通 60% · 稀有 25% · 史诗 10% · 传说 4% · 神话 1%</string>
+    <string name="reveal_btn_home">带它回家 · 继续孵化</string>
+
+    <!-- 孵化 -->
+    <string name="incubate_sheet_title">孵化进行中</string>
+    <string name="incubate_countdown_label">预计破壳</string>
+    <string name="incubate_focus">专注陪伴</string>
+    <string name="incubate_focus_desc">陪它一会儿，孵化会加快</string>
+    <string name="incubate_item">道具加速</string>
+    <string name="incubate_item_desc">使用孵化道具直接缩短时间</string>
+    <string name="incubate_friend">好友助力</string>
+    <string name="incubate_friend_desc">邀请好友帮忙（敬请期待）</string>
+    <string name="incubate_go">出发</string>
+    <string name="incubate_soon">敬请期待</string>
+    <string name="incubate_focus_done">陪伴 %1$d 分钟，孵化加快了！</string>
+
+    <!-- 破壳 / 起名 -->
+    <string name="hatching_title">要破壳了！</string>
+    <string name="naming_title">它出生啦，给它起个名字吧</string>
+    <string name="naming_hint">输入昵称</string>
+    <string name="naming_confirm">就叫这个！</string>
+    <string name="naming_empty_error">名字不能为空哦</string>
+
+    <!-- 宠物互动 -->
+    <string name="interact_exp_floaty">+%1$d 经验</string>
+    <string name="interact_level_up">升级啦！Lv.%1$d</string>
+    <string name="pet_plate_level">Lv.%1$d</string>
+
+    <!-- 搭话气泡 -->
+    <string name="bubble_greeting_1">今天也想被你摸一下～</string>
+    <string name="bubble_greeting_2">你在忙什么呀？</string>
+    <string name="bubble_greeting_3">陪我玩一会儿嘛</string>
+    <string name="bubble_action_pet">摸摸它</string>
+
+    <!-- 右缘抽屉 -->
+    <string name="drawer_handle_label">菜单</string>
+    <string name="drawer_me_default">萌芽饲养员</string>
+    <string name="drawer_me_desc">第 %1$d 只宠物陪伴中</string>
+    <string name="drawer_wallet_gold">金币</string>
+    <string name="drawer_wallet_diamond">钻石</string>
+    <string name="drawer_section_pet">宠物</string>
+    <string name="drawer_entry_codex">图鉴</string>
+    <string name="drawer_entry_codex_desc">已收集 %1$d / 18</string>
+    <string name="drawer_entry_family">族谱</string>
+    <string name="drawer_entry_family_desc">家族世代与血缘</string>
+    <string name="drawer_entry_bag">仓库</string>
+    <string name="drawer_entry_bag_desc">食物 · 玩具 · 道具</string>
+    <string name="drawer_entry_desktop">桌面宠物</string>
+    <string name="drawer_entry_desktop_desc">谁在手机桌面陪你</string>
+    <string name="drawer_section_more">更多</string>
+    <string name="drawer_entry_achievement">成就</string>
+    <string name="drawer_entry_achievement_desc">里程碑与奖励</string>
+    <string name="drawer_entry_hill">后山</string>
+    <string name="drawer_entry_hill_desc">隐居先辈的小屋</string>
+    <string name="drawer_entry_settings">设置</string>
+    <string name="drawer_entry_settings_desc">通知 · 隐私 · 关于</string>
+    <string name="drawer_placeholder">「%1$s」将在后续阶段开放</string>
+
+    <!-- 背包 / 商店 -->
+    <string name="inventory_title">仓库</string>
+    <string name="inventory_go_shop">商店 ›</string>
+    <string name="inventory_use">使用</string>
+    <string name="inventory_empty">背包空空如也，去商店逛逛吧</string>
+    <string name="inventory_used">已使用「%1$s」</string>
+    <string name="inventory_no_pet">需要先有一只宠物才能使用</string>
+    <string name="shop_title">商店</string>
+    <string name="shop_buy">购买</string>
+    <string name="shop_bought">已购买「%1$s」</string>
+    <string name="shop_not_enough">金币或钻石不足</string>
 </resources>

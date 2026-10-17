@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 气泡底部尖角（旋转 45° 的小方块，见 design-v2 .bubble:after） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#F0FFFFFF" />
+    <size android:width="12dp" android:height="12dp" />
+</shape>

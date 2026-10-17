@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 搭话气泡（design-v2 .bubble）：文案 + 行动按钮 + 底部尖角 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bubble"
+        android:orientation="vertical"
+        android:paddingHorizontal="13dp"
+        android:paddingVertical="9dp">
+
+        <TextView
+            android:id="@+id/tv_bubble_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:textColor="@color/scene_text"
+            android:textSize="13sp"
+            tools:text="今天也想被你摸一下～" />
+
+        <TextView
+            android:id="@+id/tv_bubble_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:background="@drawable/bg_btn_primary"
+            android:paddingHorizontal="11dp"
+            android:paddingVertical="5dp"
+            android:textColor="@color/white"
+            android:textSize="11.5sp"
+            android:textStyle="bold"
+            tools:text="摸摸它" />
+    </LinearLayout>
+
+    <!-- 尖角（对齐宠物头顶居中） -->
+    <View
+        android:id="@+id/view_bubble_tail"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="-6dp"
+        android:background="@drawable/bg_bubble_tail"
+        android:rotation="45" />
+</LinearLayout>

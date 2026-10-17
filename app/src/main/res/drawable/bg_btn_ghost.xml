@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 次级按钮（浅绿幽灵按钮，见 design-v2 .btn.ghost） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/scene_btn_ghost_bg" />
+    <corners android:radius="18dp" />
+</shape>
