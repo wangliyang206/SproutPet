@@ -332,11 +332,19 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
                     .show(childFragmentManager, BlindBoxRevealDialog.TAG)
             is SceneEvent.ShowIncubationSheet ->
                 IncubationSheetDialog.newInstance(event.egg).apply {
-                    onFocusFinished = { eggId, ms -> viewModel.onFocusSessionFinished(eggId, ms) }
+                    onStartFocus = { egg -> viewModel.onStartFocus(egg) }
                     onPlaceholder = { name ->
                         toast(getString(R.string.drawer_placeholder, name))
                     }
                 }.show(childFragmentManager, IncubationSheetDialog.TAG)
+            is SceneEvent.ShowFocus -> {
+                val focus = com.sproutpet.pet.ui.focus.FocusFragment.newInstance(event.egg.id)
+                focus.onFocusFinished = { eggId, ms -> viewModel.onFocusSessionFinished(eggId, ms) }
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.scene_container, focus)
+                    .addToBackStack(null)
+                    .commit()
+            }
             is SceneEvent.ShowHatching -> playHatchingOverlay(event.pet)
             is SceneEvent.ShowNaming ->
                 NamingDialogFragment.newInstance(event.pet).apply {

@@ -147,4 +147,12 @@
     <string name="shop_buy">购买</string>
     <string name="shop_bought">已购买「%1$s」</string>
     <string name="shop_not_enough">金币或钻石不足</string>
+
+    <!-- 专注陪伴 -->
+    <string name="focus_title">专注陪伴</string>
+    <string name="focus_start">开始专注</string>
+    <string name="focus_pause">暂停</string>
+    <string name="focus_resume">继续</string>
+    <string name="focus_stop">结束陪伴</string>
+    <string name="focus_hint">陪伴时长 × 50% 抵扣孵化时间（单蛋最多抵 50%）\n满 15 分钟给宠物加经验</string>
 </resources>

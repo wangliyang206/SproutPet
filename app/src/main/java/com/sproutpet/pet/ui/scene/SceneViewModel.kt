@@ -56,6 +56,8 @@ sealed interface SceneEvent : UiEvent {
     data class ShowReveal(val outcome: OpenBoxOutcome) : SceneEvent
     /** 孵化底部抽层（design-v2 屏⑤） */
     data class ShowIncubationSheet(val egg: Pet) : SceneEvent
+    /** 专注陪伴番茄钟页（docs/04 §2.5） */
+    data class ShowFocus(val egg: Pet) : SceneEvent
     /** 破壳动画（3 秒 + 震动，design-v2 屏⑥前置） */
     data class ShowHatching(val pet: Pet) : SceneEvent
     /** 强制起名弹窗（design-v2 屏⑥） */
@@ -195,6 +197,11 @@ class SceneViewModel @Inject constructor(
                 InteractionResult.ItemNotEnough -> Unit
             }
         }
+    }
+
+    /** 点击孵化抽层「专注陪伴」→ 打开番茄钟页 */
+    fun onStartFocus(egg: Pet) {
+        sendEvent(SceneEvent.ShowFocus(egg))
     }
 
     /** 专注陪伴完成：按实际陪伴时长抵扣孵化时间 */
