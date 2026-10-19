@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  蠃虫 · 少年
+
+  L1 类群层（docs/15 §1.4）：蠃虫的 少年形态。
+  类群母题 = 圆软黏（头身一体、无颈）（docs/15 §2.1）。
+  ⚠️ 美术替换时同名覆盖本文件即可，渲染器（PetAssetResolver 四级回落）零改动。
+
+  占位资源：由 tools/gen_pet_placeholder_vectors.py 生成，
+  美术交付 Rive 版本（docs/02-宠物渲染方案.md §5.1）后可整体替换。
+  手改本文件会在下次重新生成时被覆盖 —— 请改脚本。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <path
+        android:fillColor="#7FD1C1"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M135.20 135.52 C135.20 157.88 119.44 176.00 100.00 176.00 C80.56 176.00 64.80 157.88 64.80 135.52 C64.80 113.16 80.56 95.04 100.00 95.04 C119.44 95.04 135.20 113.16 135.20 135.52 Z" />
+    <path
+        android:fillColor="#B2EBDF"
+        android:pathData="M99.67 113.65 C102.03 118.96 99.06 125.44 93.02 128.13 C86.98 130.82 80.17 128.70 77.80 123.39 C75.44 118.08 78.42 111.59 84.46 108.90 C90.49 106.22 97.31 108.34 99.67 113.65 Z" />
+    <path
+        android:fillColor="#FF4E342E"
+        android:pathData="M96.48 118.52 C96.48 123.38 92.54 127.32 87.68 127.32 C82.82 127.32 78.88 123.38 78.88 118.52 C78.88 113.66 82.82 109.72 87.68 109.72 C92.54 109.72 96.48 113.66 96.48 118.52 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M87.42 115.17 C87.42 116.73 86.16 117.99 84.60 117.99 C83.04 117.99 81.78 116.73 81.78 115.17 C81.78 113.62 83.04 112.36 84.60 112.36 C86.16 112.36 87.42 113.62 87.42 115.17 Z" />
+    <path
+        android:fillColor="#FF4E342E"
+        android:pathData="M121.12 118.52 C121.12 123.38 117.18 127.32 112.32 127.32 C107.46 127.32 103.52 123.38 103.52 118.52 C103.52 113.66 107.46 109.72 112.32 109.72 C117.18 109.72 121.12 113.66 121.12 118.52 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M112.06 115.17 C112.06 116.73 110.80 117.99 109.24 117.99 C107.68 117.99 106.42 116.73 106.42 115.17 C106.42 113.62 107.68 112.36 109.24 112.36 C110.80 112.36 112.06 113.62 112.06 115.17 Z" />
+    <path
+        android:fillColor="#FFFFAB91"
+        android:pathData="M90.70 130.16 C91.28 132.86 88.46 135.75 84.41 136.61 C80.36 137.47 76.61 135.98 76.03 133.28 C75.46 130.58 78.28 127.69 82.33 126.83 C86.38 125.97 90.13 127.46 90.70 130.16 Z" />
+    <path
+        android:fillColor="#FFFFAB91"
+        android:pathData="M123.97 133.28 C123.39 135.98 119.64 137.47 115.59 136.61 C111.54 135.75 108.72 132.86 109.30 130.16 C109.87 127.46 113.62 125.97 117.67 126.83 C121.72 127.69 124.54 130.58 123.97 133.28 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.0"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M94.00 135.32 C98.00 139.59 102.00 139.59 106.00 135.32" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#4DB6AC"
+        android:strokeWidth="3.0"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M80.64 153.74 C93.55 158.32 106.45 158.32 119.36 153.74" />
+    <path
+        android:fillColor="#7FD1C1"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M66.68 140.85 C69.25 146.62 67.73 152.90 63.29 154.88 C58.85 156.85 53.17 153.78 50.60 148.00 C48.03 142.23 49.55 135.95 53.99 133.97 C58.43 132.00 64.11 135.07 66.68 140.85 Z" />
+    <path
+        android:fillColor="#7FD1C1"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M149.40 148.00 C146.83 153.78 141.15 156.85 136.71 154.88 C132.27 152.90 130.75 146.62 133.32 140.85 C135.89 135.07 141.57 132.00 146.01 133.97 C150.45 135.95 151.97 142.23 149.40 148.00 Z" />
+</vector>

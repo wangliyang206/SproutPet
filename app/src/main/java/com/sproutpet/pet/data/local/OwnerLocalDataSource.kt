@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -24,6 +25,7 @@ class OwnerLocalDataSource @Inject constructor(
 ) {
     private val keyOwnerId = longPreferencesKey("owner_id")
     private val keyPityCount = intPreferencesKey("blind_box_pity_count")
+    private val keyFreeTicketDay = stringPreferencesKey("free_ticket_day")
 
     /** 本地主人 ID（不存在则生成并落盘） */
     suspend fun getOrCreateOwnerId(): Long {
@@ -41,5 +43,22 @@ class OwnerLocalDataSource @Inject constructor(
 
     suspend fun writePityCount(count: Int) {
         dataStore.edit { it[keyPityCount] = count }
+    }
+
+    /**
+     * 领取「每日免费盲盒门票」的幂等标记（docs/00 §2.1：每日免费 2 抽）。
+     *
+     * @param today 本地日期字符串（`yyyy-MM-dd`）
+     * @return true = 今天还没领过，调用方应发放；false = 已领过
+     *
+     * ⚠️ 产品原文是「签到 1 + 任务全清 1」，但签到与任务**界面还不存在**（docs/16 §二 07 屏），
+     * 所以先把「每天 2 张」这条**规则**落地，等签到/任务做出来再把发放源换成真实领取。
+     * 这样门票经济不会因为 UI 缺位而彻底没有入口。
+     */
+    suspend fun claimDailyFreeTickets(today: String): Boolean {
+        val last = dataStore.data.map { it[keyFreeTicketDay] }.first()
+        if (last == today) return false
+        dataStore.edit { it[keyFreeTicketDay] = today }
+        return true
     }
 }

@@ -15,21 +15,28 @@ import com.sproutpet.core.domain.pet.PetRenderer
 import com.sproutpet.core.domain.pet.PetSpecies
 import com.sproutpet.core.domain.pet.PetStage
 import com.sproutpet.pet.R
+import com.sproutpet.pet.pet.renderer.PetAssetResolver
 
 /**
  * 帧动画占位渲染器（`RenderMode.FRAME_ANIM`，Phase 3 切 Rive 后由工厂无感替换）。
  *
  * 实现方式：内置一个 [ImageView]，按阶段切换占位 vector，用属性动画表达状态。
- * 美术占位仅「萌芽鸡」一套（见 docs/04 §1.2），其他物种暂以基因色相偏移区分个体。
+ *
+ * ⚠️ **取图必须带物种**（docs/15 §5.1 R-3）：所有帧统一经
+ * [PetAssetResolver] 四级回落（物种精确 → 物种阶段 → **类群** → 类群落回），
+ * 旧版「`drawableOf(stage)` 只看阶段、缺资源静默回落成萌芽鸡」的缺陷已废除。
+ * 动作状态（抚摸 / 玩耍 / 被拎起 / 睡觉）在 L1 阶段**不再切换表情帧**，
+ * 一律用待机帧 + 属性动画表达（挤压回弹 / 跳跃 / 慢呼吸）——
+ * 表情变体属于 L1.5（docs/15 §1.1），到位后由 [PetAssetResolver] 精确命中、渲染器无需再改。
  *
  * 渲染器**持有自己的视图**（[view]），由场景层添加到站位层。
  */
-class FramePetRenderer(context: Context) : PetRenderer {
+class FramePetRenderer(private val appContext: Context) : PetRenderer {
 
     /** 场景层挂载用：渲染器持有的根视图（宠物本体） */
-    val view: FrameLayout = FrameLayout(context)
+    val view: FrameLayout = FrameLayout(appContext)
 
-    private val imageView = ImageView(context).apply {
+    private val imageView = ImageView(appContext).apply {
         layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
@@ -37,6 +44,7 @@ class FramePetRenderer(context: Context) : PetRenderer {
         scaleType = ImageView.ScaleType.FIT_CENTER
     }
 
+    private var species: PetSpecies = PetSpecies.entries.first()
     private var stage: PetStage = PetStage.BABY
     private var currentAnimator: Animator? = null
     private var currentStateKey: String? = null
@@ -52,8 +60,9 @@ class FramePetRenderer(context: Context) : PetRenderer {
     }
 
     override fun load(species: PetSpecies, stage: PetStage, genes: PetGenes) {
+        this.species = species
         this.stage = stage
-        imageView.setImageResource(drawableOf(stage))
+        setImage(currentDrawable())
         // 个体差异化占位：体型 → 缩放，色相 → 轻微偏移（±30°）
         val scale = 0.85f + genes.bodySize * 0.3f
         imageView.scaleX = scale
@@ -75,63 +84,54 @@ class FramePetRenderer(context: Context) : PetRenderer {
 
         when (state) {
             is PetRenderState.Idle -> {
-                setImage(drawableOf(stage))
+                setImage(currentDrawable())
                 play(PetViewAnims.breathing(imageView, state.liveliness), keepBase = true)
             }
-            is PetRenderState.Petted -> oneShot(R.drawable.pet_sprout_chicken_happy) {
-                PetViewAnims.squashBounce(imageView)
-            }
-            is PetRenderState.Excited -> oneShot(R.drawable.pet_sprout_chicken_happy) {
-                PetViewAnims.jump(imageView)
-            }
-            is PetRenderState.Grabbed -> {
-                setImage(R.drawable.pet_sprout_chicken_grabbed)
-                play(PetViewAnims.grab(imageView))
-            }
+            // ── 动作状态（L1）：不换表情帧，属性动画即反馈（表情帧属 L1.5） ──
+            is PetRenderState.Petted -> playAction { PetViewAnims.squashBounce(imageView) }
+            is PetRenderState.Excited -> playAction { PetViewAnims.jump(imageView) }
+            is PetRenderState.Grabbed -> play(PetViewAnims.grab(imageView))
             is PetRenderState.Dragging -> {
-                setImage(R.drawable.pet_sprout_chicken_grabbed)
+                setImage(currentDrawable())
                 imageView.rotation = (state.offsetX / 24f).coerceIn(-9f, 9f)
             }
-            is PetRenderState.Eating -> oneShot(R.drawable.pet_sprout_chicken_happy) {
-                PetViewAnims.squashBounce(imageView)
-            }
-            is PetRenderState.Playing -> oneShot(R.drawable.pet_sprout_chicken_happy) {
-                PetViewAnims.jump(imageView)
-            }
+            is PetRenderState.Eating -> playAction { PetViewAnims.squashBounce(imageView) }
+            is PetRenderState.Playing -> playAction { PetViewAnims.jump(imageView) }
             is PetRenderState.Sleeping -> {
-                setImage(R.drawable.pet_sprout_chicken_sleep)
+                setImage(currentDrawable())
                 play(PetViewAnims.breathing(imageView, 0f), keepBase = true)
             }
             is PetRenderState.Sleepy -> {
-                setImage(drawableOf(stage))
+                setImage(currentDrawable())
                 play(PetViewAnims.breathing(imageView, 0.1f), keepBase = true)
             }
-            is PetRenderState.LevelUp -> oneShot(R.drawable.pet_sprout_chicken_happy) {
-                PetViewAnims.jump(imageView)
-            }
+            is PetRenderState.LevelUp -> playAction { PetViewAnims.jump(imageView) }
             is PetRenderState.Hatching -> setImage(R.drawable.pet_egg_cracked)
             is PetRenderState.Incubating -> setImage(
                 if (state.progress >= 0.5f) R.drawable.pet_egg_cracked else R.drawable.pet_egg_common
             )
-            else -> setImage(drawableOf(stage))
+            else -> setImage(currentDrawable())
         }
     }
 
-    /** 一次性动作：换动作帧 → 播动画 → 回到待机帧 */
-    private fun oneShot(@DrawableRes actionRes: Int, anim: () -> Animator) {
-        setImage(actionRes)
-        cancelCurrent()
+    /**
+     * 一次性动作：从当前帧播一段属性动画，结束后回待机呼吸。
+     * 与旧版 [oneShot] 的区别：**不切换表情帧**（L1 无表情资源，见类 KDoc）。
+     */
+    private fun playAction(anim: () -> Animator) {
         val animator = anim()
         animator.addListener(object : android.animation.AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 imageView.rotation = 0f
-                setImage(drawableOf(stage))
+                setImage(currentDrawable())
                 play(PetViewAnims.breathing(imageView, 0.5f), keepBase = true)
             }
         })
-        currentAnimator = animator
-        animator.start()
+        play(animator)
     }
+
+    /** 当前（物种, 阶段）对应的资源 —— 取图的唯一入口（经 [PetAssetResolver] 四级回落） */
+    private fun currentDrawable(): Int = PetAssetResolver.resolve(appContext, species, stage)
 
     private fun play(animator: Animator, keepBase: Boolean = false) {
         cancelCurrent()
@@ -155,15 +155,6 @@ class FramePetRenderer(context: Context) : PetRenderer {
     private fun cancelCurrent() {
         currentAnimator?.cancel()
         currentAnimator = null
-    }
-
-    @DrawableRes
-    private fun drawableOf(stage: PetStage): Int = when (stage) {
-        PetStage.EGG, PetStage.HATCHING -> R.drawable.pet_egg_common
-        PetStage.BABY -> R.drawable.pet_sprout_chicken_baby
-        PetStage.JUVENILE -> R.drawable.pet_sprout_chicken_juvenile
-        PetStage.ADULT -> R.drawable.pet_sprout_chicken_adult
-        PetStage.ELDER, PetStage.RETIRED -> R.drawable.pet_sprout_chicken_elder
     }
 
     private fun stateKeyOf(state: PetRenderState): String = state::class.simpleName.orEmpty()

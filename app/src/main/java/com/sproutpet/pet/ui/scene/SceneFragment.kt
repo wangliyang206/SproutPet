@@ -22,10 +22,15 @@ import com.sproutpet.core.domain.pet.Pet
 import com.sproutpet.core.domain.pet.PetRenderer
 import com.sproutpet.core.domain.pet.PetRendererFactory
 import com.sproutpet.pet.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import com.sproutpet.pet.databinding.FragmentSceneBinding
 import com.sproutpet.pet.pet.renderer.frame.PetViewAnims
 import com.sproutpet.pet.ui.drawer.HomeDrawerFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -65,6 +70,9 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
     private var bubblePetId: Long = -1L
     private var drawerAdded = false
 
+    /** 首蛋聚焦层的倒计时协程（docs/14 §1.4：每秒刷新 + 数字跳动 + 末 10 秒转暖橙） */
+    private var firstEggTickerJob: Job? = null
+
     override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentSceneBinding =
         FragmentSceneBinding.inflate(inflater, container, false)
 
@@ -83,11 +91,19 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
             override fun onDrawerOpened(drawerView: View) = refreshDrawerIfNeeded()
         })
 
-        // 角落的蛋：三态入口（开箱 / 孵化抽层 / 破壳）
+        // 角落的蛋：点击 = 三态入口（开箱 / 孵化抽层 / 破壳）
         binding.sceneEgg.root.setOnClickListener { viewModel.onEggClicked() }
+        // 长按 = 开箱台（design-v2 屏 14）：十连的唯一入口，也在这里看保底与门票
+        binding.sceneEgg.root.setOnLongClickListener {
+            viewModel.onOpenBoxRequested()
+            true
+        }
 
         // 蛋的周期性晃动（孵化中吸引注意）
         startEggWobbleLoop()
+
+        // 首蛋聚焦层（docs/14 §1.4）：首蛋孵化期盖在场景之上的一次性演出
+        setupFirstEggFocus()
     }
 
     override fun initData() {
@@ -124,6 +140,8 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
         val egg = state.incubatingEgg
         val tag = binding.sceneEgg.tvEggTag
         val iv = binding.sceneEgg.ivEgg
+        // 首蛋聚焦层：除了这颗蛋没有任何宠物（docs/14 §1.4 的启用条件）
+        renderFirstEggFocus(state, egg, egg != null && !state.hasAnyPet)
         if (egg == null) {
             iv.setImageResource(R.drawable.pet_egg_common)
             tag.text = if (state.hasAnyPet) {
@@ -330,6 +348,16 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
             is SceneEvent.ShowReveal ->
                 BlindBoxRevealDialog.newInstance(event.outcome)
                     .show(childFragmentManager, BlindBoxRevealDialog.TAG)
+            is SceneEvent.ShowOpenBoxSheet ->
+                OpenBoxSheetDialog.newInstance(event.pityRemaining).apply {
+                    onTenPull = { viewModel.onTenPull() }
+                    onSingle = { viewModel.onOpenSingleBox() }
+                    onGoShop = { openShop() }
+                }.show(childFragmentManager, OpenBoxSheetDialog.TAG)
+            is SceneEvent.ShowTenPull ->
+                TenPullDialog.newInstance(event.outcome).apply {
+                    onRevealAll = { eggs -> viewModel.onRevealAll(eggs) }
+                }.show(childFragmentManager, TenPullDialog.TAG)
             is SceneEvent.ShowIncubationSheet ->
                 IncubationSheetDialog.newInstance(event.egg).apply {
                     onStartFocus = { egg -> viewModel.onStartFocus(egg) }
@@ -416,6 +444,7 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
             binding.drawerLayout.closeDrawers()
             when (entryId) {
                 "bag" -> openInventory()
+                "shop" -> openShop()
                 else -> toast(getString(R.string.drawer_placeholder, entryLabel(entryId)))
             }
         }
@@ -428,6 +457,7 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
         "codex" -> getString(R.string.drawer_entry_codex)
         "family" -> getString(R.string.drawer_entry_family)
         "bag" -> getString(R.string.drawer_entry_bag)
+        "shop" -> getString(R.string.drawer_entry_shop)
         "desktop" -> getString(R.string.drawer_entry_desktop)
         "achievement" -> getString(R.string.drawer_entry_achievement)
         "hill" -> getString(R.string.drawer_entry_hill)
@@ -442,13 +472,127 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
             .commit()
     }
 
+    /** 抽屉「商店 · 盲盒」（design-v2 09 屏条目；此前只能从仓库二级进入） */
+    private fun openShop() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.scene_container, com.sproutpet.pet.ui.inventory.ShopFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
     // ═══════════ 蛋的周期晃动 ═══════════
+
+
+    // ═══════════ 首蛋聚焦层（docs/14 §1.4 · W-14-1 拍板落地） ═══════════
+
+    /** 接线：整层点击 = 敲蛋（可破壳时转为破壳）；三个动作各归其位 */
+    private fun setupFirstEggFocus() {
+        val f = binding.firstEggFocus
+        f.root.setOnClickListener { onFirstEggTapped() }
+        f.btnFirstEggName.setOnClickListener {
+            viewModel.uiState.value.incubatingEgg?.let { egg ->
+                // 蛋也是 pet 表的一行，可直接提前命名（docs/14 §1.2④）
+                NamingDialogFragment.newInstance(egg).apply {
+                    onNamed = { petId, name -> viewModel.onNamed(petId, name) }
+                }.show(childFragmentManager, NamingDialogFragment.TAG)
+            }
+        }
+        f.btnFirstEggFocus.setOnClickListener {
+            viewModel.uiState.value.incubatingEgg?.let { egg ->
+                IncubationSheetDialog.newInstance(egg).apply {
+                    onStartFocus = { e -> viewModel.onStartFocus(e) }
+                    onPlaceholder = { name -> toast(getString(R.string.drawer_placeholder, name)) }
+                }.show(childFragmentManager, IncubationSheetDialog.TAG)
+            }
+        }
+        f.btnFirstEggDrawer.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.END) }
+    }
+
+    /** 聚焦层显隐：可见时启动呼吸 + 倒计时；消失时 200ms 淡出并清理动效 */
+    private fun renderFirstEggFocus(state: SceneUiState, egg: Pet?, visible: Boolean) {
+        val f = binding.firstEggFocus
+        if (!visible) {
+            if (f.root.visibility == View.VISIBLE) {
+                f.root.animate().alpha(0f).setDuration(200L).withEndAction {
+                    f.root.visibility = View.GONE
+                    f.root.alpha = 1f
+                }.start()
+                firstEggTickerJob?.cancel()
+                firstEggTickerJob = null
+            }
+            return
+        }
+        val e = requireNotNull(egg)
+        if (f.root.visibility != View.VISIBLE) {
+            f.root.visibility = View.VISIBLE
+            f.root.alpha = 1f
+            // 呼吸（复用宠物待机动画，2.4s 往复）
+            PetViewAnims.breathing(f.ivFirstEgg, 0.5f).start()
+        }
+        startFirstEggTicker(e)
+        if (viewModel.firstEggTaps > 0) {
+            f.tvFirstEggCrack.text = getString(R.string.first_egg_crack_count, viewModel.firstEggTaps)
+        }
+    }
+
+    /** 倒计时：每秒重算剩余（离开再回来按真实时间推进，docs/14 §1.2③），不暂停不重置 */
+    private fun startFirstEggTicker(egg: Pet) {
+        if (firstEggTickerJob?.isActive == true) return
+        val fmt = SimpleDateFormat("HH:mm", Locale.getDefault())
+        firstEggTickerJob = viewLifecycleOwner.lifecycleScope.launch {
+            val f = binding.firstEggFocus
+            while (isActive && f.root.visibility == View.VISIBLE) {
+                val sec = ((egg.hatchRemainMs() + 999) / 1000).toInt().coerceAtLeast(0)
+                f.tvFirstEggCountdown.text =
+                    String.format(Locale.US, "%02d:%02d", sec / 60, sec % 60)
+                // 末 10 秒转暖橙（docs/14 §1.4）
+                f.tvFirstEggCountdown.setTextColor(
+                    if (sec <= 10) Color.parseColor("#FFB300") else Color.parseColor("#FFFDE7")
+                )
+                // 数字每秒跳一下（120ms 缩放脉冲）
+                f.tvFirstEggCountdown.animate().scaleX(1.06f).scaleY(1.06f).setDuration(60L)
+                    .withEndAction {
+                        f.tvFirstEggCountdown.animate().scaleX(1f).scaleY(1f).setDuration(60L).start()
+                    }.start()
+                if (f.tvFirstEggHatchAt.tag != egg.hatchAt) {
+                    f.tvFirstEggHatchAt.tag = egg.hatchAt
+                    f.tvFirstEggHatchAt.text =
+                        getString(R.string.first_egg_hatch_at, fmt.format(Date(egg.hatchAt)))
+                }
+                delay(1_000L)
+            }
+        }
+    }
+
+    /** 敲蛋：晃 + 细纹计数 + 递进胎动（5/15/30 次，docs/14 §1.2①）；到点则直接破壳 */
+    private fun onFirstEggTapped() {
+        val egg = viewModel.uiState.value.incubatingEgg ?: return
+        if (egg.hatchRemainMs() <= 0L) {
+            viewModel.onEggClicked()
+            return
+        }
+        val taps = viewModel.onFirstEggTapped()
+        val f = binding.firstEggFocus
+        PetViewAnims.eggWobble(f.ivFirstEgg).start()
+        f.tvFirstEggCrack.text = getString(R.string.first_egg_crack_count, taps)
+        val talk = when (taps) {
+            5 -> R.string.first_egg_talk_5
+            15 -> R.string.first_egg_talk_15
+            30 -> R.string.first_egg_talk_30
+            else -> null
+        }
+        if (talk != null) f.tvFirstEggHint.text = getString(talk)
+    }
 
     private fun startEggWobbleLoop() {
         viewLifecycleOwner.lifecycleScope.launch {
             while (true) {
                 delay(4_000L)
-                if (viewModel.uiState.value.incubatingEgg != null) {
+                val s = viewModel.uiState.value
+                if (s.incubatingEgg != null && !s.hasAnyPet) {
+                    // 首蛋期：晃聚焦层的大蛋（docs/14 §1.4 每 4s 轻晃）
+                    PetViewAnims.eggWobble(binding.firstEggFocus.ivFirstEgg).start()
+                } else if (s.incubatingEgg != null) {
                     PetViewAnims.eggWobble(binding.sceneEgg.ivEgg).start()
                 }
             }
@@ -461,6 +605,8 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
     }
 
     override fun onDestroyView() {
+        firstEggTickerJob?.cancel()
+        firstEggTickerJob = null
         petSlots.values.forEach { it.lifecycleController.stop(); it.renderer.release() }
         petSlots.clear()
         super.onDestroyView()

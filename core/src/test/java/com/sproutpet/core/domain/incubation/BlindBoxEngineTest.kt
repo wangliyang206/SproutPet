@@ -1,6 +1,8 @@
 package com.sproutpet.core.domain.incubation
 
+import com.sproutpet.core.domain.gacha.GachaRules
 import com.sproutpet.core.domain.pet.GrowthRules
+import com.sproutpet.core.domain.pet.PetGenes
 import com.sproutpet.core.domain.pet.PetSpecies
 import com.sproutpet.core.domain.pet.Rarity
 import org.junit.Assert.assertEquals
@@ -158,6 +160,73 @@ class BlindBoxEngineTest {
         assertEquals(
             (focus * GrowthRules.FOCUS_BOOST_RATIO).toLong(),
             IncubationEngine.focusBoostMs(focus, Long.MAX_VALUE / 2)
+        )
+    }
+}
+
+
+/**
+ * 十连「出壳队列」的落库时序（docs/14 §2.2 · `G-15` 的守卫）。
+ *
+ * 这一组测试守的不是数学，而是**一个具体事故**：
+ * 队列常量（`QUEUE_FIRST_MS` / `QUEUE_STAGGER_MS` / `QUEUE_TOTAL_CAP_MS`）先写好了，
+ * 但没有任何调用方 —— 于是 10 颗蛋仍旧各按自身稀有度算 CD，
+ * 观感还是「一只一只孵化」，而文档里写着「十连 = 10 颗蛋排队」。
+ */
+class TenPullQueueHatchTest {
+
+    private fun result(rarity: Rarity): BlindBoxResult = BlindBoxResult(
+        species = PetSpecies.entries.first { it.isDrawable },
+        rarity = rarity,
+        genes = PetGenes.random()
+    )
+
+    @Test
+    fun `queued eggs follow the queue clock instead of their own rarity`() {
+        val now = 1_000_000L
+        // 神话蛋若按稀有度算时长会是 60 分钟级；进了队列就必须 60 秒
+        val egg = BlindBoxEngine.createEgg(
+            ownerId = 1L,
+            result = result(Rarity.MYTHIC),
+            batchNo = "b",
+            now = now,
+            queueIndex = 0
+        )
+        assertEquals(
+            "队列第 1 颗必须在 60 秒破壳，与稀有度无关",
+            now + GachaRules.QUEUE_FIRST_MS,
+            egg.hatchAt
+        )
+    }
+
+    @Test
+    fun `the tenth queued egg still lands within four minutes`() {
+        val now = 1_000_000L
+        val egg = BlindBoxEngine.createEgg(
+            ownerId = 1L,
+            result = result(Rarity.COMMON),
+            batchNo = "b",
+            now = now,
+            queueIndex = 9
+        )
+        assertEquals(
+            now + GachaRules.QUEUE_TOTAL_CAP_MS,
+            egg.hatchAt
+        )
+    }
+
+    @Test
+    fun `non queued eggs keep the rarity based clock`() {
+        val now = 1_000_000L
+        val egg = BlindBoxEngine.createEgg(
+            ownerId = 1L,
+            result = result(Rarity.COMMON),
+            batchNo = "b",
+            now = now
+        )
+        assertEquals(
+            now + GrowthRules.hatchDurationOf(Rarity.COMMON),
+            egg.hatchAt
         )
     }
 }

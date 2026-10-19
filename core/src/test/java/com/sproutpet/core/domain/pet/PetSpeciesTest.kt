@@ -286,6 +286,24 @@ class HatchDurationTest {
     }
 
     @Test
+    fun `first pet hatches in exactly one minute regardless of rarity`() {
+        // docs/14 §1.3（v3.2 拍板）：首蛋一律 1 分钟，与稀有度无关 ——
+        // 稀有度的差异体现在破壳演出规格，不体现在「罚站时长」
+        for (rarity in Rarity.entries.filter { it != Rarity.MUTANT }) {
+            assertEquals(
+                "首蛋时长必须恒为 FIRST_PET_HATCH_MS（rarity=$rarity）",
+                GrowthRules.FIRST_PET_HATCH_MS,
+                GrowthRules.hatchDurationOf(rarity, isFirstPet = true)
+            )
+        }
+    }
+
+    @Test
+    fun `first pet duration equals sixty seconds`() {
+        assertEquals(60_000L, GrowthRules.FIRST_PET_HATCH_MS)
+    }
+
+    @Test
     fun `higher rarity takes longer`() {
         val common = GrowthRules.hatchDurationOf(Rarity.COMMON)
         val mythic = GrowthRules.hatchDurationOf(Rarity.MYTHIC)

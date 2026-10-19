@@ -8,6 +8,8 @@
     <!-- 场景宠物 -->
     <dimen name="scene_pet_size">120dp</dimen>
     <dimen name="scene_egg_size">72dp</dimen>
+    <!-- 首蛋聚焦层（docs/14 §1.4）：蛋 180dp = 场景角落蛋的 2.5 倍 -->
+    <dimen name="first_egg_size">180dp</dimen>
 
     <!-- 右缘把手 -->
     <dimen name="drawer_handle_width">30dp</dimen>

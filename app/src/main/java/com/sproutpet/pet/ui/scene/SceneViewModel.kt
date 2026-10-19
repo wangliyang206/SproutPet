@@ -4,13 +4,16 @@ import androidx.lifecycle.viewModelScope
 import com.sproutpet.core.base.BaseViewModel
 import com.sproutpet.core.base.UiEvent
 import com.sproutpet.core.base.UiState
+import com.sproutpet.core.domain.gacha.GachaRules
 import com.sproutpet.core.domain.incubation.BlindBoxEngine
 import com.sproutpet.core.domain.pet.GrowthRules
 import com.sproutpet.core.domain.pet.Pet
 import com.sproutpet.pet.data.local.OwnerLocalDataSource
 import com.sproutpet.pet.data.repository.BlindBoxRepository
 import com.sproutpet.pet.data.repository.IncubationRepository
+import com.sproutpet.pet.data.repository.ItemRepository
 import com.sproutpet.pet.data.repository.OpenBoxOutcome
+import com.sproutpet.pet.data.repository.TenPullOutcome
 import com.sproutpet.pet.data.repository.PetRepository
 import com.sproutpet.pet.data.repository.UserRepository
 import com.sproutpet.pet.domain.growth.FocusBoostUseCase
@@ -19,8 +22,12 @@ import com.sproutpet.pet.domain.interaction.InteractionResult
 import com.sproutpet.pet.domain.interaction.PetPetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -45,7 +52,9 @@ data class SceneUiState(
     /** 相伴天数（自第一只宠物出生起算，无宠物时为 1） */
     val companionDays: Int = 1,
     /** 搭话气泡文案（null = 不展示） */
-    val bubbleText: String? = null
+    val bubbleText: String? = null,
+    /** 手上的盲盒门票数量（`GachaRules.BOX_ITEM_ID` 的可用总量） */
+    val ticketCount: Int = 0
 ) : UiState
 
 /**
@@ -54,6 +63,10 @@ data class SceneUiState(
 sealed interface SceneEvent : UiEvent {
     /** 开箱揭晓模态卡（design-v2 屏④） */
     data class ShowReveal(val outcome: OpenBoxOutcome) : SceneEvent
+    /** 开箱台底部升起（design-v2 屏 14）—— 十连的唯一入口 */
+    data class ShowOpenBoxSheet(val pityRemaining: Int) : SceneEvent
+    /** 十连结果 · 出壳队列（design-v2 屏 15 / 屏 31） */
+    data class ShowTenPull(val outcome: TenPullOutcome) : SceneEvent
     /** 孵化底部抽层（design-v2 屏⑤） */
     data class ShowIncubationSheet(val egg: Pet) : SceneEvent
     /** 专注陪伴番茄钟页（docs/04 §2.5） */
@@ -83,6 +96,7 @@ class SceneViewModel @Inject constructor(
     private val petRepository: PetRepository,
     private val blindBoxRepository: BlindBoxRepository,
     private val incubationRepository: IncubationRepository,
+    private val itemRepository: ItemRepository,
     private val petPetUseCase: PetPetUseCase,
     private val focusBoostUseCase: FocusBoostUseCase
 ) : BaseViewModel<SceneUiState, SceneEvent>() {
@@ -95,14 +109,16 @@ class SceneViewModel @Inject constructor(
             // 确保 user 行存在（保底计数的真相源，Phase 2 从 DataStore 迁至 user 表）
             userRepository.getOrCreate(ownerId)
             setState { copy(ownerId = ownerId, isNight = computeIsNight()) }
+            grantTicketsIfNeeded(ownerId)
             combine(
                 petRepository.observeHomePets(ownerId),
                 incubationRepository.observeIncubatingEgg(ownerId),
                 petRepository.observePetCount(ownerId),
-                blindBoxRepository.observePityRemaining()
-            ) { pets, egg, count, pity ->
-                Quad(pets, egg, count, pity)
-            }.collect { (pets, egg, count, pity) ->
+                blindBoxRepository.observePityRemaining(),
+                itemRepository.observeInventory(ownerId)
+            ) { pets, egg, count, pity, inventory ->
+                Row(pets, egg, count, pity, inventory.count { it.itemId == GachaRules.BOX_ITEM_ID })
+            }.collect { (pets, egg, count, pity, tickets) ->
                 setState {
                     copy(
                         loading = false,
@@ -111,14 +127,17 @@ class SceneViewModel @Inject constructor(
                         hasAnyPet = count > 0,
                         pityRemaining = pity,
                         companionDays = companionDaysOf(pets, egg),
-                        bubbleText = bubbleText ?: greetIfFirstLoad(pets)
+                        bubbleText = bubbleText ?: greetIfFirstLoad(pets),
+                        ticketCount = tickets
                     )
                 }
             }
         }
     }
 
-    private data class Quad<A, B, C, D>(val a: A, val b: B, val c: C, val d: D)
+    private data class Row<A, B, C, D, E>(
+        val a: A, val b: B, val c: C, val d: D, val e: E
+    )
 
     /** 回到前台时刷新昼夜（跨黄昏/清晨边界） */
     fun refreshDayNight() {
@@ -128,6 +147,21 @@ class SceneViewModel @Inject constructor(
     private fun computeIsNight(): Boolean {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         return hour < NIGHT_END_HOUR || hour >= NIGHT_START_HOUR
+    }
+
+    /**
+     * 首蛋敲蛋计数（docs/14 §1.2① · 内存态）。
+     *
+     * ⚠️ 细纹/胎动的**持久化**（破壳后蛋壳仍留在场景里）需要 DB 字段，待 V7 迁移补；
+     * 本轮先落「敲 → 有回应 + 计数 + 递进胎动」的会话内体验（docs/14 A-1 / A-7）。
+     */
+    var firstEggTaps: Int = 0
+        private set
+
+    /** 聚焦层「敲蛋」：计一次，返回累计次数供 UI 刷新细纹文案 */
+    fun onFirstEggTapped(): Int {
+        firstEggTaps++
+        return firstEggTaps
     }
 
     /**
@@ -152,11 +186,89 @@ class SceneViewModel @Inject constructor(
         }
     }
 
-    /** 开一次盲盒（引擎执法，仓库落库；首只自动 `isFirstPet = true`） */
+    /** 开一次盲盒（引擎执法，仓库落库；首只自动 `isFirstPet = true`）—— 消耗 1 张门票 */
     private fun openBlindBox() {
         viewModelScope.launch {
-            val outcome = blindBoxRepository.openBox(currentState.ownerId)
+            val ownerId = currentState.ownerId
+            if (!consumeTickets(ownerId, 1)) {
+                sendEvent(SceneEvent.ToastMsg("盲盒不够啦，去商店补票～"))
+                return@launch
+            }
+            val outcome = blindBoxRepository.openBox(ownerId)
             sendEvent(SceneEvent.ShowReveal(outcome))
+        }
+    }
+
+    // ═══════════ 抽蛋 · 开箱台与十连（design-v2 屏 13/14/15/31） ═══════════
+
+    /** 长按角落蛋 → 开箱台（十连的唯一入口；点击仍是"直接开 1 个"） */
+    fun onOpenBoxRequested() {
+        sendEvent(SceneEvent.ShowOpenBoxSheet(currentState.pityRemaining))
+    }
+
+    /**
+     * 开箱台的「开 1 个」：**不看角落蛋的状态**，直接抽一次。
+     *
+     * 与 [onEggClicked] 的区别：后者是"场景里的那个蛋"的三态入口
+     * （可开箱 / 孵化中 / 到点破壳），在已有蛋孵化时点它只会打开孵化抽层。
+     * 开箱台是"再买一个"的语义，必须能独立开箱。
+     */
+    fun onOpenSingleBox() {
+        openBlindBox()
+    }
+
+    /**
+     * 十连：**先扣 10 张门票，再抽**（扣不动就一只都不抽 —— 不允许"抽完发现没票"）。
+     *
+     * 时序全部由仓库按 `GachaRules.queueOffsetsMs` 写进 `hatchAt`，
+     * 这里只负责把结果交给结果页。
+     */
+    fun onTenPull() {
+        viewModelScope.launch {
+            val ownerId = currentState.ownerId
+            if (!consumeTickets(ownerId, GachaRules.TEN_PULL)) {
+                val lack = GachaRules.TEN_PULL - currentState.ticketCount
+                sendEvent(SceneEvent.ToastMsg("还差 $lack 张盲盒，去商店补票吧～"))
+                return@launch
+            }
+            val outcome = blindBoxRepository.openMany(ownerId)
+            sendEvent(SceneEvent.ShowTenPull(outcome))
+        }
+    }
+
+    /** 「全部出壳」：零成本把整批蛋拉到现在（docs/14 §2.2） */
+    fun onRevealAll(eggs: List<Pet>) {
+        viewModelScope.launch {
+            var count = 0
+            eggs.forEach { egg ->
+                if (incubationRepository.forceHatch(egg.id) != null) count++
+            }
+            sendEvent(SceneEvent.ToastMsg(if (count > 0) "$count 只全出来啦！" else "它们已经出来了"))
+        }
+    }
+
+    /** 门票够不够，不够就**整笔不扣** */
+    private suspend fun consumeTickets(ownerId: Long, count: Int): Boolean {
+        val have = itemRepository.availableCount(ownerId, GachaRules.BOX_ITEM_ID)
+        if (have < count) return false
+        repeat(count) { itemRepository.consume(ownerId, GachaRules.BOX_ITEM_ID) }
+        return true
+    }
+
+    /**
+     * 门票补发（进入场景时执行一次）：
+     * 1. **新用户首次 1 个免费盲盒**（00 §2.1）
+     * 2. **每日免费 2 抽**（签到 1 + 任务全清 1 → 两者的领取界面尚未做，规则先落地）
+     */
+    private suspend fun grantTicketsIfNeeded(ownerId: Long) {
+        val pets = petRepository.observePetCount(ownerId).first()
+        val tickets = itemRepository.availableCount(ownerId, GachaRules.BOX_ITEM_ID)
+        if (pets == 0 && tickets == 0) {
+            itemRepository.acquire(ownerId, GachaRules.BOX_ITEM_ID, 1)
+        }
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+        if (local.claimDailyFreeTickets(today)) {
+            itemRepository.acquire(ownerId, GachaRules.BOX_ITEM_ID, DAILY_FREE_TICKETS)
         }
     }
 
@@ -260,6 +372,9 @@ class SceneViewModel @Inject constructor(
         private const val COMPANION_EXP_FOCUS_MS = 15 * 60 * 1000L
         /** 一次长陪伴给主宠的经验（与一次训练量级相当，不触顶每日上限） */
         private const val COMPANION_EXP_AMOUNT = 150
+
+        /** 每日免费门票数（签到 1 + 任务全清 1，docs/00 §2.1） */
+        private const val DAILY_FREE_TICKETS = 2
 
         private val GREETINGS = listOf(
             "今天也想被你摸一下～",

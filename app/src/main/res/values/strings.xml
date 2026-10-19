@@ -69,6 +69,16 @@
 
     <!-- 蛋 / 开箱 -->
     <string name="scene_egg_tag_free">免费领盲盒</string>
+    <!-- 首蛋聚焦层（docs/14 §1.4 / §1.2① 敲蛋胎动三句，递进而非随机） -->
+    <string name="first_egg_hint">敲敲它，它在里面</string>
+    <string name="first_egg_act_name">起个名字</string>
+    <string name="first_egg_act_focus">专注陪伴</string>
+    <string name="first_egg_act_drawer">去看图鉴</string>
+    <string name="first_egg_talk_5">……有人在外面吗？</string>
+    <string name="first_egg_talk_15">我听见你了。再等等我。</string>
+    <string name="first_egg_talk_30">壳有点硬……但我快好了。</string>
+    <string name="first_egg_crack_count">敲了 %1$d 次 · 蛋壳留下 %1$d 道细纹（破壳后仍留在场景里）</string>
+    <string name="first_egg_hatch_at">%1$s 破壳 · 到点会提醒你</string>
     <string name="scene_egg_tag_incubating">孵化中</string>
     <string name="scene_egg_tag_ready">可以破壳啦！</string>
     <string name="reveal_title">开箱揭晓</string>
@@ -83,6 +93,27 @@
 
     <!-- 孵化 -->
     <string name="incubate_sheet_title">孵化进行中</string>
+
+    <!-- 开箱台（design-v2 屏 14 · docs/14 §二） -->
+    <string name="open_box_title">开箱台</string>
+    <string name="open_box_pity">距史诗保底还差 %1$d 抽 · 传说 / 神话没有保底通道</string>
+    <string name="open_box_ticket_count">盲盒 ×%1$d</string>
+    <string name="open_box_ten">十连开箱（10 张盲盒）</string>
+    <string name="open_box_ten_hint">10 颗蛋排队出壳 · 全部不超过 4 分钟</string>
+    <string name="open_box_need_ticket">还差 %1$d 张盲盒 · 去商店补票</string>
+    <string name="open_box_single">开 1 个</string>
+    <string name="open_box_odds">概率公示</string>
+    <string name="open_box_odds_title">概率公示（含保底）</string>
+    <string name="open_box_odds_body">史诗及以上综合概率 %1$.2f%%（含保底）。\n\n保底只到史诗：连续 30 抽未出史诗及以上，第 30 抽必出。\n传说与神话没有保底通道。\n\n十连保底：整批至少一只稀有及以上（不保史诗）。</string>
+    <string name="open_box_go_shop">去商店补票 →</string>
+
+    <!-- 十连结果 · 出壳队列（design-v2 屏 15 / 屏 31） -->
+    <string name="ten_pull_title">十连 · 出壳队列</string>
+    <string name="ten_pull_note">稀有度降序 · 每 %2$d 秒一颗 · 全部 %1$d 秒内出壳</string>
+    <string name="ten_pull_cell">T+%1$ds</string>
+    <string name="ten_pull_floor">这一批原本可能全是普通 —— 十连兜底把最后一只抬到了「稀有」</string>
+    <string name="ten_pull_reveal_all">全部出壳（零成本）</string>
+    <string name="ten_pull_later">让它们自己出来</string>
     <string name="incubate_countdown_label">预计破壳</string>
     <string name="incubate_focus">专注陪伴</string>
     <string name="incubate_focus_desc">陪它一会儿，孵化会加快</string>
@@ -125,6 +156,8 @@
     <string name="drawer_entry_family_desc">家族世代与血缘</string>
     <string name="drawer_entry_bag">仓库</string>
     <string name="drawer_entry_bag_desc">食物 · 玩具 · 道具</string>
+    <string name="drawer_entry_shop">商店 · 盲盒</string>
+    <string name="drawer_entry_shop_desc">门票 · 补给 · 钻石</string>
     <string name="drawer_entry_desktop">桌面宠物</string>
     <string name="drawer_entry_desktop_desc">谁在手机桌面陪你</string>
     <string name="drawer_section_more">更多</string>

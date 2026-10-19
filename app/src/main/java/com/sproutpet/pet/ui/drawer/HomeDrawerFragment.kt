@@ -37,6 +37,7 @@ class HomeDrawerFragment : Fragment() {
         bindEntry(binding.entryCodex, "📖", R.string.drawer_entry_codex, R.string.drawer_entry_codex_desc, "codex", 1)
         bindEntry(binding.entryFamily, "🌳", R.string.drawer_entry_family, R.string.drawer_entry_family_desc, "family")
         bindEntry(binding.entryBag, "🎒", R.string.drawer_entry_bag, R.string.drawer_entry_bag_desc, "bag")
+        bindEntry(binding.entryShop, "🛒", R.string.drawer_entry_shop, R.string.drawer_entry_shop_desc, "shop")
         bindEntry(binding.entryDesktop, "🖥️", R.string.drawer_entry_desktop, R.string.drawer_entry_desktop_desc, "desktop")
         bindEntry(binding.entryAchievement, "🏆", R.string.drawer_entry_achievement, R.string.drawer_entry_achievement_desc, "achievement")
         bindEntry(binding.entryHill, "⛰️", R.string.drawer_entry_hill, R.string.drawer_entry_hill_desc, "hill")

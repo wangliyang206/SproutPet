@@ -115,6 +115,9 @@
         <include android:id="@+id/entry_codex" layout="@layout/view_drawer_entry" />
         <include android:id="@+id/entry_family" layout="@layout/view_drawer_entry" />
         <include android:id="@+id/entry_bag" layout="@layout/view_drawer_entry" />
+        <!-- 商店：design-v2 09 屏的抽屉 7 条目之一（"图鉴/族谱/仓库/商店·盲盒/成就/后山/设置"），
+             此前只有 Inventory 里的二级入口 —— 抽屉缺它 = L2 有落点、L6 无入口 -->
+        <include android:id="@+id/entry_shop" layout="@layout/view_drawer_entry" />
         <include android:id="@+id/entry_desktop" layout="@layout/view_drawer_entry" />
 
         <!-- 更多入口 -->

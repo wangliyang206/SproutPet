@@ -218,12 +218,18 @@ object BlindBoxEngine {
      *
      * @param ownerId 主人 ID
      * @param batchNo 盲盒批次号
-     * @param isFirstPet 是否为该用户的**首只宠物**。首只额外缩短孵化时长，
+     * @param isFirstPet 是否为该用户的**首只宠物**。首只的孵化时长**恒为 1 分钟、
+     *                   与稀有度无关**（`GrowthRules.FIRST_PET_HATCH_MS`，docs/14 §1.3 v1.1 拍板），
      *                   保证当天就能玩到（ADR-013 首日体验优先）。
      *                   ⚠️ 调用方**必须显式传 `true`**，默认值是 `false` ——
      *                   这里没有"自动判断是否首只"的能力（那需要查库）。
      *                   曾经因为调用方漏传，`hatchDurationOf(isFirstPet)` 的减半
      *                   分支从未被执行过（文档承诺过但实际没生效）。
+     * @param queueIndex 十连队列中的**第几颗**（0 起，null = 不是队列成员）。
+     *                   传了它就**忽略稀有度与 isFirstPet**，改用
+     *                   [GachaRules.queueHatchOffsetMs] 的队列时序 ——
+     *                   十连是「一次开箱的 10 颗蛋共用一套节奏」，
+     *                   不是「10 次单抽各走自己的 CD」。
      */
     fun createEgg(
         ownerId: Long,
@@ -231,9 +237,16 @@ object BlindBoxEngine {
         batchNo: String,
         isFirstPet: Boolean = false,
         now: Long = System.currentTimeMillis(),
-        random: Random = Random.Default
+        random: Random = Random.Default,
+        queueIndex: Int? = null
     ): Pet {
-        val hatchDuration = GrowthRules.hatchDurationOf(result.rarity, isFirstPet)
+        // 队列成员（十连）走队列时序：与稀有度、是否首只**都无关**（docs/14 §2.2）。
+        // 非队列（单抽）仍按稀有度算时长 —— 两条路径的差别只有这一行。
+        val hatchDuration = if (queueIndex != null) {
+            GachaRules.queueHatchOffsetMs(queueIndex)
+        } else {
+            GrowthRules.hatchDurationOf(result.rarity, isFirstPet)
+        }
         return Pet(
             id = 0L, // 由数据库自增分配
             ownerId = ownerId,

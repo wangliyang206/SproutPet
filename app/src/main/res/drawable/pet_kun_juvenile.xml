@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  昆虫 · 少年
+
+  L1 类群层（docs/15 §1.4）：昆虫的 少年形态。
+  类群母题 = 甲壳分节（背中缝、触角）（docs/15 §2.1）。
+  ⚠️ 美术替换时同名覆盖本文件即可，渲染器（PetAssetResolver 四级回落）零改动。
+
+  占位资源：由 tools/gen_pet_placeholder_vectors.py 生成，
+  美术交付 Rive 版本（docs/02-宠物渲染方案.md §5.1）后可整体替换。
+  手改本文件会在下次重新生成时被覆盖 —— 请改脚本。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M70.08 134.37 L59.52 140.37" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M70.08 150.18 L59.52 156.18" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M129.92 134.37 L140.48 140.37" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M129.92 150.18 L140.48 156.18" />
+    <path
+        android:fillColor="#B39DDB"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M135.20 134.00 C135.20 151.50 119.44 165.68 100.00 165.68 C80.56 165.68 64.80 151.50 64.80 134.00 C64.80 116.50 80.56 102.32 100.00 102.32 C119.44 102.32 135.20 116.50 135.20 134.00 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#9575CD"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M70.08 126.00 C90.03 119.33 109.97 119.33 129.92 126.00" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#9575CD"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M66.56 144.00 C88.85 138.67 111.15 138.67 133.44 144.00" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#9575CD"
+        android:strokeWidth="2.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M100.00 98.00 L100.00 170.00" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M81.69 109.36 C82.66 111.04 81.41 113.59 78.88 115.05 C76.35 116.51 73.52 116.32 72.55 114.64 C71.58 112.96 72.83 110.41 75.36 108.95 C77.89 107.49 80.72 107.68 81.69 109.36 Z" />
+    <path
+        android:fillColor="#B39DDB"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M121.12 82.00 C121.12 91.72 111.66 99.60 100.00 99.60 C88.34 99.60 78.88 91.72 78.88 82.00 C78.88 72.28 88.34 64.40 100.00 64.40 C111.66 64.40 121.12 72.28 121.12 82.00 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M87.68 66.00 L77.12 46.00" />
+    <path
+        android:fillColor="#9575CD"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.0"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M79.74 44.00 C79.74 45.93 78.17 47.50 76.24 47.50 C74.31 47.50 72.74 45.93 72.74 44.00 C72.74 42.07 74.31 40.50 76.24 40.50 C78.17 40.50 79.74 42.07 79.74 44.00 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M112.32 66.00 L122.88 46.00" />
+    <path
+        android:fillColor="#9575CD"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.0"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M127.26 44.00 C127.26 45.93 125.69 47.50 123.76 47.50 C121.83 47.50 120.26 45.93 120.26 44.00 C120.26 42.07 121.83 40.50 123.76 40.50 C125.69 40.50 127.26 42.07 127.26 44.00 Z" />
+    <path
+        android:fillColor="#FF4E342E"
+        android:pathData="M98.02 84.00 C98.02 87.52 95.16 90.38 91.64 90.38 C88.12 90.38 85.26 87.52 85.26 84.00 C85.26 80.48 88.12 77.62 91.64 77.62 C95.16 77.62 98.02 80.48 98.02 84.00 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M91.45 81.58 C91.45 82.70 90.53 83.62 89.41 83.62 C88.28 83.62 87.37 82.70 87.37 81.58 C87.37 80.45 88.28 79.53 89.41 79.53 C90.53 79.53 91.45 80.45 91.45 81.58 Z" />
+    <path
+        android:fillColor="#FF4E342E"
+        android:pathData="M114.74 84.00 C114.74 87.52 111.88 90.38 108.36 90.38 C104.84 90.38 101.98 87.52 101.98 84.00 C101.98 80.48 104.84 77.62 108.36 77.62 C111.88 77.62 114.74 80.48 114.74 84.00 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M108.17 81.58 C108.17 82.70 107.25 83.62 106.13 83.62 C105.00 83.62 104.09 82.70 104.09 81.58 C104.09 80.45 105.00 79.53 106.13 79.53 C107.25 79.53 108.17 80.45 108.17 81.58 Z" />
+    <path
+        android:fillColor="#FFFFAB91"
+        android:pathData="M96.05 92.01 C96.62 94.71 93.81 97.60 89.75 98.46 C85.70 99.32 81.95 97.83 81.38 95.13 C80.80 92.43 83.62 89.54 87.67 88.68 C91.73 87.82 95.48 89.31 96.05 92.01 Z" />
+    <path
+        android:fillColor="#FFFFAB91"
+        android:pathData="M118.62 95.13 C118.05 97.83 114.30 99.32 110.25 98.46 C106.19 97.60 103.38 94.71 103.95 92.01 C104.52 89.31 108.27 87.82 112.33 88.68 C116.38 89.54 119.20 92.43 118.62 95.13 Z" />
+</vector>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  资源缺失兜底占位（docs/15 §5.1 R-2）：RELEASE 下四级回落全部未命中时显示。
+  ⚠️ 这是最后防线 —— 删掉它等于让 RELEASE 也在缺资源时崩溃。
+  红叉 = 「缺资源」必须可见，不许静默。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- 淡红警示底 -->
+    <path
+        android:fillColor="#FFEF9A9A"
+        android:strokeColor="#FFC62828"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M100 32 C132 32 168 62 168 100 C168 138 132 168 100 168 C68 168 32 138 32 100 C32 62 68 32 100 32 Z" />
+    <!-- 红叉 -->
+    <path
+        android:strokeColor="#FFB71C1C"
+        android:strokeWidth="12"
+        android:strokeLineCap="round"
+        android:pathData="M72 72 L128 128" />
+    <path
+        android:strokeColor="#FFB71C1C"
+        android:strokeWidth="12"
+        android:strokeLineCap="round"
+        android:pathData="M128 72 L72 128" />
+</vector>

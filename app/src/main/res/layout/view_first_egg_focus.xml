@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  首蛋聚焦层（docs/14 §1.4 · 2026-10-17 拍板）：
+  首蛋孵化期盖在场景之上的「一次性演出」—— 蛋 180dp 居中、场景压暗、
+  MM:SS 大字倒计时 + 绝对时刻 + 三组动效（呼吸 / 轻晃 / 数字跳动，代码挂载）。
+  ⚠️ 只对首蛋启用：hasAnyPet == false 且存在孵化中蛋。
+  破壳时由 SceneFragment 淡出移除；不做常驻（第 2 颗起回到角落 72dp 小蛋）。
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/first_egg_focus"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#47101F14"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:id="@+id/first_egg_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/tv_first_egg_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/first_egg_hint"
+            android:textColor="#FFF8E1"
+            android:textSize="12.5sp"
+            android:letterSpacing="0.04"
+            android:shadowColor="#80000000"
+            android:shadowDy="2"
+            android:shadowRadius="6" />
+
+        <ImageView
+            android:id="@+id/iv_first_egg"
+            android:layout_width="@dimen/first_egg_size"
+            android:layout_height="@dimen/first_egg_size"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/first_egg_hint"
+            android:src="@drawable/pet_egg_common" />
+
+        <TextView
+            android:id="@+id/tv_first_egg_countdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="01:00"
+            android:textColor="#FFFDE7"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.06"
+            android:fontFeatureSettings="tnum"
+            android:shadowColor="#80000000"
+            android:shadowDy="2"
+            android:shadowRadius="8" />
+
+        <TextView
+            android:id="@+id/tv_first_egg_hatch_at"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="#E8F0E4"
+            android:textSize="11.5sp"
+            tools:text="21:40 破壳 · 到点会提醒你" />
+
+        <TextView
+            android:id="@+id/tv_first_egg_crack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#C8E6C9"
+            android:textSize="10.5sp"
+            tools:text="敲了 3 次 · 蛋壳留下 3 道细纹" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btn_first_egg_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_white"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:layout_marginHorizontal="4dp"
+                android:text="@string/first_egg_act_name"
+                android:textColor="@color/scene_text"
+                android:textSize="11.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btn_first_egg_focus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_white"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:layout_marginHorizontal="4dp"
+                android:text="@string/first_egg_act_focus"
+                android:textColor="@color/scene_text"
+                android:textSize="11.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btn_first_egg_drawer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_white"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:layout_marginHorizontal="4dp"
+                android:text="@string/first_egg_act_drawer"
+                android:textColor="@color/scene_text"
+                android:textSize="11.5sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

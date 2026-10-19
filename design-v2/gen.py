@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""倒置 IA 设计稿 v2 —— 30 屏定义 + 渲染 + 归档页构建。
+"""倒置 IA 设计稿 v2 —— 31 屏定义 + 渲染 + 归档页构建。
 
 原则（docs/09 U-10 拍板稿）：
   P1 打开 App = 家（全屏场景，无 Tab 栏）
@@ -152,24 +152,43 @@ def s04():
 
 # ---------------------------------------------------------------- 05 孵化 · 裂纹即进度
 def s05():
-    rows = "".join(f'<div class="srow"><span class="ic" style="background:{bg}">{em}</span>'
-                   f'<span class="tx"><b>{t}</b><i>{s}</i></span><span class="go{" warn" if warn else ""}">{go}</span></div>'
-                   for em, bg, t, s, go, warn in (
-        ("⏱", "#E8F5E9", "专注陪伴", "专注时长 ×50% 抵扣孵化 · 最多抵 50%", "开启", False),
-        ("🧪", "#FFF3E0", "道具加速", "沙漏碎片 ×3 · 每个加速 1 小时", "用道具", True),
-        ("🤝", "#E3F2FD", "好友助力", "已助力 2/5 人 · 每人减 5 分钟", "邀请", False),
-    ))
-    return "", f"""
-    <img class="bg" src="{BG_DAY}">{DAYCHIP}{drawer_handle()}
-    {bubble("快了吧？我一直在听。", 46, 236, width=170)}
-    {pet("小豆芽", 26, 60, 322, 108, "chick", "happy", badge="主宠")}
-    <div class="eggtag abs" style="left:236px;top:262px">{egg_svg(104, 2, glow=True)}
-      <span class="lb">剩 18 分 24 秒 · 今晚破壳</span></div>
-    <div class="sheet">
-      <div class="grip"></div>
-      <h3 style="white-space:nowrap">孵化中 <i>剩余 18 分 24 秒</i></h3>
-      <div style="font-size:11px;color:{C['hint']};margin:2px 0 10px">四档文案随进度换：还在睡 → 有动静 → 裂纹蔓延 → 今晚破壳</div>
-      <div>{rows}</div>
+    css = '''
+    .fe-hint{position:absolute;left:0;right:0;top:206px;text-align:center;font-size:12.5px;
+      color:#FFF8E1;letter-spacing:.4px;text-shadow:0 1px 6px rgba(0,0,0,.45)}
+    .fe-egg{position:absolute;left:105px;top:238px;width:180px;height:180px;
+      filter:drop-shadow(0 18px 34px rgba(0,0,0,.42)) drop-shadow(0 0 26px rgba(255,232,150,.55))}
+    .fe-cd{position:absolute;left:0;right:0;top:434px;text-align:center;
+      font-size:34px;font-weight:800;letter-spacing:2px;color:#FFFDE7;
+      font-variant-numeric:tabular-nums;text-shadow:0 2px 12px rgba(0,0,0,.5)}
+    .fe-sub{position:absolute;left:0;right:0;top:486px;text-align:center;font-size:11.5px;color:#E8F0E4}
+    .fe-crack{position:absolute;left:0;right:0;top:512px;text-align:center;font-size:10.5px;color:#C8E6C9}
+    .fe-acts{position:absolute;left:24px;right:24px;top:562px;display:flex;gap:8px;justify-content:center}
+    .fe-act{flex:1;text-align:center;padding:11px 0;border-radius:16px;font-size:11.5px;font-weight:700;
+      background:rgba(255,255,255,.94);color:#33502F;box-shadow:0 8px 18px rgba(0,0,0,.22)}
+    .fe-note{position:absolute;left:16px;right:16px;bottom:26px;font-size:9.5px;line-height:1.75;
+      color:#DCEBD8;background:rgba(20,38,22,.62);border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;padding:10px 12px}
+    .fe-note b{color:#FFF3C4}
+    '''
+    return css, f"""
+    <img class="bg" src="{BG_DAY}">
+    <div class="vig" style="background:rgba(16,32,18,.34)"></div>
+    <div class="chipctx abs" style="left:14px;top:14px;background:rgba(255,255,255,.94)">🥚 首蛋 · 第一次孵化<br><i>第 2 颗起回到角落 72dp 小蛋</i></div>
+    <div class="fe-hint">敲敲它，它在里面</div>
+    <div class="fe-egg">{egg_svg(180, 2, glow=True)}</div>
+    <div class="fe-cd">00:47</div>
+    <div class="fe-sub">21:40 破壳 · 到点会提醒你</div>
+    <div class="fe-crack">敲了 3 次 · 蛋壳留下 3 道细纹（破壳后仍留在场景里）</div>
+    <div class="fe-acts">
+      <span class="fe-act">起个名字</span>
+      <span class="fe-act">专注陪伴</span>
+      <span class="fe-act">去看图鉴</span>
+    </div>
+    <div class="fe-note">
+      <b>首蛋聚焦层（14 §1.4）</b>：蛋 <b>180dp</b> · 水平居中 / 垂直 46% · 场景压暗 <b>0.28</b>；
+      倒计时 <b>32sp 等宽数字</b>（最后 10 秒转暖橙）+ 绝对时刻；
+      动效 = <b>呼吸 2.4s</b> / <b>每 4s 轻晃</b> / <b>数字每秒跳动</b>。
+      <b>首蛋恒 1 分钟，与稀有度无关</b>（W-14-1 拍板）—— 稀有度的差异放在<b>破壳演出规格</b>里。
     </div>
     """
 
@@ -1285,12 +1304,77 @@ def s30():
     '''
 
 
+# ---------------------------------------------------------------- 31 十连 · 出壳队列
+def s31():
+    css = '''
+    .q{position:absolute;left:10px;right:10px;top:112px;bottom:14px;background:rgba(255,255,255,.97);
+      backdrop-filter:blur(14px);border-radius:26px;padding:14px 14px 12px;
+      box-shadow:0 -8px 40px rgba(20,45,20,.24)}
+    .q h3{font-size:16.5px;font-weight:800;color:#26382A;display:flex;align-items:baseline;gap:8px}
+    .q h3 i{font-style:normal;font-size:11px;font-weight:500;color:#7C8E79}
+    .qsum{display:flex;align-items:center;gap:8px;margin:8px 0 10px;font-size:10.5px;color:#5C6B58}
+    .qbar{flex:1;height:6px;border-radius:4px;background:#E6EDE4;overflow:hidden}
+    .qbar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#8BC34A,#558B2F)}
+    .grid{display:flex;flex-wrap:wrap;gap:6px 4px}
+    .qe{width:66px;text-align:center;position:relative}
+    .qe .no{position:absolute;left:3px;top:0;font-size:8.5px;font-weight:800;color:#9AA89A;
+      background:rgba(255,255,255,.9);border-radius:6px;padding:0 3px}
+    .qe .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:3px;vertical-align:1px}
+    .qe .st{font-size:8.5px;color:#7C8E79;margin-top:1px}
+    .qe.cur{background:rgba(139,195,74,.14);border-radius:14px;box-shadow:0 0 0 1.5px rgba(139,195,74,.5) inset}
+    .qe.cur .st{color:#2E7D32;font-weight:800}
+    .qe.done{opacity:.42}
+    .qfoot{position:absolute;left:14px;right:14px;bottom:14px}
+    .qbtn{display:block;text-align:center;padding:13px 0;border-radius:18px;font-size:12.5px;font-weight:800;
+      background:linear-gradient(135deg,#7CB342,#558B2F);color:#fff;box-shadow:0 10px 22px rgba(85,139,47,.32)}
+    .qnote{margin-top:8px;font-size:9.5px;line-height:1.7;color:#7C8E79;background:#F4F8F2;
+      border:1px solid #E3EDE1;border-radius:12px;padding:8px 10px}
+    .qnote b{color:#33502F}
+    '''
+    rar = [
+        (1, "#E53935", "神话", "破壳中", "cur"),
+        (2, "#FB8C00", "传说", "待出壳", ""),
+        (3, "#FB8C00", "传说", "待出壳", ""),
+        (4, "#8E24AA", "史诗", "待出壳", ""),
+        (5, "#8E24AA", "史诗", "待出壳", ""),
+        (6, "#8E24AA", "史诗", "待出壳", ""),
+        (7, "#8E24AA", "史诗", "待出壳", ""),
+        (8, "#1E88E5", "稀有", "待出壳", ""),
+        (9, "#1E88E5", "稀有", "待出壳", ""),
+        (10, "#90A4AE", "普通", "待出壳", ""),
+    ]
+    cells = "".join(
+        f'<div class="qe {cls}"><span class="no">{no:02d}</span>'
+        f'{egg_svg(46, 3 if cls == "cur" else 1, glow=(cls == "cur"))}'
+        f'<div class="st"><span class="dot" style="background:{col}"></span>{name}</div></div>'
+        for no, col, name, st, cls in rar
+    )
+    return css, f"""
+    <img class="bg" src="{BG_DAY}"><div class="vig" style="background:rgba(20,38,22,.22)"></div>
+    <div class="chipctx abs" style="left:14px;top:14px">🥚 十连 · 出壳队列<br><i>10 颗蛋 · 按稀有度降序排列</i></div>
+    <div class="q">
+      <h3>出壳队列 <i>0 / 10 已破壳</i></h3>
+      <div class="qsum"><span>全部出壳约 3:12 后完成</span><span class="qbar"><span style="width:4%"></span></span></div>
+      <div class="grid">{cells}</div>
+      <div class="qfoot">
+        <span class="qbtn">全部出壳（零成本）</span>
+        <div class="qnote">
+          <b>节奏（14 §二定稿）</b>：第 1 颗 <b>T+60s</b>，之后<b>每 20s 一颗</b>，第 10 颗在 <b>T+240s</b>；
+          <b>总长 ≤ 4 分钟</b>。10 颗蛋<b>共用一套队列时长</b>，<b>不按稀有度各走 5~60 分钟</b> —— 这正是旧实现的缺陷。
+          <b>稀有度降序</b>出壳：把最好的惊喜前置，避免等 4 分钟才看到最值钱那只。
+          <b>每颗都走 3 秒破壳</b>（3s × 10 = 30s，占队列 1/8）；不耐烦时点「全部出壳」，剩余蛋 0.4s 间隔全破。
+        </div>
+      </div>
+    </div>
+    """
+
+
 SCREENS = [
     ("01", "家 · 主界面（无 Tab）", "打开 App = 家。场景即信息架构：宠物生活、搭话气泡、蛋在角落；唯一的常驻 HUD 是右缘抽屉把手（环 = 今日经验进度）。⭐ **在家最多同时站 6 只**（这里画满：两排各 3），左下角 chip 显示「在家 6/6 · 待命 3」。", "s01", "旧 01 首页（5-Tab + 功能宫格）整体作废"),
     ("02", "手势 · 抚摸", "在宠物身上长按/滑动 = 抚摸。涟漪 + 爱心 + 经验飘字就地反馈，没有「互动面板」页。", "s02", "旧 06 互动面板 → 删除"),
     ("03", "手势 · 拖拽喂食", "托盘按住拖到宠物身上 = 喂食/玩耍/训练。玩具拖过去即消耗耐久（G-08 的落点）。", "s03", "旧 06 互动面板 → 删除"),
     ("04", "蛋 · 就地揭晓", "蛋长在家里，轻点即开箱；揭晓卡浮在家的场景上。保底与概率公示仍在场。", "s04", "旧 02 盲盒开箱页 → 场景化"),
-    ("05", "孵化 · 裂纹即进度", "蛋壳裂纹就是进度，四档文案随进度换。轻点蛋从底部升起孵化片，三种加速不离开家。", "s05", "旧 03 孵化中页 → 场景化"),
+    ("05", "孵化 · 首蛋聚焦层", "**v2.5 改：首蛋不再是小角落** —— 蛋 180dp 居中、场景压暗，下方 00:47 大字倒计时 + 「21:40 破壳」，上方教手势「敲敲它」。敲一次多一道永久细纹。三组动效：呼吸 2.4s / 每 4s 轻晃 / 数字每秒跳动。**首蛋恒 1 分钟，与稀有度无关**；第 2 颗起回到角落 72dp 小蛋 + 底部孵化片（旧稿形态）。", "s05", "旧 03 孵化中页 → 首蛋聚焦层（v2.5）"),
     ("06", "破壳 · 起名仪式", "唯一保留的模态：起名是仪式，值得一次全屏中断。档案卡与六维初值在仪式内完成。", "s06", "旧 04 破壳起名 → 保留"),
     ("07", "搭话任务", "任务不做成进度条清单：宠物开口要，你回应就算数。今日进度只在把手环与一个淡色 chip。", "s07", "旧 08 今日任务页 → 删除"),
     ("08", "长按 · 档案浮卡", "长按宠物，档案从它身上浮起；左右滑切换家人。等级经验用修正后的 6,238。", "s08", "旧 05 宠物详情页 → 浮卡化"),
@@ -1316,6 +1400,7 @@ SCREENS = [
     ("28", "排行榜 · 五榜", "档案浮卡「排行榜」的落点（底部升起）：战力 / 等级 / 亲密 / 世代 / 繁育五榜（§7.1），全服 / 好友切换。⚠️ **综合战力是智慧 / 魅力唯一参与计算的地方**（U-06），类群与性别不制造数值优劣（ADR-021）。", "s28", "新增屏（s08 断链补齐）"),
     ("29", "成就 · 已点亮", "抽屉「成就」的落点（底部升起）：成就墙点亮态 / 未点亮灰格；**奖励只发金币与钻石**（§6.1 产出侧）。稀缺感来自陪伴时长与家族厚度，不来自抽卡运气。", "s29", "新增屏（抽屉 8 条目落点补齐 · 6/6）"),
     ("30", "设置 · 隐私与合规", "抽屉「设置 · 隐私与合规」的落点（底部升起）：悬浮窗 / 常驻通知（保活解释）/**重走 16~18 引导**（U-11 第⑤条「保留再次引导」）/ 隐私政策 / 概率公示 / 数据可导出可删除（合规红线第 10 条）。", "s30", "新增屏（抽屉 8 条目落点补齐 · 设置）"),
+    ("31", "十连 · 出壳队列", "**v2.5 新增**：十连不是「10 只幼体砸下来」，也不是「10 份独立倒计时」—— 是**一个队列**。10 颗蛋横排（按稀有度降序，最值钱的在最前），第 1 颗 `T+60s`、之后每 `20s` 一颗、**总长 ≤ 4 分钟**；每颗都走 3 秒破壳；不耐烦可点「**全部出壳**」（零成本，0.4s 间隔）。", "s31", "新增屏（W-14-2 拍板后补）"),
 ]
 
 
@@ -1442,7 +1527,7 @@ footer{margin-top:44px;text-align:center;font-size:12.5px;color:#9E9E9E}
   <header class="hero">
     <h1>萌芽宠物 SproutPet · 倒置 IA 设计稿 v2</h1>
     <p>按 U-10 拍板方向重做：桌面场景即主界面，无 Tab 栏、手势直触、蛋长在家里、任务由宠物搭话驱动、管理收进抽屉。旧稿（design-export/）原样保留，可逐屏对照。数值全部取自代码，修正旧稿 2 处漂移。<br>⭐ <b>v2.3 补 12 屏（对齐 L1 冻结版 00 §五/§七 与抽屉 8 条目）</b>：抽屉里「宠物图鉴 / 族谱 / 家庭成员 / 仓库 / 商店 / 成就 / 后山小屋 / 设置」此前只有入口没有落点（断链），配对与融合两条核心动线也只有浮卡文案没有界面 —— 现补 19（首启隐私政策）· 20（图鉴）· 21（族谱）· 22（仓库）· 23（商店）· 24/25（配对广场与双光效汇合）· 26（融合）· 27（后山小屋）· 28（排行榜）· 29（成就）· 30（设置）。<br>⭐ v2.2 补 3 屏：U-12 拍板「<b>拥有不限 ⊃ 在家 6 ⊃ 桌面 3</b>」后，01 屏改为在家 6 只，并新增 11（家庭成员名册）· 12（上桌 3 个位置）；U-13 拍板「陪伴换抽 · 只做十连 · 公示口径」后再补 13（抽蛋入口）· 14（开箱台）· 15（十连结果）。</p>
-    <div class="chips"><span class="chip">30 屏界面</span><span class="chip">画布 390 × 844</span>
+    <div class="chips"><span class="chip">31 屏界面</span><span class="chip">画布 390 × 844</span>
       <span class="chip">无 Tab · 无互动面板 · 无任务清单</span><span class="chip">数值对齐 EconomyRules / GrowthRules</span>
       <span class="chip">2026-10-16</span></div>
   </header>
@@ -1456,7 +1541,7 @@ footer{margin-top:44px;text-align:center;font-size:12.5px;color:#9E9E9E}
   <div class="screens">{"".join(cards)}</div>
 
   <h2 class="sec">新旧对照</h2>
-  <p class="sec-note">旧稿 10 屏（design-export/）→ 新稿 30 屏：互动 / 任务 / 详情 / 设置全部化为场景层，抽屉 8 条目逐一落点。</p>
+  <p class="sec-note">旧稿 10 屏（design-export/）→ 新稿 31 屏：互动 / 任务 / 详情 / 设置全部化为场景层，抽屉 8 条目逐一落点。</p>
   <div class="card"><table class="cmp">
     <tr><th style="width:30%">旧稿（常规 Tab App）</th><th style="width:30%">新稿（倒置 IA）</th><th>为什么</th></tr>
     {cmp_rows}

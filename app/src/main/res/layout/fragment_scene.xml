@@ -107,6 +107,15 @@
             android:textColor="#9E263C23"
             android:textSize="11.5sp" />
 
+        <!-- 首蛋聚焦层（docs/14 §1.4）：首蛋孵化期盖在场景之上，破壳后隐藏 -->
+        <include
+            android:id="@+id/first_egg_focus"
+            layout="@layout/view_first_egg_focus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:visibility="gone"
+            xmlns:tools="http://schemas.android.com/tools" />
+
     </FrameLayout>
 
     <!-- ═══ 右缘抽屉内容（HomeDrawerFragment） ═══ -->

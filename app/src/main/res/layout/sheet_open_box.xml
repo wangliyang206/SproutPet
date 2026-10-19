@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  开箱台（design-v2 屏 14「开箱台 · 底部升起」）
+
+  守 L2 的三条硬要求：
+  - 保底进度可见（"距史诗还差 N 抽"，数字来自 BlindBoxEngine.remainingToPity，UI 不自己算）
+  - 十连是**主按钮**，门票不足时**说清差几张**（不是灰掉不解释）
+  - 概率公示入口必须在场（00 §6.3 承诺，中国区上架合规项）
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_round"
+    android:orientation="vertical"
+    android:paddingHorizontal="18dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="20dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4.5dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_sheet_grip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/open_box_title"
+            android:textColor="@color/scene_text"
+            android:textSize="16.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_ticket_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/brand_primary_dark"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="盲盒 ×3" />
+    </LinearLayout>
+
+    <!-- 保底进度：对用户可见（00 §2.1），数字来自引擎 -->
+    <TextView
+        android:id="@+id/tv_pity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/scene_hint"
+        android:textSize="12sp"
+        tools:text="距史诗保底还差 12 抽 · 传说 / 神话没有保底通道" />
+
+    <!-- 十连：主按钮 -->
+    <TextView
+        android:id="@+id/btn_ten_pull"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_btn_primary"
+        android:gravity="center"
+        android:text="@string/open_box_ten"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_ten_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="@string/open_box_ten_hint"
+        android:textColor="@color/scene_hint"
+        android:textSize="11.5sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btn_single"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_ghost"
+            android:gravity="center"
+            android:text="@string/open_box_single"
+            android:textColor="@color/brand_primary_dark"
+            android:textSize="14.5sp" />
+
+        <TextView
+            android:id="@+id/btn_odds"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_ghost"
+            android:gravity="center"
+            android:text="@string/open_box_odds"
+            android:textColor="@color/brand_primary_dark"
+            android:textSize="14.5sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btn_go_shop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:paddingVertical="6dp"
+        android:text="@string/open_box_go_shop"
+        android:textColor="@color/scene_hint"
+        android:textSize="12.5sp" />
+</LinearLayout>

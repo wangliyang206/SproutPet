@@ -447,6 +447,227 @@ ACTIONS = {
 }
 
 
+# ─────────────────────────── L1 类群层（docs/15 §2.1 六类群母题） ───────────────────────────
+#
+# 2026-10-17 拍板（docs/15 §1.4 / §八）：形象先做 L1 类群层 —— 6 类群 × 3 可画阶段 = 18 个。
+# 每个类群一个装配函数，参数按 §2.1 的「轮廓母题 / 体块比例 / 材质」写死；
+# 阶段差异 = 体积缩放 + 头占比调整（§四 阶段形变表）。
+# ⚠️ 美术替换时只需同名覆盖 app/src/main/res/drawable/pet_{family}_{stage}.xml，
+#    渲染器（PetAssetResolver 四级回落）与测试一行都不用改。
+
+FAMILY_COLORS = {
+    # 类群 → (主色, 暗部, 亮部)。同屏两类群主色相间隔 ≥ 40°（docs/15 §2.2）
+    "luo":   ("#7FD1C1", "#4DB6AC", "#B2EBDF"),   # 蠃虫：水感青
+    "lin":   ("#64B5F6", "#42A5F5", "#BBDEFB"),   # 鳞虫：冷调蓝
+    "mao":   ("#FFB74D", "#FFA726", "#FFE0B2"),   # 毛虫：暖橙
+    "yu":    ("#FFD54F", "#FFC107", "#FFF2B8"),   # 羽虫：暖黄（沿萌芽鸡）
+    "kun":   ("#B39DDB", "#9575CD", "#E1D7F2"),   # 昆虫：甲壳紫
+    "uncat": ("#F48FB1", "#EC407A", "#FCE4EC"),   # 异兽：荧光粉（自发光）
+}
+
+# 阶段形变（docs/15 §四）：体积 / 头占比 / 特征
+STAGE_FORM = {
+    "baby":     dict(s=0.72, head_up=1.00, note="头占比最大（眼 ≥ 头 30%）"),
+    "juvenile": dict(s=0.88, head_up=0.92, note="开始抽长，出现类群母题"),
+    "adult":    dict(s=1.00, head_up=0.85, note="母题完整，记忆点最清晰"),
+}
+
+
+def _face(cx, head_cy, span, r, body_light, stage, mouth=None):
+    """共享五官：同一双眼睛 + 腮红（docs/15 §2.2 允许共享的部分）。眼睛占比随阶段变大。"""
+    baby_boost = 1.25 if stage == "baby" else (1.1 if stage == "juvenile" else 1.0)
+    out = eyes(cx, head_cy, span, r * baby_boost, "open")
+    out += cheeks(cx, head_cy + r * baby_boost * 1.5, span * 1.35, 7.5, 5.0)
+    if mouth == "smile":
+        out.append(S(arc3((cx - 6, head_cy + r * 2.1), (cx, head_cy + r * 2.9), (cx + 6, head_cy + r * 2.1)),
+                     None, OUTLINE, W_DETAIL))
+    return out
+
+
+def build_luo(stage):
+    """蠃虫 LUO：圆 · 软 · 黏 —— 头身一体（零硬边、无颈），宽:高 ≈ 1:1.15，湿润半透。"""
+    body, dark, light = FAMILY_COLORS["luo"]
+    st = STAGE_FORM[stage]
+    rx, ry = 40 * st["s"], 46 * st["s"]
+    cy = 176 - ry
+    out = []
+    # 湿润高光（材质：湿润半透 → 亮部大块）
+    out.append(S(ellipse(100, cy, rx, ry), body, OUTLINE, W_MAIN))
+    out.append(S(ellipse(100 - rx * 0.32, cy - ry * 0.42, rx * 0.34, ry * 0.26, rot=-24),
+                 light, None, 0))
+    # 头身一体：五官直接长在身体上部
+    out += _face(100, cy - ry * 0.42, 14 * st["s"], 8.0, light, stage, mouth="smile")
+    # 黏液光泽弧（身体下部一条弧线，与轮廓同色系）
+    out.append(S(arc3((100 - rx * 0.55, cy + ry * 0.45), (100, cy + ry * 0.62), (100 + rx * 0.55, cy + ry * 0.45)),
+                 None, dark, W_DETAIL))
+    # 小短手（圆软，贴身）
+    for sx in (-1, 1):
+        out.append(S(ellipse(100 + sx * (rx + 7 * st["s"]), cy + ry * 0.22, 10 * st["s"], 13 * st["s"], rot=sx * 24),
+                     body, OUTLINE, W_MAIN))
+    return out
+
+
+def build_lin(stage):
+    """鳞虫 LIN：长条 · S 形 · 有鳞 —— 身长为高的 2.2~2.6 倍，冷调鳞片（隔行明暗，非写实）。"""
+    body, dark, light = FAMILY_COLORS["lin"]
+    st = STAGE_FORM[stage]
+    s = st["s"]
+    out = []
+    # S 形长身：三段圆叠出弯曲（底大顶小），总高 ~150 × s（比例感靠"细长"而不是绝对长）
+    out.append(S(ellipse(100, 140, 24 * s, 34 * s), body, OUTLINE, W_MAIN))            # 尾段（卷）
+    out.append(S(ellipse(88 * s + 100 * (1 - s), 104, 20 * s, 30 * s, rot=-14), body, OUTLINE, W_MAIN))  # 中段
+    out.append(S(ellipse(112 * s + 100 * (1 - s), 68, 18 * s, 26 * s, rot=12), body, OUTLINE, W_MAIN))   # 上段
+    # 鳞纹：每段 2 条弧（隔行明暗，非网格）
+    for ex, ey, erx, ery in ((100, 140, 16 * s, 24 * s), (88 * s + 100 * (1 - s), 104, 13 * s, 20 * s),
+                             (112 * s + 100 * (1 - s), 68, 11 * s, 17 * s)):
+        out.append(S(arc3((ex - erx * 0.8, ey), (ex, ey + ery * 0.35), (ex + erx * 0.8, ey)),
+                     None, dark, 2.2))
+    # 头（小，长在 S 顶）
+    hx, hy = 112 * s + 100 * (1 - s) + 4, 34
+    out.append(S(ellipse(hx, hy, 19 * s, 16 * s), body, OUTLINE, W_MAIN))
+    out += _face(hx, hy - 2, 10 * s, 6.0, light, stage, mouth="smile")
+    # 分叉舌（小青蛇记忆点的类群基础版）
+    out.append(S(poly([(hx, hy + 12 * s), (hx, hy + 19 * s)], close=False), None, OUTLINE, 2.4))
+    out.append(S(poly([(hx, hy + 19 * s), (hx - 4, hy + 24 * s)], close=False), None, OUTLINE, 2.4))
+    out.append(S(poly([(hx, hy + 19 * s), (hx + 4, hy + 24 * s)], close=False), None, OUTLINE, 2.4))
+    return out
+
+
+def build_mao(stage):
+    """毛虫 MAO：蓬松 · 尖耳/尾 —— 头径 ≈ 体宽 × 1.1（大头），毛边轮廓（锯齿状柔化）。"""
+    body, dark, light = FAMILY_COLORS["mao"]
+    st = STAGE_FORM[stage]
+    s = st["s"]
+    out = []
+    # 蓬松尾（3 个叠圆，先画被身体压住）
+    for i, (tx, ty, tr) in enumerate(((146, 150, 12 * s), (158, 136, 10 * s), (163, 121, 8 * s))):
+        out.append(S(circle(tx, ty, tr), dark if i == 1 else body, OUTLINE, W_DETAIL))
+    # 小身
+    out.append(S(ellipse(100, 148, 30 * s, 24 * s), body, OUTLINE, W_MAIN))
+    # 大头（头径 ≈ 体宽 × 1.1 → 40 × 36）
+    out.append(S(ellipse(100, 94, 40 * s, 36 * s), body, OUTLINE, W_MAIN))
+    # 毛边（外缘锯齿状柔化：一圈短线）
+    for i in range(10):
+        ang = math.radians(-200 + i * 22)
+        x0, y0 = 100 + 40 * s * math.cos(ang), 94 + 36 * s * math.sin(ang)
+        x1, y1 = 100 + (40 * s + 7) * math.cos(ang), 94 + (36 * s + 7) * math.sin(ang)
+        out.append(S(poly([(x0, y0), (x1, y1)], close=False), None, dark, 2.2))
+    # 尖耳 2 只
+    for sx in (-1, 1):
+        out.append(S(poly([(100 + sx * 26 * s, 64), (100 + sx * 34 * s, 38), (100 + sx * 10 * s, 58)]),
+                     body, OUTLINE, W_MAIN))
+        out.append(S(poly([(100 + sx * 25 * s, 60), (100 + sx * 29 * s, 47), (100 + sx * 17 * s, 57)]),
+                     light, None, 0))
+    out += _face(100, 96, 13 * s, 7.6, light, stage, mouth="smile")
+    # 鼻头（兽感小圆鼻）
+    out.append(S(ellipse(100, 108, 5.5 * s, 4.2 * s), dark, None, 0))
+    return out
+
+
+def build_yu(stage):
+    """羽虫 YU：卵形身 + 小翅 —— 高:宽 ≈ 1.15:1，无颈；羽片分层（2~3 层）。头顶一撮羽（非嫩芽）。"""
+    body, dark, light = FAMILY_COLORS["yu"]
+    st = STAGE_FORM[stage]
+    s = st["s"]
+    out = []
+    # 尾羽 3 根（分层）
+    out += tail(100 + 30 * s, 148, [(26 * s, 22, 9), (0, 24, 10), (-26 * s, 20, 9)], color=dark)
+    # 身体（卵形）
+    out.append(S(ellipse(100, 132, 36 * s, 42 * s), body, OUTLINE, W_MAIN))
+    # 翅膀 2 层（分层羽片）
+    for sx in (-1, 1):
+        out.append(S(ellipse(100 + sx * 34 * s, 124, 12 * s, 20 * s, rot=sx * 34), dark, OUTLINE, W_DETAIL))
+        out.append(S(ellipse(100 + sx * 30 * s, 126, 10 * s, 16 * s, rot=sx * 30), light, None, 0))
+    # 头（无颈，融在身上）
+    out.append(S(ellipse(100, 86, 30 * s, 27 * s), body, OUTLINE, W_MAIN))
+    # 头顶一撮小羽（3 根短线，区别于萌芽鸡的嫩芽）
+    for dx, ang in ((-8, -24), (0, 0), (8, 24)):
+        out.append(S(poly([(100 + dx * s, 62), (100 + dx * s + 10 * math.sin(math.radians(ang)), 48)],
+                          close=False), None, dark, 2.6))
+    out += _face(100, 88, 11.5 * s, 7.4, light, stage, mouth=None)
+    # 喙（小三角）
+    out.append(S(poly([(95, 98), (105, 98), (100, 106)]), "#FFB300", OUTLINE, 2.4))
+    # 爪 2 只
+    for sx in (-1, 1):
+        out.append(S(poly([(100 + sx * 12 * s, 170), (100 + sx * 12 * s, 176)], close=False), None, "#FFB300", 3.0))
+    return out
+
+
+def build_kun(stage):
+    """昆虫 KUN：甲壳 · 分节 · 中轴对称 —— 明显背中缝，硬质锐利小高光，壳缘清晰。"""
+    body, dark, light = FAMILY_COLORS["kun"]
+    st = STAGE_FORM[stage]
+    s = st["s"]
+    out = []
+    # 足 4 条（短，中轴对称）
+    for sx in (-1, 1):
+        for fy in (136, 152):
+            out.append(S(poly([(100 + sx * 34 * s, fy * (0.9 + 0.1 * s)),
+                               (100 + sx * 46 * s, fy * (0.9 + 0.1 * s) + 6)], close=False),
+                         None, OUTLINE, 2.8))
+    # 甲壳（大椭圆）+ 分节弧
+    out.append(S(ellipse(100, 134, 40 * s, 36 * s), body, OUTLINE, W_MAIN))
+    out.append(S(arc3((100 - 34 * s, 126), (100, 116), (100 + 34 * s, 126)), None, dark, 2.4))
+    out.append(S(arc3((100 - 38 * s, 144), (100, 136), (100 + 38 * s, 144)), None, dark, 2.4))
+    # 背中缝（明显，中轴对称的标志）
+    out.append(S(poly([(100, 98), (100, 170)], close=False), None, dark, 2.8))
+    # 硬质小高光（锐利点，不弥散）
+    out.append(S(ellipse(74 * s + 100 * (1 - s), 112, 6 * s, 4 * s, rot=-30), "#FFFFFF", None, 0))
+    # 头 + 触角（末端小圆）
+    out.append(S(ellipse(100, 82, 24 * s, 20 * s), body, OUTLINE, W_MAIN))
+    for sx in (-1, 1):
+        out.append(S(poly([(100 + sx * 14 * s, 66), (100 + sx * 26 * s, 46)], close=False), None, OUTLINE, 2.6))
+        out.append(S(circle(100 + sx * 27 * s, 44, 3.5), dark, OUTLINE, 2.0))
+    out += _face(100, 84, 9.5 * s, 5.8, light, stage)
+    return out
+
+
+def build_uncat(stage):
+    """异兽 UNCAT：发光 · 悬浮 · 不落地 —— 底部离地 4~10px（唯一不触地），自发光外晕。"""
+    body, dark, light = FAMILY_COLORS["uncat"]
+    st = STAGE_FORM[stage]
+    s = st["s"]
+    out = []
+    # 自发光外晕（≥ 8px 羽化：用两层同心半透明圆表达）
+    out.append(S(circle(100, 124, 64 * s), "#28F48FB1", None, 0))
+    out.append(S(circle(100, 124, 52 * s), "#33F48FB1", None, 0))
+    # 身体（头身圆润相融）
+    out.append(S(ellipse(100, 134, 32 * s, 30 * s), body, OUTLINE, W_MAIN))
+    out.append(S(ellipse(100, 94, 28 * s, 26 * s), body, OUTLINE, W_MAIN))
+    # 独角（发光尖角）
+    out.append(S(poly([(100, 70), (94, 48), (103, 58), (108, 46), (106, 70)]), light, OUTLINE, W_DETAIL))
+    # 小翅翼（异兽的"不属十类"感：一对小浮翼）
+    for sx in (-1, 1):
+        out.append(S(ellipse(100 + sx * 38 * s, 118, 8 * s, 14 * s, rot=sx * 40),
+                     "#8CF48FB1", OUTLINE, 2.2))
+    # 悬浮：脚下无脚，留空 4~10px，下方只有一团淡影
+    out.append(S(ellipse(100, 172, 18 * s, 4 * s), "#231E371E", None, 0))
+    out += _face(100, 94, 10.5 * s, 7.0, light, stage, mouth="smile")
+    # 星屑 2 颗（发光感的注脚）
+    out.append(S(poly([(52, 84), (54, 90), (60, 92), (54, 94), (52, 100), (50, 94), (44, 92), (50, 90)]),
+                 "#FFF3C4", None, 0))
+    out.append(S(poly([(158, 60), (159.5, 64.5), (164, 66), (159.5, 67.5), (158, 72), (156.5, 67.5), (152, 66), (156.5, 64.5)]),
+                 "#FFF3C4", None, 0))
+    return out
+
+
+FAMILY_BUILDERS = {
+    "luo": build_luo, "lin": build_lin, "mao": build_mao,
+    "yu": build_yu, "kun": build_kun, "uncat": build_uncat,
+}
+
+FAMILY_NAMES = {
+    "luo": "蠃虫", "lin": "鳞虫", "mao": "毛虫", "yu": "羽虫", "kun": "昆虫", "uncat": "异兽",
+}
+
+STAGE_NAMES = {"baby": "幼崽", "juvenile": "少年", "adult": "成年"}
+
+
+def build_family(family, stage):
+    """按类群与阶段装配（docs/15 §1.4 L1 交付清单）。"""
+    return FAMILY_BUILDERS[family](stage)
+
+
 # ─────────────────────────── 蛋 ───────────────────────────
 
 def build_egg(cracked: bool):
@@ -500,13 +721,19 @@ def path_data(segs):
 
 
 def hex_to_rgb(h):
-    """内部色值是 Android 风格 #AARRGGBB；位图预览需要 (R,G,B)。"""
+    """内部色值兼容 #RRGGBB 与 #AARRGGBB；位图预览需要 (R,G,B)。"""
     h = h.lstrip("#")
+    if len(h) == 6:
+        return (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16))
     return (int(h[2:4], 16), int(h[4:6], 16), int(h[6:8], 16))
 
 
 def hex_to_rgba(h):
+    """兼容 6 位（#RRGGBB，alpha=255）与 8 位（#AARRGGBB）两种写法。"""
     h = h.lstrip("#")
+    if len(h) == 6:
+        r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+        return (r, g, b, 255)
     r, g, b, a = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16), int(h[6:8], 16)
     return (r, g, b, a)
 
@@ -658,6 +885,25 @@ SPEC = [
     ("pet_sprout_chicken_sleep", "萌芽鸡 · 睡着",
      ["对应 PetRenderState.Sleeping：蹲坐压扁 + 闭眼 + Zzz 气泡 + 嫩芽下垂。"],
      lambda: build_chicken(ACTIONS["sleep"])),
+]
+
+# ── L1 类群层（docs/15 §1.4 · 2026-10-17 拍板交付）：6 类群 × 3 可画阶段 = 18 个 ──
+FAMILY_MOTIF = {
+    "luo": "圆软黏（头身一体、无颈）", "lin": "长条S形（有鳞、分叉舌）",
+    "mao": "蓬松大头（尖耳/尾）", "yu": "卵形身小翅（无颈、羽片分层）",
+    "kun": "甲壳分节（背中缝、触角）", "uncat": "发光悬浮（不落地、独角）",
+}
+SPEC += [
+    (f"pet_{family}_{stage}", f"{FAMILY_NAMES[family]} · {STAGE_NAMES[stage]}",
+     [f"L1 类群层（docs/15 §1.4）：{FAMILY_NAMES[family]}的 {STAGE_NAMES[stage]}形态。",
+      f"类群母题 = {FAMILY_MOTIF[family]}（docs/15 §2.1）。",
+      "⚠️ 美术替换时同名覆盖本文件即可，渲染器（PetAssetResolver 四级回落）零改动。"],
+     lambda family=family, stage=stage: build_family(family, stage))
+    for family in ("luo", "lin", "mao", "yu", "kun", "uncat")
+    for stage in ("baby", "juvenile", "adult")
+]
+
+SPEC += [
     ("pet_egg_common", "蛋 · 孵化中",
      ["对应 PetRenderState.Incubating：普通蛋（rarity=COMMON）。",
       "外形对全部物种通用 —— 蛋里是什么虫，破壳时才知道。"],

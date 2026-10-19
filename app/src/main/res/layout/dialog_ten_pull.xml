@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  十连结果 · 出壳队列（design-v2 屏 15「结果横排」+ 屏 31「出壳队列」）
+
+  口径（docs/14 §2.2 / W-14-2）：
+  - 10 颗蛋横排，**按稀有度降序**排 —— 第 1 颗就是整批最值钱的
+  - 第 1 颗 T+60s，之后每 20s 一颗，**总长 ≤ 4 分钟**
+  - 每颗都走 3 秒破壳；不耐烦可「全部出壳」（零成本）
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_round"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="18dp"
+    android:paddingBottom="18dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ten_pull_title"
+        android:textColor="@color/scene_text"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_queue_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="@string/ten_pull_note"
+        android:textColor="@color/scene_hint"
+        android:textSize="11.5sp" />
+
+    <!-- 10 颗蛋横排（代码里按稀有度降序填充，第 1 颗高亮） -->
+    <LinearLayout
+        android:id="@+id/ll_eggs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal" />
+
+    <TextView
+        android:id="@+id/tv_floor_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/ten_pull_floor"
+        android:textColor="@color/brand_primary_dark"
+        android:textSize="11.5sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/btn_reveal_all"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_btn_primary"
+        android:gravity="center"
+        android:text="@string/ten_pull_reveal_all"
+        android:textColor="@android:color/white"
+        android:textSize="15.5sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/btn_later"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_btn_ghost"
+        android:gravity="center"
+        android:text="@string/ten_pull_later"
+        android:textColor="@color/brand_primary_dark"
+        android:textSize="14sp" />
+</LinearLayout>

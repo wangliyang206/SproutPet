@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  鳞虫 · 少年
+
+  L1 类群层（docs/15 §1.4）：鳞虫的 少年形态。
+  类群母题 = 长条S形（有鳞、分叉舌）（docs/15 §2.1）。
+  ⚠️ 美术替换时同名覆盖本文件即可，渲染器（PetAssetResolver 四级回落）零改动。
+
+  占位资源：由 tools/gen_pet_placeholder_vectors.py 生成，
+  美术交付 Rive 版本（docs/02-宠物渲染方案.md §5.1）后可整体替换。
+  手改本文件会在下次重新生成时被覆盖 —— 请改脚本。
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <path
+        android:fillColor="#64B5F6"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M121.12 140.00 C121.12 156.52 111.66 169.92 100.00 169.92 C88.34 169.92 78.88 156.52 78.88 140.00 C78.88 123.48 88.34 110.08 100.00 110.08 C111.66 110.08 121.12 123.48 121.12 140.00 Z" />
+    <path
+        android:fillColor="#64B5F6"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M106.52 99.74 C110.04 113.89 105.26 127.26 95.83 129.62 C86.40 131.97 75.89 122.41 72.36 108.26 C68.84 94.11 73.62 80.74 83.05 78.38 C92.48 76.03 102.99 85.59 106.52 99.74 Z" />
+    <path
+        android:fillColor="#64B5F6"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M126.05 71.29 C123.43 83.65 114.36 92.20 105.80 90.38 C97.25 88.56 92.44 77.07 95.07 64.71 C97.69 52.35 106.76 43.80 115.32 45.62 C123.87 47.44 128.68 58.93 126.05 71.29 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#42A5F5"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M88.74 140.00 C96.25 144.93 103.75 144.93 111.26 140.00" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#42A5F5"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M80.29 104.00 C86.39 108.11 92.49 108.11 98.59 104.00" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#42A5F5"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M102.82 68.00 C107.98 71.49 113.14 71.49 118.30 68.00" />
+    <path
+        android:fillColor="#64B5F6"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M131.28 34.00 C131.28 41.78 123.79 48.08 114.56 48.08 C105.33 48.08 97.84 41.78 97.84 34.00 C97.84 26.22 105.33 19.92 114.56 19.92 C123.79 19.92 131.28 26.22 131.28 34.00 Z" />
+    <path
+        android:fillColor="#FF4E342E"
+        android:pathData="M112.36 32.00 C112.36 35.65 109.41 38.60 105.76 38.60 C102.11 38.60 99.16 35.65 99.16 32.00 C99.16 28.35 102.11 25.40 105.76 25.40 C109.41 25.40 112.36 28.35 112.36 32.00 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M105.56 29.49 C105.56 30.66 104.62 31.60 103.45 31.60 C102.28 31.60 101.34 30.66 101.34 29.49 C101.34 28.33 102.28 27.38 103.45 27.38 C104.62 27.38 105.56 28.33 105.56 29.49 Z" />
+    <path
+        android:fillColor="#FF4E342E"
+        android:pathData="M129.96 32.00 C129.96 35.65 127.01 38.60 123.36 38.60 C119.71 38.60 116.76 35.65 116.76 32.00 C116.76 28.35 119.71 25.40 123.36 25.40 C127.01 25.40 129.96 28.35 129.96 32.00 Z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M123.16 29.49 C123.16 30.66 122.22 31.60 121.05 31.60 C119.88 31.60 118.94 30.66 118.94 29.49 C118.94 28.33 119.88 27.38 121.05 27.38 C122.22 27.38 123.16 28.33 123.16 29.49 Z" />
+    <path
+        android:fillColor="#FFFFAB91"
+        android:pathData="M110.02 40.34 C110.59 43.04 107.77 45.93 103.72 46.79 C99.67 47.65 95.92 46.16 95.34 43.46 C94.77 40.76 97.59 37.87 101.64 37.01 C105.69 36.15 109.44 37.64 110.02 40.34 Z" />
+    <path
+        android:fillColor="#FFFFAB91"
+        android:pathData="M133.78 43.46 C133.20 46.16 129.45 47.65 125.40 46.79 C121.35 45.93 118.53 43.04 119.10 40.34 C119.68 37.64 123.43 36.15 127.48 37.01 C131.53 37.87 134.35 40.76 133.78 43.46 Z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="3.0"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M108.56 44.60 C112.56 47.80 116.56 47.80 120.56 44.60" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M114.56 44.56 L114.56 50.72" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M114.56 50.72 L110.56 55.12" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF5D4037"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M114.56 50.72 L118.56 55.12" />
+</vector>

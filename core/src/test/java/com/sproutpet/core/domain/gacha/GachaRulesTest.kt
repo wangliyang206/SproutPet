@@ -4,6 +4,7 @@ import com.sproutpet.core.domain.economy.EconomyRules
 import com.sproutpet.core.domain.incubation.BlindBoxEngine
 import com.sproutpet.core.domain.item.ItemRegistry
 import com.sproutpet.core.domain.item.ItemSource
+import com.sproutpet.core.domain.pet.GrowthRules
 import com.sproutpet.core.domain.pet.Rarity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -274,5 +275,60 @@ class GachaRulesTest {
             text.contains("传说") && text.contains("神话") && text.contains("没有保底")
         )
         assertTrue("公示必须写明灵兽不可抽（ADR-017）", text.contains("灵兽"))
+    }
+}
+
+/**
+ * 十连出壳队列的时序常量（docs/14 §二 · 2026-10-17 拍板 `W-14-2`）。
+ *
+ * 队列 = 一套时长 + 错峰，**不是 10 份独立 CD** ——
+ * 旧实现「10 颗蛋各走 5~60 分钟」正是用户报的「一只一只孵化」的根因。
+ */
+class TenPullQueueTest {
+
+    @Test
+    fun `queue caps the whole ten-pull within four minutes`() {
+        assertEquals("队列总长硬上限 = 第 1 颗 60s + 9 × 20s = 240s",
+            240_000L, GachaRules.QUEUE_TOTAL_CAP_MS)
+    }
+
+    @Test
+    fun `first egg of the queue lands at one minute`() {
+        // 与首蛋同量级：第一次惊喜必须快（docs/14 §二）
+        assertEquals(GrowthRules.FIRST_PET_HATCH_MS, GachaRules.QUEUE_FIRST_MS)
+    }
+
+    @Test
+    fun `queue offsets are the single executor of the constants`() {
+        // G-15 的原始事故：三个 QUEUE_* 常量写好了，却没有任何调用方。
+        // 这条测试钉死「偏移表 = 常量的唯一出口」，展示层不许自己再算一遍。
+        assertEquals(0, GachaRules.queueHatchOffsetMs(0).compareTo(GachaRules.QUEUE_FIRST_MS))
+        assertEquals(0, GachaRules.queueHatchOffsetMs(9).compareTo(GachaRules.QUEUE_TOTAL_CAP_MS))
+        // 每颗的间隔严格等于错峰常量
+        for (i in 1 until GachaRules.TEN_PULL) {
+            assertEquals(
+                GachaRules.QUEUE_STAGGER_MS,
+                GachaRules.queueHatchOffsetMs(i) - GachaRules.queueHatchOffsetMs(i - 1)
+            )
+        }
+    }
+
+    @Test
+    fun `queue offset table has one entry per egg and never exceeds the cap`() {
+        val offsets = GachaRules.queueOffsetsMs()
+        assertEquals(GachaRules.TEN_PULL, offsets.size)
+        assertEquals(offsets.sorted(), offsets)  // 单调递增 = 不会出现「后面的先出」
+        assertTrue("整条队列不得超过 4 分钟", offsets.last() <= GachaRules.QUEUE_TOTAL_CAP_MS)
+        // 越界入参被钳制，调用方传错也不会把队列拖到 4 分钟之后
+        assertEquals(GachaRules.QUEUE_TOTAL_CAP_MS, GachaRules.queueHatchOffsetMs(99))
+        assertEquals(GachaRules.QUEUE_FIRST_MS, GachaRules.queueHatchOffsetMs(-3))
+    }
+
+    @Test
+    fun `stagger is long enough to see one egg but short enough to stay engaged`() {
+        assertTrue(
+            "错峰间隔应在 15~30s 之间（< 15s 看不清，> 30s 变罚站）",
+            GachaRules.QUEUE_STAGGER_MS in 15_000L..30_000L
+        )
     }
 }

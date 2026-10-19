@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <path d="M158.00 150.00 C158.00 156.63 152.63 162.00 146.00 162.00 C139.37 162.00 134.00 156.63 134.00 150.00 C134.00 143.37 139.37 138.00 146.00 138.00 C152.63 138.00 158.00 143.37 158.00 150.00 Z" fill="#FFB74D" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M168.00 136.00 C168.00 141.52 163.52 146.00 158.00 146.00 C152.48 146.00 148.00 141.52 148.00 136.00 C148.00 130.48 152.48 126.00 158.00 126.00 C163.52 126.00 168.00 130.48 168.00 136.00 Z" fill="#FFA726" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M171.00 121.00 C171.00 125.42 167.42 129.00 163.00 129.00 C158.58 129.00 155.00 125.42 155.00 121.00 C155.00 116.58 158.58 113.00 163.00 113.00 C167.42 113.00 171.00 116.58 171.00 121.00 Z" fill="#FFB74D" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M130.00 148.00 C130.00 161.25 116.57 172.00 100.00 172.00 C83.43 172.00 70.00 161.25 70.00 148.00 C70.00 134.75 83.43 124.00 100.00 124.00 C116.57 124.00 130.00 134.75 130.00 148.00 Z" fill="#FFB74D" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M140.00 94.00 C140.00 113.88 122.09 130.00 100.00 130.00 C77.91 130.00 60.00 113.88 60.00 94.00 C60.00 74.12 77.91 58.00 100.00 58.00 C122.09 58.00 140.00 74.12 140.00 94.00 Z" fill="#FFB74D" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M62.41 106.31 L55.83 108.71" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M60.02 92.74 L53.03 92.50" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M63.46 79.36 L57.06 76.51" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M72.21 68.10 L67.35 63.07" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M85.02 60.62 L82.39 54.13" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M100.00 58.00 L100.00 51.00" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M114.98 60.62 L117.61 54.13" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M127.79 68.10 L132.65 63.07" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M136.54 79.36 L142.94 76.51" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M139.98 92.74 L146.97 92.50" fill="none" stroke="#FFA726" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M74.00 64.00 L66.00 38.00 L90.00 58.00 Z" fill="#FFB74D" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M75.00 60.00 L71.00 47.00 L83.00 57.00 Z" fill="#FFE0B2" />
+  <path d="M126.00 64.00 L134.00 38.00 L110.00 58.00 Z" fill="#FFB74D" stroke="rgba(255,93,64,0.216)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M125.00 60.00 L129.00 47.00 L117.00 57.00 Z" fill="#FFE0B2" />
+  <path d="M94.60 96.00 C94.60 100.20 91.20 103.60 87.00 103.60 C82.80 103.60 79.40 100.20 79.40 96.00 C79.40 91.80 82.80 88.40 87.00 88.40 C91.20 88.40 94.60 91.80 94.60 96.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M86.77 93.11 C86.77 94.46 85.68 95.54 84.34 95.54 C83.00 95.54 81.91 94.46 81.91 93.11 C81.91 91.77 83.00 90.68 84.34 90.68 C85.68 90.68 86.77 91.77 86.77 93.11 Z" fill="#FFFFFF" />
+  <path d="M120.60 96.00 C120.60 100.20 117.20 103.60 113.00 103.60 C108.80 103.60 105.40 100.20 105.40 96.00 C105.40 91.80 108.80 88.40 113.00 88.40 C117.20 88.40 120.60 91.80 120.60 96.00 Z" fill="rgba(255,78,52,0.180)" />
+  <path d="M112.77 93.11 C112.77 94.46 111.68 95.54 110.34 95.54 C109.00 95.54 107.91 94.46 107.91 93.11 C107.91 91.77 109.00 90.68 110.34 90.68 C111.68 90.68 112.77 91.77 112.77 93.11 Z" fill="#FFFFFF" />
+  <path d="M89.79 105.84 C90.36 108.54 87.54 111.43 83.49 112.29 C79.44 113.15 75.69 111.66 75.11 108.96 C74.54 106.26 77.36 103.37 81.41 102.51 C85.46 101.65 89.21 103.14 89.79 105.84 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M124.89 108.96 C124.31 111.66 120.56 113.15 116.51 112.29 C112.46 111.43 109.64 108.54 110.21 105.84 C110.79 103.14 114.54 101.65 118.59 102.51 C122.64 103.37 125.46 106.26 124.89 108.96 Z" fill="rgba(255,255,171,0.569)" />
+  <path d="M94.00 111.96 C98.00 116.01 102.00 116.01 106.00 111.96" fill="none" stroke="rgba(255,93,64,0.216)" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M105.50 108.00 C105.50 110.32 103.04 112.20 100.00 112.20 C96.96 112.20 94.50 110.32 94.50 108.00 C94.50 105.68 96.96 103.80 100.00 103.80 C103.04 103.80 105.50 105.68 105.50 108.00 Z" fill="#FFA726" />
+</svg>

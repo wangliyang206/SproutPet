@@ -76,16 +76,25 @@ object GrowthRules {
      * 稀有度对孵化时长的影响。
      * 越稀有孵化越久，制造期待感 —— 但整体压制在分钟~小时级别。
      *
-     * @param isFirstPet 是否为用户的**首只宠物**。首只宠物额外缩短时长，
-     *                   保证当天就能玩到（首日体验优先）。
+     * @param isFirstPet 是否为用户的**首只宠物**。首蛋**恒为
+     *                   [FIRST_PET_HATCH_MS]（1 分钟），与稀有度无关** ——
+     *                   首日不该让「抽到神话」变成罚站 30 分钟
+     *                   （docs/14 §1.3，2026-10-17 拍板）。
+     *                   稀有度的差异体现在**破壳演出规格**，不体现在等待时长。
      */
     fun hatchDurationOf(rarity: Rarity, isFirstPet: Boolean = false): Long {
-        val base = HATCH_DURATION_BY_RARITY[rarity] ?: BASE_HATCH_DURATION_MS
-        return if (isFirstPet) (base * FIRST_PET_HATCH_RATIO).toLong() else base
+        if (isFirstPet) return FIRST_PET_HATCH_MS
+        return HATCH_DURATION_BY_RARITY[rarity] ?: BASE_HATCH_DURATION_MS
     }
 
-    /** 首只宠物的孵化时长倍率（更短，保证首日体验） */
-    const val FIRST_PET_HATCH_RATIO = 0.5f
+    /**
+     * 首蛋孵化时长：**固定 1 分钟，与稀有度无关**（docs/14 §1.3，v3.2 拍板）。
+     *
+     * ⚠️ 只作用于**第一只**宠物；第 2 颗起回到 [HATCH_DURATION_BY_RARITY]（5~60 分钟）。
+     * 旧常量 `FIRST_PET_HATCH_RATIO = 0.5f` 已作废并删除 ——
+     * 「比例折算」会让神话蛋首日等 30 分钟，把大喜事变成差评。
+     */
+    const val FIRST_PET_HATCH_MS = 60_000L
 
     /** 专注陪伴抵扣比例：陪伴时长 × 该比例 = 抵扣的孵化时间 */
     const val FOCUS_BOOST_RATIO = 0.5f

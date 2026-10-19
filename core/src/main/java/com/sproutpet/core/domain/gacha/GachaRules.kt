@@ -1,6 +1,7 @@
 package com.sproutpet.core.domain.gacha
 
 import com.sproutpet.core.domain.incubation.BlindBoxEngine
+import com.sproutpet.core.domain.pet.GrowthRules
 import com.sproutpet.core.domain.pet.Rarity
 
 /**
@@ -109,6 +110,52 @@ object GachaRules {
      * 数值依据：`tools/acquisition_sim.py` 第八节（40 万次蒙卡）。
      */
     val TEN_PULL_FLOOR: Rarity = Rarity.RARE
+
+    // ═══════════════════ 十连出壳队列（docs/14 §二 · 2026-10-17 拍板） ═══════════════════
+
+    /**
+     * 十连的第 1 颗蛋距连开结束多久破壳。
+     *
+     * ⚠️ **十连的 10 颗蛋共用一套「队列时长」，不按稀有度各走
+     * `HATCH_DURATION_BY_RARITY`** —— 十连是批量开箱，不是 10 次单抽。
+     * 旧实现「10 颗蛋各走 5~60 分钟 CD」正是用户报的
+     * 「怎么是一只一只孵化」的根因。
+     */
+    const val QUEUE_FIRST_MS = GrowthRules.FIRST_PET_HATCH_MS
+
+    /** 队列错峰间隔：第 1 颗破壳后，每 20 秒再破一颗（刚好够「看清一只 + 期待下一只」） */
+    const val QUEUE_STAGGER_MS = 20_000L
+
+    /** 队列总长硬上限：第 10 颗在 T+240s（4 分钟）全部出壳 */
+    const val QUEUE_TOTAL_CAP_MS = QUEUE_FIRST_MS + QUEUE_STAGGER_MS * (TEN_PULL - 1)
+
+    /** 「全部出壳」的间隔：点击后剩余蛋以 0.4s 间隔依次破壳（零成本） */
+    const val QUEUE_REVEAL_ALL_STAGGER_MS = 400L
+
+    /**
+     * 队列中第 [index] 颗（**0 起**）蛋距「现在」多久破壳。
+     *
+     * 这是 [QUEUE_FIRST_MS] / [QUEUE_STAGGER_MS] / [QUEUE_TOTAL_CAP_MS] 三个常量的
+     * **唯一执行者** —— 常量写对了却没人调用，等于没改（`docs/09 G-15` 的原始事故）。
+     *
+     * @param index 0 = 第 1 颗（最先破壳）。负数按 0 处理；超过 [TEN_PULL] 时被
+     *              钳制在 [QUEUE_TOTAL_CAP_MS]，**队列永远不会超过 4 分钟**。
+     */
+    fun queueHatchOffsetMs(index: Int): Long {
+        val i = index.coerceAtLeast(0)
+        return (QUEUE_FIRST_MS + QUEUE_STAGGER_MS * i).coerceAtMost(QUEUE_TOTAL_CAP_MS)
+    }
+
+    /**
+     * 整条队列的破壳偏移表（长度 = [count]，默认十连）。
+     *
+     * 单独存在是为了让「落库」与「演出」共用同一份时序 —— 展示层不该自己再算一遍，
+     * 否则又多一个真相源。
+     */
+    fun queueOffsetsMs(count: Int = TEN_PULL): List<Long> {
+        require(count >= 1) { "队列至少 1 颗蛋，收到 $count" }
+        return List(count) { queueHatchOffsetMs(it) }
+    }
 
     // ═══════════════════════ 抽数 / 概率（公示口径） ═══════════════════════
 

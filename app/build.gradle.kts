@@ -42,6 +42,13 @@ android {
         }
     }
 
+    testOptions {
+        unitTests {
+            // 让 JVM 单测能读 res/（PetAssetResolverTest 用 Robolectric 解析 drawable）
+            isIncludeAndroidResources = true
+        }
+    }
+
     buildTypes {
         debug {
             isDebuggable = true
@@ -112,11 +119,14 @@ dependencies {
     // Debug
     debugImplementation(libs.leakcanary)
 
-    // Test
+    // Test（Robolectric：PetAssetResolverTest 需要在 JVM 侧真实解析 drawable，docs/15 §5.1）
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.turbine)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.monitor)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

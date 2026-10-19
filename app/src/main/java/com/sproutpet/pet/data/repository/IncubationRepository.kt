@@ -37,6 +37,16 @@ interface IncubationRepository {
      * @return 破壳后的宠物；未到点或不存在返回 null
      */
     suspend fun hatchIfReady(eggId: Long, now: Long = System.currentTimeMillis()): Pet?
+
+    /**
+     * 立即破壳（不看计时）：十连「全部出壳」用（docs/14 §2.2 · 零成本）。
+     *
+     * 与 [hatchIfReady] 的差别只有"不检查时间" —— 仍然走 `BlindBoxEngine.hatch`
+     * 的同一套属性/阶段初始化，**不是**绕过规则直接改 stage。
+     *
+     * @return 破壳后的宠物；蛋不存在或已破壳返回 null
+     */
+    suspend fun forceHatch(eggId: Long, now: Long = System.currentTimeMillis()): Pet?
 }
 
 @Singleton
@@ -67,6 +77,16 @@ class IncubationRepositoryImpl @Inject constructor(
             val entity = petDao.queryById(eggId) ?: return@withContext null
             val egg = PetMapper.toDomain(entity)
             if (egg.isHatched || egg.hatchRemainMs(now) > 0L) return@withContext null
+            val hatched = BlindBoxEngine.hatch(egg, now)
+            petDao.insert(PetMapper.toEntity(hatched))
+            hatched
+        }
+
+    override suspend fun forceHatch(eggId: Long, now: Long): Pet? =
+        withContext(Dispatchers.IO) {
+            val entity = petDao.queryById(eggId) ?: return@withContext null
+            val egg = PetMapper.toDomain(entity)
+            if (egg.isHatched) return@withContext null
             val hatched = BlindBoxEngine.hatch(egg, now)
             petDao.insert(PetMapper.toEntity(hatched))
             hatched
