@@ -100,7 +100,19 @@ data class Pairing(
      * 对方是否为 NPC。
      * NPC 配对**免确认**，创建即生效；真人配对需对方接受。
      */
-    val partnerIsNpc: Boolean = false
+    val partnerIsNpc: Boolean = false,
+
+    /** 双方好感度（亲密值 0~100） */
+    val affection: Int = 0,
+
+    /** 邀请过期时间（真人配对未确认时 = `pairedAt + PairingRules.inviteTtlMs`；NPC 恒 0） */
+    val expireAt: Long = 0L,
+
+    /** 最后本地修改时间（同步用） */
+    val updatedAt: Long = System.currentTimeMillis(),
+
+    /** 是否已同步到云端 */
+    val isSynced: Boolean = false
 ) {
     /** 搭档的另一方宠物 ID */
     fun partnerOf(petId: Long): Long = if (petId == petIdA) petIdB else petIdA
@@ -130,24 +142,30 @@ data class Pairing(
 }
 
 /** 配对状态 */
-enum class PairingStatus(val displayName: String) {
+enum class PairingStatus(val id: Int, val displayName: String) {
     /** 待对方确认（仅真人配对会出现） */
-    PENDING("待确认"),
+    PENDING(0, "待确认"),
 
     /** 配对生效中 */
-    PAIRED("搭档中"),
+    PAIRED(1, "搭档中"),
 
     /** 已解绑 */
-    RELEASED("已解绑"),
+    RELEASED(2, "已解绑"),
 
     /** 已过期（邀请未被接受） */
-    EXPIRED("已过期");
+    EXPIRED(3, "已过期");
 
     /** 是否为有效配对 */
     val isActive: Boolean get() = this == PAIRED
 
     /** 是否处于等待确认 */
-    val isWaiting: Boolean get() = this == PENDING
+    val isWaiting: Boolean get() = this == PENDING;
+
+    companion object {
+        /** 从持久化值还原（`docs/03 §3.6`：0/1/2/3）。未知值按已解绑处理，不抛错。 */
+        fun fromId(id: Int): PairingStatus =
+            entries.firstOrNull { it.id == id } ?: RELEASED
+    }
 }
 
 /**

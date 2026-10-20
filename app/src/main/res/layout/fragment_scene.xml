@@ -50,15 +50,35 @@
             tools:text="相伴第 1 天"
             xmlns:tools="http://schemas.android.com/tools" />
 
-        <!-- 角落的蛋（含标签；开箱 / 孵化 / 破壳的唯一直接入） -->
+        <!-- 「院子里还有 N 只」（三层链条：拥有不限 ⊃ 家在册 6）。
+             家站满 6 只后，新孵出的会留在院子 —— 没有这条角标，用户只会认为宠物丢了。
+             与日签同列、紧贴其下，不压宠物站位（站位 y ∈ 0.62~0.78）。 -->
+        <TextView
+            android:id="@+id/tv_yard_chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|start"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="54dp"
+            android:background="@drawable/bg_chip_white"
+            android:paddingHorizontal="13dp"
+            android:paddingVertical="7dp"
+            android:textColor="@color/scene_text"
+            android:textSize="12.5sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- 角落的蛋（含标签；开箱 / 孵化 / 破壳的唯一直接入）。
+             ⭐ 位置 = 右下角（design 01 屏「新蛋 · 轻点看看」），避让左下站位与底部托盘；
+             marginBottom 随托盘状态动态调整（renderTray）。 -->
         <include
             android:id="@+id/scene_egg"
             layout="@layout/view_scene_egg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="18dp"
-            android:layout_marginBottom="86dp" />
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="90dp" />
 
         <!-- 右缘抽屉把手（唯一常驻 HUD） -->
         <LinearLayout
@@ -106,6 +126,18 @@
             android:text="@string/scene_foot_hint"
             android:textColor="#9E263C23"
             android:textSize="11.5sp" />
+
+        <!-- 互动托盘（design-v2 屏③ · K-2）：拖道具到宠物身上 = 喂食/玩耍/训练；有宠物时显示 -->
+        <include
+            android:id="@+id/interaction_tray"
+            layout="@layout/view_interaction_tray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="16dp"
+            tools:visibility="gone"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:ignore="MissingId" />
 
         <!-- 首蛋聚焦层（docs/14 §1.4）：首蛋孵化期盖在场景之上，破壳后隐藏 -->
         <include

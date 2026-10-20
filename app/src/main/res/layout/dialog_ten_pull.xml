@@ -76,4 +76,16 @@
         android:text="@string/ten_pull_later"
         android:textColor="@color/brand_primary_dark"
         android:textSize="14sp" />
+
+    <!-- 去融合（design-v2 屏 26 的指定入口：「15 屏去融合」· docs/02 §十一） -->
+    <TextView
+        android:id="@+id/btn_go_fuse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingVertical="4dp"
+        android:text="@string/fusion_go_fuse"
+        android:textColor="@color/scene_hint"
+        android:textSize="12.5sp" />
 </LinearLayout>

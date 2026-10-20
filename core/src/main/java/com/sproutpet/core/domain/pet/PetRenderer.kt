@@ -105,6 +105,15 @@ interface PetRenderer {
      */
     fun setScale(scale: Float) {}
 
+    /**
+     * 朝向（docs/15 §十 行为层）：溜达 / 社交时面向移动方向。
+     * 默认空实现 —— 占位渲染器翻转整体视图，Rive 版可换行走循环。
+     */
+    fun setFacing(facingLeft: Boolean) {}
+
+    /** 打哈欠（行为层 YAWN）：默认空实现 */
+    fun playYawn() {}
+
     /** 暂停动画（省电，如应用进入后台） */
     fun pause() {}
 

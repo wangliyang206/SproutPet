@@ -49,6 +49,12 @@ class FramePetRenderer(private val appContext: Context) : PetRenderer {
     private var currentAnimator: Animator? = null
     private var currentStateKey: String? = null
 
+    /** 朝向（docs/15 §十 行为层）：true = 面向左。翻整棵 [view]，镜像不丢体型缩放 */
+    private var facingLeft = false
+
+    /** 最近一次待机的活泼度（setFacing / yawn 结束后续播呼吸用） */
+    private var lastLiveliness = 0.5f
+
     init {
         view.addView(imageView)
         view.foregroundGravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
@@ -84,13 +90,14 @@ class FramePetRenderer(private val appContext: Context) : PetRenderer {
 
         when (state) {
             is PetRenderState.Idle -> {
+                lastLiveliness = state.liveliness
                 setImage(currentDrawable())
-                play(PetViewAnims.breathing(imageView, state.liveliness), keepBase = true)
+                play(PetViewAnims.breathing(imageView, state.liveliness, baseScaleX, baseScaleY), keepBase = true)
             }
             // ── 动作状态（L1）：不换表情帧，属性动画即反馈（表情帧属 L1.5） ──
-            is PetRenderState.Petted -> playAction { PetViewAnims.squashBounce(imageView) }
+            is PetRenderState.Petted -> playAction { PetViewAnims.squashBounce(imageView, baseScaleX, baseScaleY) }
             is PetRenderState.Excited -> playAction { PetViewAnims.jump(imageView) }
-            is PetRenderState.Grabbed -> play(PetViewAnims.grab(imageView))
+            is PetRenderState.Grabbed -> play(PetViewAnims.grab(imageView, baseScaleX, baseScaleY))
             is PetRenderState.Dragging -> {
                 setImage(currentDrawable())
                 imageView.rotation = (state.offsetX / 24f).coerceIn(-9f, 9f)
@@ -99,11 +106,11 @@ class FramePetRenderer(private val appContext: Context) : PetRenderer {
             is PetRenderState.Playing -> playAction { PetViewAnims.jump(imageView) }
             is PetRenderState.Sleeping -> {
                 setImage(currentDrawable())
-                play(PetViewAnims.breathing(imageView, 0f), keepBase = true)
+                play(PetViewAnims.breathing(imageView, 0f, baseScaleX, baseScaleY), keepBase = true)
             }
             is PetRenderState.Sleepy -> {
                 setImage(currentDrawable())
-                play(PetViewAnims.breathing(imageView, 0.1f), keepBase = true)
+                play(PetViewAnims.breathing(imageView, 0.1f, baseScaleX, baseScaleY), keepBase = true)
             }
             is PetRenderState.LevelUp -> playAction { PetViewAnims.jump(imageView) }
             is PetRenderState.Hatching -> setImage(R.drawable.pet_egg_cracked)
@@ -124,7 +131,7 @@ class FramePetRenderer(private val appContext: Context) : PetRenderer {
             override fun onAnimationEnd(animation: Animator) {
                 imageView.rotation = 0f
                 setImage(currentDrawable())
-                play(PetViewAnims.breathing(imageView, 0.5f), keepBase = true)
+                play(PetViewAnims.breathing(imageView, 0.5f, baseScaleX, baseScaleY), keepBase = true)
             }
         })
         play(animator)
@@ -166,6 +173,18 @@ class FramePetRenderer(private val appContext: Context) : PetRenderer {
         matrix.setRotate(1, degrees)
         matrix.setRotate(2, degrees)
         return ColorMatrixColorFilter(matrix)
+    }
+
+    override fun setFacing(facingLeft: Boolean) {
+        if (this.facingLeft == facingLeft) return
+        this.facingLeft = facingLeft
+        // 翻 renderer 根视图：imageView 上的体型缩放/动画不受影响
+        view.scaleX = if (facingLeft) -1f else 1f
+    }
+
+    /** 哈欠（docs/15 §十 YAWN）：拉长 → 停顿 → 回弹，结束回待机呼吸 */
+    override fun playYawn() {
+        playAction { PetViewAnims.yawn(imageView, baseScaleY) }
     }
 
     override fun supportsTouch(): Boolean = false // 触摸统一由手势控制器在容器层处理

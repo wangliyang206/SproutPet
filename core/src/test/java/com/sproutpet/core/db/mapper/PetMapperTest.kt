@@ -67,6 +67,32 @@ class PetMapperTest {
         assertTrue(restored.carriesExoticBlood)
     }
 
+    // ═══════════ 融合印记（V6 → V7 补列）回归测试 ═══════════
+
+    @Test
+    fun `fusion marks survive a round trip`() {
+        val original = samplePet().copy(fusionMarks = 6)
+
+        val entity = PetMapper.toEntity(original)
+        val restored = PetMapper.toDomain(entity)
+
+        assertEquals(6, entity.fusionMarks)
+        assertEquals(
+            "融合印记在往返后必须保持不变（V7 前无此列，喂过的副宠会白喂）",
+            6,
+            restored.fusionMarks
+        )
+    }
+
+    @Test
+    fun `fusion marks default to zero for legacy pets`() {
+        val legacy = samplePet()
+
+        val restored = PetMapper.toDomain(PetMapper.toEntity(legacy))
+
+        assertEquals(0, restored.fusionMarks)
+    }
+
     // ═══════════ 神兽形态（ADR-026）回归测试 ═══════════
 
     @Test

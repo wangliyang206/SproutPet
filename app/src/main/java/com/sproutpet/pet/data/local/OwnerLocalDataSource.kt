@@ -2,6 +2,7 @@ package com.sproutpet.pet.data.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -26,6 +27,33 @@ class OwnerLocalDataSource @Inject constructor(
     private val keyOwnerId = longPreferencesKey("owner_id")
     private val keyPityCount = intPreferencesKey("blind_box_pity_count")
     private val keyFreeTicketDay = stringPreferencesKey("free_ticket_day")
+    private val keyPrivacyAgreed = booleanPreferencesKey("privacy_agreed")
+    private val keyTrayCollapsed = booleanPreferencesKey("tray_collapsed")
+    private val keyFirstHatchReward = booleanPreferencesKey("first_hatch_reward_claimed")
+
+    /**
+     * 隐私政策同意态（docs/00 §八 红线 5 · design-v2 19 屏 · `16 §三 K-4`）。
+     *
+     * - 未同意前：`MainActivity` 只展示全屏隐私门，不加载场景；
+     *   `SproutPetApplication.privacyAgreed` 保持 false，任何采集类 SDK 不得初始化。
+     * - 同意后：写入本键，并触发 `SproutPetApplication.onPrivacyAgreed()`。
+     */
+    fun observePrivacyAgreed(): Flow<Boolean> = dataStore.data.map { it[keyPrivacyAgreed] ?: false }
+
+    suspend fun readPrivacyAgreed(): Boolean =
+        dataStore.data.map { it[keyPrivacyAgreed] ?: false }.first()
+
+    /** 同意隐私政策（幂等；只许从 false → true，撤回同意不在 App 内提供 —— 按设计走卸载） */
+    suspend fun setPrivacyAgreed() {
+        dataStore.edit { it[keyPrivacyAgreed] = true }
+    }
+
+    /** 互动托盘是否收起（真机反馈：底部三卡挡场景 → 可折成右下小药丸，选择要记住） */
+    fun observeTrayCollapsed(): Flow<Boolean> = dataStore.data.map { it[keyTrayCollapsed] ?: false }
+
+    suspend fun setTrayCollapsed(collapsed: Boolean) {
+        dataStore.edit { it[keyTrayCollapsed] = collapsed }
+    }
 
     /** 本地主人 ID（不存在则生成并落盘） */
     suspend fun getOrCreateOwnerId(): Long {
@@ -60,5 +88,25 @@ class OwnerLocalDataSource @Inject constructor(
         if (last == today) return false
         dataStore.edit { it[keyFreeTicketDay] = today }
         return true
+    }
+
+    /**
+     * 领取「首只孵化成功」一次性十连奖励（`docs/00 §2.1` · `docs/14 §2.4`）。
+     *
+     * @return true = 本次是第一次领取，调用方应发放 10 抽；false = 已领过
+     *
+     * ⚠️ **读-判-写必须在同一次 `edit` 里**：`edit` 的 lambda 在事务内只跑一次，
+     * 所以两次并发调用不可能同时拿到 true（先读再 `edit` 的写法会重复发奖）。
+     * 这条奖励是**一次性**的，重复发的后果是直接送出一个十连 —— 不能靠调用方自觉。
+     */
+    suspend fun claimFirstHatchReward(): Boolean {
+        var granted = false
+        dataStore.edit { prefs ->
+            if (prefs[keyFirstHatchReward] != true) {
+                prefs[keyFirstHatchReward] = true
+                granted = true
+            }
+        }
+        return granted
     }
 }

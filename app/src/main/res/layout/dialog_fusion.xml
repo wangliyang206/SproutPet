@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  融合（design-v2 屏 26「融合 · 重复宠的去处」· 底部升起）
+
+  守 L2 的四条硬要求（docs/00 §2.6.1 · docs/10）：
+  - 三枚门槛标签在场：同物种 / 都已破壳 / 消耗 200 金币（数字读 FusionRules.costGold，UI 不自己写死）
+  - 副宠去向必须说清：「入后山」不消失但**不可取回** —— 所以主按钮是**二次确认**文案
+  - ADR-017 警示必须在场：融合**永不能产出灵兽**；神话不可作为目标
+  - 预览数字（印记 X → Y/阈值 · 经验 +N）全部来自 FusionRules 纯函数，UI 不重算
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_card_round"
+    android:orientation="vertical"
+    android:paddingHorizontal="18dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="20dp">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4.5dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_sheet_grip" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/fusion_title"
+            android:textColor="@color/scene_text"
+            android:textSize="16.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_gold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/brand_primary_dark"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="金币 12480" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_rules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/scene_hint"
+        android:textSize="12sp"
+        tools:text="同物种 · 都已破壳 · 消耗 200 金币" />
+
+    <!-- 留下（目标） -->
+    <LinearLayout
+        android:id="@+id/card_target"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_btn_ghost"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:text="@string/fusion_target_label"
+            android:textColor="@color/scene_hint"
+            android:textSize="11.5sp" />
+
+        <TextView
+            android:id="@+id/tv_target"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="end"
+            android:textColor="@color/scene_text"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="小豆芽 · Lv.26 · 稀有" />
+    </LinearLayout>
+
+    <!-- 喂给它（副宠） -->
+    <LinearLayout
+        android:id="@+id/card_material"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_btn_ghost"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/fusion_material_label"
+            android:textColor="@color/scene_hint"
+            android:textSize="11.5sp" />
+
+        <TextView
+            android:id="@+id/tv_material"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="end"
+            android:textColor="@color/scene_text"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="糖球 · Lv.12 · 稀有" />
+    </LinearLayout>
+
+    <!-- 预览：印记 / 经验 / 上漂 —— 数字来自 FusionRules -->
+    <TextView
+        android:id="@+id/tv_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/scene_sub"
+        android:textSize="12.5sp"
+        tools:text="融合后：印记 4 → 6/12 · 经验 +600" />
+
+    <!-- ADR-017 警示 -->
+    <TextView
+        android:id="@+id/tv_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:lineSpacingExtra="3dp"
+        android:text="@string/fusion_warning"
+        android:textColor="@color/scene_hint"
+        android:textSize="11.5sp" />
+
+    <!-- 主按钮：二次确认文案 -->
+    <TextView
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_btn_primary"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="二次确认 —— 送糖球入后山" />
+
+    <TextView
+        android:id="@+id/tv_confirm_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text="@string/fusion_confirm_hint"
+        android:textColor="@color/scene_hint"
+        android:textSize="11.5sp" />
+
+    <!-- 去配对广场（24 屏；设计指定入口 = 图鉴浮卡，图鉴落地前由本入口承担） -->
+    <TextView
+        android:id="@+id/btn_go_pairing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:paddingVertical="4dp"
+        android:text="@string/pairing_entry_from_fusion"
+        android:textColor="@color/scene_hint"
+        android:textSize="12.5sp" />
+</LinearLayout>

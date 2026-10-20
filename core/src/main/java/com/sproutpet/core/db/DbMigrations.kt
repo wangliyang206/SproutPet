@@ -2,6 +2,7 @@ package com.sproutpet.core.db
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.sproutpet.core.domain.pet.HomeSlots
 
 /**
  * 数据库迁移集合。
@@ -10,6 +11,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * - 每次修改实体结构，必须同时**提升 [SproutPetDatabase.DB_VERSION]** 并在此补一条迁移
  * - 迁移只做**加列/加表/加索引**，不改已有列语义（避免线上数据不可逆）
  * - 每条迁移都应在 `MigrationTest` 中被覆盖（至少验证关键列存在）
+ *
+ * **唯一例外：纯数据回填**（[MIGRATION_7_8]）。当某个字段此前**从未被写入过**
+ * （写入侧有 bug），回填的是"它本来应该是什么"，而不是推翻用户已有的选择 ——
+ * 这种情况必须满足三条：① 字段此前无有效值 ② 回填算法确定性可复算 ③ 注释写清为什么。
  *
  * 为什么不长期依赖 `fallbackToDestructiveMigration`：那会**清空用户数据**。
  * 开发期可以兜底，但灵兽血统、族谱、世代这些字段一旦丢失无法重建。
@@ -195,6 +200,118 @@ object DbMigrations {
         }
     }
 
+    /**
+     * V6 → V7：配对与融合的持久化落点（docs/03 §3.6 冻结结构 + `fusion_marks` 排期项）。
+     *
+     * ## `pet.fusion_marks` 列
+     *
+     * [com.sproutpet.core.domain.pet.FusionRules]（docs/10）早已冻结，且
+     * `resolve(target, targetMarks, material)` 明确要求"印记**持久化在宠物身上**"，
+     * 但落点一直不存在 —— 与 `exotic_blood`（V1→V2）/ `gender`（V3→V4）同款事故：
+     * 领域规则全绿、真实运行不可用。默认 `0` 与领域模型一致，存量宠语义等价于
+     * 「从未融合过」，迁移安全。
+     *
+     * ## `pairing` 表
+     *
+     * 配对生育是 docs/00 §2.5 的核心动线（「生育搭档」而非婚姻，ADR-008/011）。
+     * 本轮只建表（结构 100% 冻结），流程 UI 随后接入 —— 一次迁移到位，
+     * 避免下一版本再出 V8 只为建表。NPC 候选宠的生成规则尚待拍板
+     * （docs/09 `W-16-1`），**建表本身不引入任何数值**。
+     */
+    val MIGRATION_6_7: Migration = object : Migration(6, 7) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE `pet` ADD COLUMN `fusion_marks` INTEGER NOT NULL DEFAULT 0"
+            )
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `pairing` (
+                    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    `pet_id_a` INTEGER NOT NULL,
+                    `pet_id_b` INTEGER NOT NULL,
+                    `owner_id_a` INTEGER NOT NULL,
+                    `owner_id_b` INTEGER NOT NULL,
+                    `partner_is_npc_a` INTEGER NOT NULL DEFAULT 0,
+                    `partner_is_npc_b` INTEGER NOT NULL DEFAULT 0,
+                    `is_same_owner` INTEGER NOT NULL DEFAULT 0,
+                    `affection` INTEGER NOT NULL DEFAULT 0,
+                    `paired_at` INTEGER NOT NULL,
+                    `last_breed_at` INTEGER NOT NULL DEFAULT 0,
+                    `offspring_count` INTEGER NOT NULL DEFAULT 0,
+                    `expire_at` INTEGER NOT NULL DEFAULT 0,
+                    `status` INTEGER NOT NULL DEFAULT 0,
+                    `updated_at` INTEGER NOT NULL,
+                    `is_synced` INTEGER NOT NULL DEFAULT 0
+                )
+                """.trimIndent()
+            )
+            // 唯一约束：同一对宠物只允许一条配对记录（docs/03 §3.6）
+            db.execSQL(
+                "CREATE UNIQUE INDEX IF NOT EXISTS `index_pairing_pet_a_pet_b` ON `pairing`(`pet_id_a`, `pet_id_b`)"
+            )
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_pairing_pet_a` ON `pairing`(`pet_id_a`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_pairing_pet_b` ON `pairing`(`pet_id_b`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_pairing_status` ON `pairing`(`status`)")
+        }
+    }
+
+    /**
+     * V7 → V8：**回填家的在册槽位**（2026-10-20 崩溃修复）。
+     *
+     * ## 为什么要迁移
+     *
+     * 破壳路径（`IncubationRepositoryImpl.hatchIfReady` / `forceHatch`）此前**从不写
+     * `home_slot`**，而 `BlindBoxEngine.createEgg` 造蛋时也一律 `NO_SLOT`。于是存量库里
+     * 除 V5 迁移指定的那一只之外，**所有已破壳宠物都是 `home_slot = -1`（待命）**。
+     *
+     * 崩溃正是这个漏洞的另一面：场景以前不过滤 `atHome`，把 11 只全喂给
+     * `ScenePetLayout.homeLayout`（`require(count in 0..6)`）→ 直接抛异常。
+     * 一旦按三层链条开始过滤，不迁移就等于「用户原来能看见的宠物突然只剩 1 只」。
+     *
+     * ## 回填口径（确定性，可复算）
+     *
+     * 对每个 owner：已破壳、未退休的宠物按 **`id` 升序**（= 出生先后），
+     * 前 `HomeSlots.MAX_HOME_PETS`（6）只依次占 `0..5`，其余留 `-1` 进院子。
+     *
+     * - 顺带**修掉任何槽位冲突**（同 owner 多只挤同一个号）：这里直接重排，不做增量修补
+     * - 槽位具体值不影响体验（站位只按 `homeSlot` 排序），**不重复**才是唯一硬约束
+     * - 迁移**不改 `is_main`**：V5 已把最早一只设为主宠，而按 id 升序它必然落在 0 号位
+     *
+     * ⚠️ 用 Kotlin 循环而不是窗口函数：Android 7.0（minSdk 24）自带的 SQLite 是 3.9，
+     * 没有 `ROW_NUMBER()`。
+     */
+    val MIGRATION_7_8: Migration = object : Migration(7, 8) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            val owners = mutableListOf<Long>()
+            db.query(
+                "SELECT DISTINCT owner_id FROM pet WHERE is_hatched = 1 AND is_retired = 0"
+            ).use { c ->
+                while (c.moveToNext()) owners += c.getLong(0)
+            }
+            owners.forEach { ownerId ->
+                val ids = mutableListOf<Long>()
+                db.query(
+                    "SELECT id FROM pet WHERE owner_id = ? AND is_hatched = 1 AND is_retired = 0 " +
+                        "ORDER BY id ASC",
+                    arrayOf(ownerId)
+                ).use { c ->
+                    while (c.moveToNext()) ids += c.getLong(0)
+                }
+                ids.forEachIndexed { index, id ->
+                    val slot = if (index < HomeSlots.MAX_HOME_PETS) {
+                        index
+                    } else {
+                        HomeSlots.NO_SLOT
+                    }
+                    db.execSQL("UPDATE pet SET home_slot = ? WHERE id = ?", arrayOf(slot, id))
+                }
+            }
+        }
+    }
+
     /** 全部迁移，按版本顺序交给 Room（见 [com.sproutpet.core.di.AppModule]） */
-    val ALL: Array<Migration> = arrayOf(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+    val ALL: Array<Migration> = arrayOf(
+        MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7,
+        MIGRATION_7_8
+    )
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 蛋旁的「十连」徽章（docs/00 §2.1 入口 · docs/14 §2.4）：
+     长按不再是十连的唯一入口 —— 常驻可见，点了就开箱台。 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/brand_accent" />
+    <corners android:radius="@dimen/radius_chip" />
+</shape>

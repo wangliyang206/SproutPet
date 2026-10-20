@@ -150,7 +150,19 @@ data class Pet(
      *
      * 含包约束：**桌面 ⊆ 在家** —— 桌上的宠必须先在册。由 [HomeSlots.validate] 守住。
      */
-    val desktopSlot: Int = HomeSlots.NO_SLOT
+    val desktopSlot: Int = HomeSlots.NO_SLOT,
+
+    /**
+     * 融合印记累计数（**当前档位内**，上漂后溢出自动带到新档）。
+     *
+     * 它由 [FusionRules.resolve] 结算、**必须持久化在宠物身上** ——
+     * 印记是玩家对个体投入的累计，丢了等于"喂过的副宠白喂"。
+     * 上漂阈值见 [FusionRules.thresholdFor]（普通 5 / 稀有 8 / 史诗 12 / 传说 20）。
+     *
+     * ⚠️ 该列曾长期缺失（V6 → V7 补上）—— 与 `exotic_blood` / `gender` 是同款事故：
+     * 规则在 [FusionRules] 里早已冻结，落点却没有，机制在真实运行中不可用。
+     */
+    val fusionMarks: Int = 0
 ) {
     /**
      * 是否在「家」的在册名单里。

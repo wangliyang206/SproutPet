@@ -4,6 +4,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.sproutpet.core.db.entity.InventoryItemDao
 import com.sproutpet.core.db.entity.InventoryItemEntity
+import com.sproutpet.core.db.entity.PairingDao
+import com.sproutpet.core.db.entity.PairingEntity
 import com.sproutpet.core.db.entity.PetEntity
 import com.sproutpet.core.db.entity.PetDao
 import com.sproutpet.core.db.entity.UserDao
@@ -29,7 +31,8 @@ import com.sproutpet.core.db.entity.UserEntity
     entities = [
         PetEntity::class,
         UserEntity::class,
-        InventoryItemEntity::class
+        InventoryItemEntity::class,
+        PairingEntity::class
     ],
     version = SproutPetDatabase.DB_VERSION,
     exportSchema = true
@@ -42,6 +45,8 @@ abstract class SproutPetDatabase : RoomDatabase() {
 
     abstract fun inventoryItemDao(): InventoryItemDao
 
+    abstract fun pairingDao(): PairingDao
+
     companion object {
         /**
          * 当前数据库版本。
@@ -53,7 +58,11 @@ abstract class SproutPetDatabase : RoomDatabase() {
          * - V4：`pet` 表补 `gender`（配对前置条件"一公一母"，见 [DbMigrations.MIGRATION_3_4]）
          * - V5：`pet` 表补 `is_main` / `home_slot` / `desktop_slot`（U-12 三层数量链条，见 [DbMigrations.MIGRATION_4_5]）
          * - V6：新增 `user` 表与 `inventory_item` 表（Phase 2 数据与成长系统，见 [DbMigrations.MIGRATION_5_6]）
+         * - V7：`pet` 表补 `fusion_marks`（融合印记落库）+ 新增 `pairing` 表
+         *   （docs/03 §3.6 冻结结构；见 [DbMigrations.MIGRATION_6_7]）
+         * - V8：**回填 `home_slot`**（不改结构）—— 破壳路径此前从不写该列，存量宠全是 -1；
+         *   按 id 升序前 6 只占 0..5、其余进院子（见 [DbMigrations.MIGRATION_7_8]）
          */
-        const val DB_VERSION = 6
+        const val DB_VERSION = 8
     }
 }

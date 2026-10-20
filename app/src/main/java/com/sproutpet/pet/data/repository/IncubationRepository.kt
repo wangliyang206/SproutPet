@@ -4,6 +4,7 @@ import com.sproutpet.core.db.entity.PetDao
 import com.sproutpet.core.db.mapper.PetMapper
 import com.sproutpet.core.domain.incubation.BlindBoxEngine
 import com.sproutpet.core.domain.incubation.IncubationEngine
+import com.sproutpet.core.domain.pet.HomeSlots
 import com.sproutpet.core.domain.pet.Pet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -77,7 +78,7 @@ class IncubationRepositoryImpl @Inject constructor(
             val entity = petDao.queryById(eggId) ?: return@withContext null
             val egg = PetMapper.toDomain(entity)
             if (egg.isHatched || egg.hatchRemainMs(now) > 0L) return@withContext null
-            val hatched = BlindBoxEngine.hatch(egg, now)
+            val hatched = assignHomeSlotIfPossible(BlindBoxEngine.hatch(egg, now))
             petDao.insert(PetMapper.toEntity(hatched))
             hatched
         }
@@ -87,8 +88,26 @@ class IncubationRepositoryImpl @Inject constructor(
             val entity = petDao.queryById(eggId) ?: return@withContext null
             val egg = PetMapper.toDomain(entity)
             if (egg.isHatched) return@withContext null
-            val hatched = BlindBoxEngine.hatch(egg, now)
+            val hatched = assignHomeSlotIfPossible(BlindBoxEngine.hatch(egg, now))
             petDao.insert(PetMapper.toEntity(hatched))
             hatched
         }
+
+    /**
+     * 破壳即「入册」：家有空槽就占一个，满了就留在**院子**（`home_slot = -1`）。
+     *
+     * 为什么要在这里做：`BlindBoxEngine.createEgg` 造出来的蛋 `home_slot` 一律是
+     * `NO_SLOT`（引擎是纯函数，看不到"家里还有几个位子"）。如果破壳时不补，
+     * 抽到的宠物就永远不会 `atHome` —— 而场景只渲染 `atHome` 的宠物（三层链条），
+     * 结果就是「抽到了但看不见」。
+     *
+     * ⚠️ 队列（十连）按出壳顺序调用，先到先得 —— 而队列本身是**稀有度降序**，
+     * 所以最好的那几只优先入册，这个顺序恰好是对的。
+     */
+    private suspend fun assignHomeSlotIfPossible(pet: Pet): Pet {
+        if (HomeSlots.isAtHome(pet)) return pet
+        val peers = petDao.queryByOwner(pet.ownerId).map(PetMapper::toDomain)
+        val slot = HomeSlots.nextFreeHomeSlot(peers) ?: return pet
+        return pet.copy(homeSlot = slot)
+    }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 互动托盘提示条（design-v2 屏③「按住，拖给它」）：深色半透明圆角 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#CC1F3D2C" />
+    <corners android:radius="999dp" />
+</shape>

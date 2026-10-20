@@ -12,10 +12,14 @@ import com.sproutpet.core.db.entity.UserDao
 import com.sproutpet.core.domain.pet.PetRendererFactory
 import com.sproutpet.pet.data.repository.BlindBoxRepository
 import com.sproutpet.pet.data.repository.BlindBoxRepositoryImpl
+import com.sproutpet.pet.data.repository.FusionRepository
+import com.sproutpet.pet.data.repository.FusionRepositoryImpl
 import com.sproutpet.pet.data.repository.IncubationRepository
 import com.sproutpet.pet.data.repository.IncubationRepositoryImpl
 import com.sproutpet.pet.data.repository.ItemRepository
 import com.sproutpet.pet.data.repository.ItemRepositoryImpl
+import com.sproutpet.pet.data.repository.PairingRepository
+import com.sproutpet.pet.data.repository.PairingRepositoryImpl
 import com.sproutpet.pet.data.repository.PetRepository
 import com.sproutpet.pet.data.repository.PetRepositoryImpl
 import com.sproutpet.pet.data.repository.UserRepository
@@ -51,6 +55,10 @@ object SceneProvidesModule {
     @Singleton
     fun provideInventoryItemDao(db: SproutPetDatabase): InventoryItemDao = db.inventoryItemDao()
 
+    @Provides
+    @Singleton
+    fun providePairingDao(db: SproutPetDatabase): com.sproutpet.core.db.entity.PairingDao = db.pairingDao()
+
     /** 本地偏好（ownerId / 盲盒保底计数），文件 sproutpet_local.preferences_pb */
     @Provides
     @Singleton
@@ -83,6 +91,14 @@ abstract class SceneBindsModule {
     @Binds
     @Singleton
     abstract fun bindItemRepository(impl: ItemRepositoryImpl): ItemRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFusionRepository(impl: FusionRepositoryImpl): FusionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPairingRepository(impl: PairingRepositoryImpl): PairingRepository
 
     /** 渲染工厂：Phase 1 帧动画占位；Phase 3 切 Rive 只改这一个绑定 */
     @Binds

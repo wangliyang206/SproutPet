@@ -1,36 +1,32 @@
 package com.sproutpet.pet.ui.scene
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sproutpet.core.domain.pet.Rarity
 import com.sproutpet.pet.R
 import com.sproutpet.pet.data.repository.OpenBoxOutcome
 import com.sproutpet.pet.databinding.DialogRevealBinding
 
 /**
- * 开箱揭晓模态卡（design-v2 屏④）。
+ * 开箱揭晓 · 底部升起面板（design-v2 屏④ · `K-5` 落地）。
+ *
+ * v1.1（2026-10-20）：从全屏模态 [DialogFragment] 改为 [BottomSheetDialogFragment] ——
+ * 04 屏设计是「底部升起面板 + 场景仍在背后」（[02 §10.2](../../../docs/02-宠物渲染方案.md) 硬规则②
+ * 「禁止跳页式全屏切换」），旧实现违背了倒置 IA 的「就地发生」。
  *
  * 必备要素（docs/04 §1.4）：稀有度揭晓、距保底还差 N 抽、概率公示入口。
  */
-class BlindBoxRevealDialog : DialogFragment() {
+class BlindBoxRevealDialog : BottomSheetDialogFragment() {
 
     /** 由场景层在 show 前注入（不跨进程死亡恢复，Phase 1 可接受） */
     var outcome: OpenBoxOutcome? = null
 
     private var _binding: DialogRevealBinding? = null
     private val binding get() = requireNotNull(_binding)
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        Dialog(requireContext()).apply {
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,14 +59,6 @@ class BlindBoxRevealDialog : DialogFragment() {
         }
 
         binding.btnRevealHome.setOnClickListener { dismiss() }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.86f).toInt(),
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
     }
 
     override fun onDestroyView() {

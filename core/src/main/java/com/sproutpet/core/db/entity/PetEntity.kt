@@ -194,6 +194,15 @@ data class PetEntity(
     @ColumnInfo(name = "desktop_slot", defaultValue = "-1")
     val desktopSlot: Int = -1,
 
+    /**
+     * 融合印记（当前档位内累计）。见 [com.sproutpet.core.domain.pet.Pet.fusionMarks]
+     * 与 [com.sproutpet.core.domain.pet.FusionRules]。
+     *
+     * V6 → V7 补列；默认 `0` 与领域模型一致，存量宠语义等价于「从未融合过」，迁移安全。
+     */
+    @ColumnInfo(name = "fusion_marks", defaultValue = "0")
+    val fusionMarks: Int = 0,
+
     // ===== 同步字段（Phase 6 云端使用） =====
     /** 服务端 ID，未同步时为 null */
     @ColumnInfo(name = "remote_id")

@@ -18,16 +18,20 @@ import android.view.animation.OvershootInterpolator
  */
 object PetViewAnims {
 
-    /** 待机呼吸：轻微的纵向缩放循环。[liveliness] 越高节奏越快。 */
-    fun breathing(target: View, liveliness: Float): Animator {
+    /**
+     * 待机呼吸：轻微的纵向缩放循环。[liveliness] 越高节奏越快。
+     * ⭐ v1.2 修复：缩放改为**相对基准**（基因体型 baseX/baseY）——
+     * 旧版硬编码 1f 起点，体型 ≠1.0 的宠物待机时会被悄悄拉回标准体型。
+     */
+    fun breathing(target: View, liveliness: Float, baseX: Float = 1f, baseY: Float = 1f): Animator {
         val period = (2600L - (liveliness * 1200L).toLong()).coerceIn(900L, 2600L)
-        val scaleY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.045f, 1f).apply {
+        val scaleY = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY, baseY * 1.045f, baseY).apply {
             duration = period
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
             interpolator = AccelerateDecelerateInterpolator()
         }
-        val scaleX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 0.97f, 1f).apply {
+        val scaleX = ObjectAnimator.ofFloat(target, View.SCALE_X, baseX, baseX * 0.97f, baseX).apply {
             duration = period
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.RESTART
@@ -36,12 +40,43 @@ object PetViewAnims {
         return AnimatorSet().apply { playTogether(scaleX, scaleY) }
     }
 
-    /** 挤压回弹（被抚摸）：先压扁再回弹，< 100ms 内起第一帧。 */
-    fun squashBounce(target: View): Animator {
-        val down = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 0.82f).setDuration(90)
-        val downX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1.12f).setDuration(90)
-        val up = ObjectAnimator.ofFloat(target, View.SCALE_Y, 0.82f, 1f).setDuration(320)
-        val upX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1.12f, 1f).setDuration(320)
+    /**
+     * 走路弹跳（docs/15 §十）：溜达时身体小幅度上下起伏 + 轻微前倾，
+     * 无限循环 —— 到达后由调用方 cancel。
+     */
+    fun walkBob(target: View): Animator {
+        val bob = ObjectAnimator.ofFloat(target, View.TRANSLATION_Y, 0f, -6f, 0f).apply {
+            duration = 260L
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.RESTART
+        }
+        val lean = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, 3f, 0f, -3f, 0f).apply {
+            duration = 520L
+            repeatCount = ValueAnimator.INFINITE
+            repeatMode = ValueAnimator.RESTART
+        }
+        return AnimatorSet().apply { playTogether(bob, lean) }
+    }
+
+    /**
+     * 打哈欠（docs/15 §十）：身体缓缓拉长 → 停顿 → 收回。
+     * 与呼吸共用锚点（脚底），一次性动画，结束回待机由调用方处理。
+     */
+    fun yawn(target: View, baseY: Float = 1f): Animator {
+        val stretch = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY, baseY * 1.12f).setDuration(520)
+        stretch.interpolator = AccelerateDecelerateInterpolator()
+        val hold = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY * 1.12f, baseY * 1.12f).setDuration(420)
+        val shrink = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY * 1.12f, baseY).setDuration(560)
+        shrink.interpolator = OvershootInterpolator(1.2f)
+        return AnimatorSet().apply { playSequentially(stretch, hold, shrink) }
+    }
+
+    /** 挤压回弹（被抚摸）：先压扁再回弹，< 100ms 内起第一帧。（v1.2：相对基准体型） */
+    fun squashBounce(target: View, baseX: Float = 1f, baseY: Float = 1f): Animator {
+        val down = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY, baseY * 0.82f).setDuration(90)
+        val downX = ObjectAnimator.ofFloat(target, View.SCALE_X, baseX, baseX * 1.12f).setDuration(90)
+        val up = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY * 0.82f, baseY).setDuration(320)
+        val upX = ObjectAnimator.ofFloat(target, View.SCALE_X, baseX * 1.12f, baseX).setDuration(320)
         up.interpolator = OvershootInterpolator(2.4f)
         upX.interpolator = OvershootInterpolator(2.4f)
         return AnimatorSet().apply {
@@ -62,18 +97,18 @@ object PetViewAnims {
         return AnimatorSet().apply { playSequentially(up, down) }
     }
 
-    /** 拎起（长按/拖拽）：纵向拉伸 + 轻微放大，模拟"被提溜起来"。 */
-    fun grab(target: View): Animator {
-        val stretch = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.14f).setDuration(140)
-        val widen = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 0.92f).setDuration(140)
+    /** 拎起（长按/拖拽）：纵向拉伸 + 轻微放大，模拟"被提溜起来"。（v1.2：相对基准体型） */
+    fun grab(target: View, baseX: Float = 1f, baseY: Float = 1f): Animator {
+        val stretch = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY, baseY * 1.14f).setDuration(140)
+        val widen = ObjectAnimator.ofFloat(target, View.SCALE_X, baseX, baseX * 0.92f).setDuration(140)
         val lift = ObjectAnimator.ofFloat(target, View.TRANSLATION_Z, 0f, 24f).setDuration(140)
         return AnimatorSet().apply { playTogether(stretch, widen, lift) }
     }
 
-    /** 松手落地：从拉伸态回弹归位。 */
-    fun release(target: View): Animator {
-        val sy = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1.14f, 1f).setDuration(300)
-        val sx = ObjectAnimator.ofFloat(target, View.SCALE_X, 0.92f, 1f).setDuration(300)
+    /** 松手落地：从拉伸态回弹归位。（v1.2：相对基准体型） */
+    fun release(target: View, baseX: Float = 1f, baseY: Float = 1f): Animator {
+        val sy = ObjectAnimator.ofFloat(target, View.SCALE_Y, baseY * 1.14f, baseY).setDuration(300)
+        val sx = ObjectAnimator.ofFloat(target, View.SCALE_X, baseX * 0.92f, baseX).setDuration(300)
         val sz = ObjectAnimator.ofFloat(target, View.TRANSLATION_Z, 24f, 0f).setDuration(300)
         sy.interpolator = OvershootInterpolator(1.8f)
         sx.interpolator = OvershootInterpolator(1.8f)
@@ -99,6 +134,14 @@ object PetViewAnims {
             playTogether(throwX, hop)
             play(land).after(hop)
         }
+    }
+
+    /** 张望（行为层 LOOK）：原地小角度左右摆头一次。 */
+    fun lookAround(target: View): Animator {
+        val look = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, 7f, -6f, 3f, 0f)
+            .setDuration(900)
+        look.interpolator = AccelerateDecelerateInterpolator()
+        return look
     }
 
     /** 蛋壳晃动（孵化中）：小角度左右摇摆一次。 */

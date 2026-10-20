@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 场景角落的蛋：蛋体 + 状态标签（免费领盲盒 / 孵化中 / 可破壳） -->
+<!-- 场景角落的蛋：十连徽章 + 蛋体 + 状态标签（免费领盲盒 / 孵化中 / 可破壳 / 距保底） -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical">
+
+    <!-- 十连入口（docs/14 §2.4）：长按是"知道的人才做得出来"的手势，
+         必须有一个常驻可见的替代物。够 10 张时实心，不够时半透明「差 N」。 -->
+    <TextView
+        android:id="@+id/tv_ten_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/bg_egg_badge"
+        android:contentDescription="@string/ten_badge_a11y"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/scene_text"
+        android:textSize="10.5sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="十连 ×10"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/iv_egg"

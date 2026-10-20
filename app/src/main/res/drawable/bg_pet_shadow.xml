@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  宠物地面投影（docs/15 §十 2.5D 立体四件套之一）：
+  椭圆径向渐变软阴影 —— 有了影子，宠物才「站在地上」而不是贴在屏幕上。
+  跳起 / 被拎起时由场景层反向缩放（升空 → 影子变小变淡），高度感即视差。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="50%"
+        android:startColor="#5C1F3A1C"
+        android:centerColor="#2E1F3A1C"
+        android:endColor="#001F3A1C" />
+    <size
+        android:width="64dp"
+        android:height="16dp" />
+</shape>

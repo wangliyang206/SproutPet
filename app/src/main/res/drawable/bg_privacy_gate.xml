@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 首启隐私门背景（design-v2 屏 19：模糊场景的静态近似 —— 顶部亮草绿 → 底部深一点的苔绿） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <gradient
+        android:angle="-90"
+        android:startColor="#FFCDE3C6"
+        android:centerColor="#FFAFCBA6"
+        android:endColor="#FF8FAE8B"
+        android:type="linear" />
+</shape>

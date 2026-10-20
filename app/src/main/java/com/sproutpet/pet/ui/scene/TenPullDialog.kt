@@ -37,6 +37,9 @@ class TenPullDialog : DialogFragment() {
     /** 「全部出壳」：把整批蛋的 hatchAt 拉到现在（零成本） */
     var onRevealAll: ((List<Pet>) -> Unit)? = null
 
+    /** 去融合（design-v2 屏 26 的指定入口；docs/02 §十一「15 屏去融合」） */
+    var onGoFuse: (() -> Unit)? = null
+
     private var _binding: DialogTenPullBinding? = null
     private val binding get() = requireNotNull(_binding)
 
@@ -76,6 +79,10 @@ class TenPullDialog : DialogFragment() {
             dismiss()
         }
         binding.btnLater.setOnClickListener { dismiss() }
+        binding.btnGoFuse.setOnClickListener {
+            onGoFuse?.invoke()
+            dismiss()
+        }
 
         dialog?.window?.setLayout(
             (resources.displayMetrics.widthPixels * 0.94f).toInt(),

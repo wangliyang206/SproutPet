@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 互动托盘（design-v2 屏③）：「按住，拖给它 —— 用完的耐久自己会掉」。
+     三卡 = 喂食(谷物饲料) / 玩耍(毛线球) / 训练(铁哑铃)；拖到宠物身上松手触发。
+     真机反馈（2026-10-20）：底部三卡挡场景 → 点「收起」折成右下小药丸，点药丸展开。
+     清洁/桌面互动无拖拽入口（03 屏只画了三卡，见 docs/16 §二 03 行）。 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- ═══ 展开态：提示条 + 收起钮 + 三卡 ═══ -->
+    <LinearLayout
+        android:id="@+id/tray_expanded"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="18dp">
+
+        <!-- 提示条 + 收起按钮 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_tray_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_tray_hint"
+                android:paddingHorizontal="13dp"
+                android:paddingVertical="5dp"
+                android:text="@string/tray_hint"
+                android:textColor="@color/white"
+                android:textSize="10.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_tray_collapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_chip_white"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:text="@string/tray_collapse"
+                android:textColor="@color/scene_hint"
+                android:textSize="10.5sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 三张道具卡 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <!-- 喂食：谷物饲料 -->
+            <LinearLayout
+                android:id="@+id/tray_feed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_tray_card"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingVertical="9dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:text="@string/tray_icon_feed"
+                    android:textSize="21sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/tray_name_feed"
+                    android:textColor="@color/scene_text"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_tray_feed_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/scene_sub"
+                    android:textSize="10.5sp"
+                    tools:text="×12" />
+            </LinearLayout>
+
+            <!-- 玩耍：毛线球 -->
+            <LinearLayout
+                android:id="@+id/tray_play"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_tray_card"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingVertical="9dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:text="@string/tray_icon_play"
+                    android:textSize="21sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/tray_name_play"
+                    android:textColor="@color/scene_text"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_tray_play_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/scene_sub"
+                    android:textSize="10.5sp"
+                    tools:text="×5" />
+            </LinearLayout>
+
+            <!-- 训练：铁哑铃（互动规则不消耗道具，数量位给经验增量） -->
+            <LinearLayout
+                android:id="@+id/tray_train"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_tray_card"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingVertical="9dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null"
+                    android:text="@string/tray_icon_train"
+                    android:textSize="21sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/tray_name_train"
+                    android:textColor="@color/scene_text"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_tray_train_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/scene_sub"
+                    android:textSize="10.5sp"
+                    tools:text="+150" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ═══ 收起态：右下角小药丸，点一下展开 ═══ -->
+    <LinearLayout
+        android:id="@+id/tray_collapsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="34dp"
+        android:background="@drawable/bg_chip_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="13dp"
+        android:paddingVertical="8dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:text="@string/tray_icon_feed"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_tray_collapsed_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/tray_expand"
+            android:textColor="@color/scene_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="道具 ×17" />
+    </LinearLayout>
+</FrameLayout>

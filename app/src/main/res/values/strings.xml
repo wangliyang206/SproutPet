@@ -107,6 +107,33 @@
     <string name="open_box_odds_body">史诗及以上综合概率 %1$.2f%%（含保底）。\n\n保底只到史诗：连续 30 抽未出史诗及以上，第 30 抽必出。\n传说与神话没有保底通道。\n\n十连保底：整批至少一只稀有及以上（不保史诗）。</string>
     <string name="open_box_go_shop">去商店补票 →</string>
 
+    <!-- 十连入口徽章 + 首只孵化奖励（docs/14 §2.4 / §2.4 · 2026-10-20） -->
+    <string name="ten_badge_ready">十连 ×%1$d</string>
+    <string name="ten_badge_short">十连 · 差%1$d</string>
+    <string name="ten_badge_a11y">十连开箱</string>
+    <string name="first_reward_title">第一只宝宝出生啦</string>
+    <string name="first_reward_amount">+10 张盲盒 · 刚好够一次十连</string>
+    <string name="first_reward_body">十连会一次开出 10 颗蛋，4 分钟内全部破壳。\n蛋旁边那个「十连」按钮会一直留着，想起来再抽也行。</string>
+    <string name="first_reward_go">现在去开箱台</string>
+    <string name="first_reward_later">留着以后抽</string>
+
+    <!-- 院子（三层链条：拥有不限 ⊃ 家在册 6）—— 2026-10-20 崩溃修复的另一半：
+         十连开出 10 只，家里只站得下 6 只，剩下的必须有看得见的去处 -->
+    <string name="yard_chip">院子里还有 %1$d 只 ›</string>
+    <string name="yard_title">院子</string>
+    <string name="yard_subtitle">家里已有 %1$d / %2$d 只。这里的随时能接回去。</string>
+    <string name="yard_empty">院子里空着，都接回家了。</string>
+    <string name="yard_close">知道了</string>
+    <string name="yard_pet_desc">%1$s · Lv.%2$d</string>
+    <string name="yard_take_home">接回家</string>
+    <string name="yard_took_home">%1$s 回家了</string>
+    <string name="yard_home_full">家里满了，先收起一只再接</string>
+    <string name="yard_swap_title">家里满了，收起谁给「%1$s」让位？</string>
+    <string name="yard_swap_item">收起 %1$s（Lv.%2$d）</string>
+    <string name="yard_swap_main">%1$s（主宠 · 不能收起）</string>
+    <string name="yard_send_failed">%1$s 收不起来</string>
+    <string name="yard_swapped">%1$s 回家了，%2$s 去院子休息</string>
+
     <!-- 十连结果 · 出壳队列（design-v2 屏 15 / 屏 31） -->
     <string name="ten_pull_title">十连 · 出壳队列</string>
     <string name="ten_pull_note">稀有度降序 · 每 %2$d 秒一颗 · 全部 %1$d 秒内出壳</string>
@@ -114,6 +141,127 @@
     <string name="ten_pull_floor">这一批原本可能全是普通 —— 十连兜底把最后一只抬到了「稀有」</string>
     <string name="ten_pull_reveal_all">全部出壳（零成本）</string>
     <string name="ten_pull_later">让它们自己出来</string>
+    <!-- 融合（design-v2 屏 26 · docs/00 §2.6.1 · docs/10） -->
+    <string name="fusion_title">融合 · 重复宠的去处</string>
+    <string name="fusion_rules">同物种 · 都已破壳 · 消耗 %1$d 金币</string>
+    <string name="fusion_gold">金币 %1$d</string>
+    <string name="fusion_target_label">留下（目标）</string>
+    <string name="fusion_material_label">喂给它（副宠 · 将入后山）</string>
+    <string name="fusion_pick_target">选择留下的宠物</string>
+    <string name="fusion_pick_material">选择喂给它的宠物（仅同物种）</string>
+    <string name="fusion_pet_item">%1$s · Lv.%2$d · %3$s%4$s</string>
+    <string name="fusion_main_tag">（主宠）</string>
+    <string name="fusion_preview">融合后：印记 %1$d → %2$d/%3$d · 经验 +%4$d%5$s</string>
+    <string name="fusion_preview_drift"> · 上漂一档到 %1$s！</string>
+    <string name="fusion_preview_cap"> · 剩余 %1$d 印记将带入新档</string>
+    <string name="fusion_preview_invalid">这两只还不能融合 —— %1$s</string>
+    <string name="fusion_warning">⚠️ 副宠「入后山」—— 不消失，退出桌面与配对，仍留在族谱与图鉴；但不可取回。\n🚫 融合永远不能产出灵兽（ADR-017）；神话已是终点，不可作为融合目标。</string>
+    <string name="fusion_confirm">二次确认 —— 送 %1$s 入后山</string>
+    <string name="fusion_confirm_hint">这是不可逆的操作 —— 弹窗会再确认一次，不会一键完成</string>
+    <string name="fusion_confirm_title">确认融合</string>
+    <string name="fusion_confirm_message">%1$s 将入后山（不可取回），%2$s 获得印记 +%3$d、经验 +%4$d。\n\n确定要送走 %1$s 吗？</string>
+    <string name="fusion_success_title">融合完成</string>
+    <string name="fusion_success_message">%1$s 获得印记 +%2$d（当前 %3$d/%4$d）、经验 +%5$d%6$s%7$s。\n%8$s 已入后山 —— 它仍在族谱里。</string>
+    <string name="fusion_success_drift">，并上漂一档到 %1$s</string>
+    <string name="fusion_success_level">，升到了 Lv.%1$d</string>
+    <string name="fusion_fail_title">不能融合</string>
+    <string name="fusion_fail_main">主宠不能被喂掉 —— 先在家里换一位主角</string>
+    <string name="fusion_fail_gold">金币不足，还差 %1$d 枚</string>
+    <string name="fusion_fail_notfound">宠物不见了，刷新后再试</string>
+    <string name="fusion_empty">还没有可融合的宠物 —— 先从盲盒里迎接几只家人吧</string>
+    <string name="fusion_go_fuse">去融合</string>
+    <string name="pairing_entry_from_fusion">去配对广场 →</string>
+    <!-- 首启隐私门（design-v2 屏 19 · docs/00 §八 红线 5 · 16 §三 K-4） -->
+    <string name="privacy_app_icon">🌱</string>
+    <string name="privacy_title">欢迎来到萌芽宠物</string>
+    <string name="privacy_subtitle">在把第一颗蛋交给你之前，有几句实话要说</string>
+    <string name="privacy_point_1">&lt;b&gt;1 · 悬浮窗只用来显示宠物。&lt;/b&gt;用途声明为「桌面宠物展示」—— 不读取任何其他 App 的内容、包名、图标，也不模拟点击。</string>
+    <string name="privacy_point_2">&lt;b&gt;2 · 不用无障碍服务。&lt;/b&gt;宠物「踩在图标上」是视觉效果，我们并不知道那是什么 App —— 我们只能「演」，不能「读」。</string>
+    <string name="privacy_point_3" formatted="false">&lt;b&gt;3 · 概率全部公开。&lt;/b&gt;抽蛋含保底综合概率 10.42%，保底只到史诗 —— 公示常驻「设置 · 隐私与合规」里。</string>
+    <string name="privacy_agree">同意并开始</string>
+    <string name="privacy_read_policy">先看完整隐私政策</string>
+    <string name="privacy_disagree">不同意，退出应用</string>
+    <string name="privacy_footnote_sdk">同意之前不会初始化任何采集类 SDK、不上报任何数据（合规红线第 5 条）</string>
+    <string name="privacy_footnote_last_gate">这是全 App 唯一一次全屏阻断 —— 之后，处处都是「家」</string>
+    <string name="privacy_policy_title">萌芽宠物 · 隐私政策</string>
+    <string name="privacy_policy_body" formatted="false">&lt;b&gt;一、我们收集什么&lt;/b&gt;\n本应用为单机应用。你的宠物数据（宠物、物品、配对记录）只保存在本机数据库中，不会上传到任何服务器。\n\n&lt;b&gt;二、悬浮窗权限&lt;/b&gt;\n悬浮窗用途声明为「桌面宠物展示」。它只「演」不「读」：不读取、不记录任何其他应用的内容、包名或图标，不模拟任何点击或输入。\n\n&lt;b&gt;三、无障碍服务&lt;/b&gt;\n本应用不申请、不使用无障碍服务。\n\n&lt;b&gt;四、抽蛋概率公示&lt;/b&gt;\n普通 65.57%% · 稀有 26.23%% · 史诗 7.87%% · 神话 0.33%%（权重 1000 / 400 / 120 / 5）；含保底综合概率 10.42%%，保底只到史诗。常驻「设置 · 隐私与合规」。\n\n&lt;b&gt;五、SDK 与数据上报&lt;/b&gt;\n你同意本政策之前，本应用不会初始化任何采集类 SDK，也不上报任何数据。将来接入的任何第三方 SDK 及其收集的数据类型与用途，都会在本政策中逐条补充公示。\n\n&lt;b&gt;六、数据删除&lt;/b&gt;\n卸载应用即删除全部本地数据。</string>
+    <string name="privacy_exit_toast">未同意隐私政策，应用已退出</string>
+    <!-- 图鉴（design-v2 屏 08） -->
+    <string name="codex_title">宠物图鉴</string>
+    <string name="codex_summary">已收集 %1$d/%2$d 种 · %3$d/%4$d 类群</string>
+    <string name="codex_collected">已收集</string>
+    <string name="codex_unseen">未遇见</string>
+    <string name="codex_exotic_header">不入十类 · 不可抽</string>
+    <string name="codex_exotic_trait" formatted="false">异兽混血 4% / 异兽对 40%</string>
+    <string name="codex_footer">还没见过的，概率在「设置 · 隐私与合规」里公示着。不剧透 —— 见到才算数。</string>
+
+    <!-- 族谱（design-v2 屏 20） -->
+    <string name="family_tree_subtitle">%1$s 的家族树</string>
+    <string name="family_ancestors">先辈</string>
+    <string name="family_self">这一代</string>
+    <string name="family_offspring">后代</string>
+    <string name="family_no_offspring">还没有后代 —— 配对生育后，这里会长出新的枝</string>
+    <string name="family_member_subtitle">Lv.%1$d · %2$s · %3$s</string>
+    <string name="family_tag_main">〔主宠〕</string>
+    <string name="family_tag_retired">〔隐居中〕</string>
+    <string name="family_tag_generation">〔世代 %1$d〕</string>
+    <string name="family_footer_rule">称谓由血缘推导：搭档只是「生育搭档」，不进称谓系统；取掉配对也不会乱。虚线框 = 配对，实线 = 血缘。导出族谱图片随后续渲染阶段开放。</string>
+    <string name="family_stat_offspring">直系后代</string>
+    <string name="family_stat_generation">血统源头世代</string>
+    <string name="family_stat_root">最大贡献血统</string>
+    <string name="family_pet_missing">这只宠物不见了，刷新后再试</string>
+
+    <!-- 档案浮卡（design-v2 屏 21） -->
+    <string name="profile_tag_main">主宠</string>
+    <string name="profile_subtitle">%1$s · %2$s · %3$s · 世代 %4$d</string>
+    <string name="profile_level">Lv.%1$d %2$s　%3$d / %4$d</string>
+    <string name="profile_attr_stamina">体力</string>
+    <string name="profile_attr_strength">力量</string>
+    <string name="profile_attr_agility">敏捷</string>
+    <string name="profile_attr_wisdom">智慧</string>
+    <string name="profile_attr_charm">魅力</string>
+    <string name="profile_attr_power">综合</string>
+    <string name="profile_unlock_adult">成年已解锁 · 配对生育（亲密 %1$d ≥ %2$d）· 族谱 · 排行榜 · 共同生活动作</string>
+    <string name="profile_unlock_growing">成长中：Lv.26 成年后解锁配对生育 · 族谱 · 排行榜 · 共同生活动作</string>
+    <string name="profile_switch_hint">切换看家里其他成员</string>
+    <string name="profile_pet_missing">这只宠物不见了，刷新后再试</string>
+    <!-- 配对广场（design-v2 屏 24/25 · docs/00 §2.5 · W-16-1 拍板口径） -->
+    <string name="pairing_title">配对广场</string>
+    <string name="pairing_mode_hint">真人优先 · 无真人补 NPC（单机阶段为 NPC 托管 · 免确认）</string>
+    <string name="pairing_gold">金币 %1$d</string>
+    <string name="pairing_mine_label">我的宠</string>
+    <string name="pairing_pick_mine">选择要配对的宠物（成年 + 亲密度达标）</string>
+    <string name="pairing_mine_none">还没有可配对的宠物 —— 成年（Lv.26+）且亲密度 ≥ 70 才行</string>
+    <string name="pairing_pet_item">%1$s · Lv.%2$d · 亲密 %3$d%4$s</string>
+    <string name="pairing_paired_tag">（配对中）</string>
+    <string name="pairing_checklist_ok">✓ 双方成年 · ✓ 亲密度 ≥ %1$d · ✓ 一公一母（NPC 永远取反）\n✓ 冷却已过 · 金币 %2$d（余额 %3$d）</string>
+    <string name="pairing_checklist_immature">✗ 未成年（Lv.26+ 才可配对）· 亲密度 ≥ %1$d · 金币 %2$d（余额 %3$d）</string>
+    <string name="pairing_candidate">%1$s · %2$s · Lv.%3$d · %4$s%5$s</string>
+    <string name="pairing_same_family">同虫</string>
+    <string name="pairing_cross_family">跨虫</string>
+    <string name="pairing_pair_now">立即配对</string>
+    <string name="pairing_refresh">换一批 →</string>
+    <string name="pairing_footer">配对成功后双方各得一只后代 —— 你的宠不会被拿走。称「生育搭档」，不称夫妻。</string>
+    <string name="pairing_partner">生育搭档：%1$s · %2$s · Lv.%3$d</string>
+    <string name="pairing_state_ready">可以生育了 · 后代名额已用 %1$d/%2$d</string>
+    <string name="pairing_state_cooldown">冷却还剩 %1$d 天 · 后代名额已用 %2$d/%3$d</string>
+    <string name="pairing_breed_now">生育（双方各得一只后代）</string>
+    <string name="pairing_release">解除搭档（宠物归属不变）</string>
+    <string name="pairing_success_title">配对成功</string>
+    <string name="pairing_success_message">%1$s 与 %2$s 结为生育搭档。\n\n配对类型：%3$s%4$s\n后代预览：以 %5$s 为基准上漂 ×%6$.2f\n冷却 3 天后即可生育第一只。</string>
+    <string name="pairing_kind_same">同虫（成功率 100%%）</string>
+    <string name="pairing_kind_cross">跨虫（成功率 85%% · 上漂 ×1.35）</string>
+    <string name="pairing_kind_exotic_mix">含异兽（成功率 90%% · 上漂 ×1.80）</string>
+    <string name="pairing_kind_exotic_pair">异兽 × 异兽（上漂 ×2.00）</string>
+    <string name="pairing_offspring_title">新生命诞生</string>
+    <string name="pairing_offspring_message">%1$s（%2$s · %3$s · Lv.1 · 世代 %4$d）出生了！\n它已在「院子」等你，随时可以接回家。</string>
+    <string name="pairing_fail_title">不能配对</string>
+    <string name="pairing_fail_immature">这只宠还没准备好 —— 需要成年（Lv.26+）且亲密度 ≥ 70</string>
+    <string name="pairing_fail_already">它已经有生育搭档了 —— 先解除现在的搭档</string>
+    <string name="pairing_fail_gold">金币不足，还差 %1$d 枚</string>
+    <string name="pairing_fail_cooldown">还没到时候 —— 冷却还剩 %1$d 天</string>
+    <string name="pairing_fail_quota">这对搭档的后代名额已用完（%1$s）</string>
+    <string name="pairing_fail_notfound">状态有变，刷新后再试</string>
     <string name="incubate_countdown_label">预计破壳</string>
     <string name="incubate_focus">专注陪伴</string>
     <string name="incubate_focus_desc">陪它一会儿，孵化会加快</string>
@@ -188,4 +336,25 @@
     <string name="focus_resume">继续</string>
     <string name="focus_stop">结束陪伴</string>
     <string name="focus_hint">陪伴时长 × 50% 抵扣孵化时间（单蛋最多抵 50%）\n满 15 分钟给宠物加经验</string>
+    <!-- ═══ 互动托盘（design-v2 屏③ · K-2 拖拽喂食/玩耍/训练） ═══ -->
+    <string name="tray_hint">按住，拖给它 —— 用完的耐久自己会掉</string>
+    <string name="tray_icon_feed">🌾</string>
+    <string name="tray_name_feed">谷物饲料</string>
+    <string name="tray_icon_play">🧶</string>
+    <string name="tray_name_play">毛线球</string>
+    <string name="tray_icon_train">🏋️</string>
+    <string name="tray_name_train">铁哑铃</string>
+    <string name="tray_count_none">没有了</string>
+    <string name="tray_count_exp">+150</string>
+    <string name="tray_item_missing">没有道具啦，去商店补一点吧～</string>
+    <string name="tray_collapse">收起 ˅</string>
+    <string name="tray_expand">道具 · 点开展开</string>
+    <string name="tray_collapsed_summary">道具 ×%1$d</string>
+    <string name="talk_feed">开饭啦！</string>
+    <string name="talk_play">再玩再玩！</string>
+    <string name="talk_train">感觉变强了！</string>
+    <string name="talk_yawn">哈～啊……有点困</string>
+    <string name="talk_sleep">呼… 呼…</string>
+    <string name="talk_social_1">来玩呀！</string>
+    <string name="talk_social_2">等等我！</string>
 </resources>

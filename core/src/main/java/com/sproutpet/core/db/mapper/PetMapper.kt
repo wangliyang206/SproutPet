@@ -59,7 +59,8 @@ object PetMapper {
         generation = entity.generation,
         isMain = entity.isMain,
         homeSlot = entity.homeSlot,
-        desktopSlot = entity.desktopSlot
+        desktopSlot = entity.desktopSlot,
+        fusionMarks = entity.fusionMarks
     )
 
     /**
@@ -108,6 +109,7 @@ object PetMapper {
             isMain = pet.isMain,
             homeSlot = pet.homeSlot,
             desktopSlot = pet.desktopSlot,
+            fusionMarks = pet.fusionMarks,
             remoteId = existing?.remoteId,
             updatedAt = System.currentTimeMillis(),
             isSynced = false

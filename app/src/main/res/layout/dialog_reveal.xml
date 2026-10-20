@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 开箱揭晓模态卡（design-v2 屏④）：稀有度 + 物种/虫属/性别/世代 + 保底进度 + 概率公示 -->
+<!-- 开箱揭晓 · 底部升起面板（design-v2 屏④ · K-5）：稀有度 + 物种/虫属/性别/世代 + 保底进度 + 概率公示 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +7,10 @@
     android:background="@drawable/bg_card_round"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="22dp">
+    android:paddingStart="22dp"
+    android:paddingEnd="22dp"
+    android:paddingTop="22dp"
+    android:paddingBottom="30dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,20 +20,12 @@
         android:textSize="16.5sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/iv_reveal_egg"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_marginTop="14dp"
-        android:contentDescription="@null"
-        tools:src="@drawable/pet_egg_cracked" />
-
     <!-- 稀有度徽章（底色按档位着色） -->
     <TextView
         android:id="@+id/tv_reveal_rarity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="14dp"
         android:background="@drawable/bg_kv_chip"
         android:paddingHorizontal="11dp"
         android:paddingVertical="4dp"
