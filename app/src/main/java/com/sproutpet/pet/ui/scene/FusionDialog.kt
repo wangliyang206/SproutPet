@@ -48,6 +48,14 @@ class FusionDialog : BottomSheetDialogFragment() {
     /** 去配对广场（24 屏；设计指定入口 = 图鉴浮卡，图鉴落地前由本入口承担） */
     var onGoPairing: (() -> Unit)? = null
 
+    /**
+     * 预选物种（`PetSpecies.id`）—— 从家庭成员名册的「同种 ×N · 去融合」点进来时用。
+     *
+     * 名册是本项目里**唯一能看到同种重复**的地方；不带这个参数时，融合弹窗
+     * 默认把主宠当目标，而同种材料可能一只都没有 —— 用户点了个"去融合"却看到空列表。
+     */
+    var initialSpeciesId: String? = null
+
     private var _binding: DialogFusionBinding? = null
     private val binding get() = requireNotNull(_binding)
 
@@ -99,8 +107,16 @@ class FusionDialog : BottomSheetDialogFragment() {
             return
         }
 
-        // 默认目标 = 主宠（没有主宠标记则取第一只）；材料默认同物种第一只
-        target = pets.firstOrNull { it.isMain } ?: pets.first()
+        // 默认目标 = 指定物种里可作目标的第一只 → 主宠 → 全体第一只；
+        // 材料默认同物种第一只
+        val wantSpecies = initialSpeciesId
+        target = if (wantSpecies != null) {
+            pets.firstOrNull { it.species.id == wantSpecies && FusionRules.canBeTarget(it.rarity) }
+                ?: pets.firstOrNull { it.isMain }
+                ?: pets.first()
+        } else {
+            pets.firstOrNull { it.isMain } ?: pets.first()
+        }
         material = defaultMaterialFor(target)
         refreshPreview()
     }

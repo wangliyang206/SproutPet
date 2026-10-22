@@ -1,10 +1,10 @@
 package com.sproutpet.pet.ui.scene
 
+import android.animation.Animator
 import android.content.ClipData
 import android.graphics.Color
 import android.graphics.RectF
 import android.os.Bundle
-import android.os.Vibrator
 import android.view.DragEvent
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.sproutpet.core.domain.gacha.TenPullEntry
 import com.sproutpet.core.domain.desktop.SceneRoster
+import com.sproutpet.core.domain.pet.EggPresentation
 import com.sproutpet.core.domain.pet.HomeSlots
 import com.sproutpet.core.domain.pet.BehaviorDirector
 import com.sproutpet.core.domain.pet.PetBehaviorAction
@@ -98,10 +99,26 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
     private val petSlots = HashMap<Long, PetSlot>()
     private var bubbleView: PetSpeechBubbleView? = null
     private var bubblePetId: Long = -1L
-    private var drawerAdded = false
 
     /** 首蛋聚焦层的倒计时协程（docs/14 §1.4：每秒刷新 + 数字跳动 + 末 10 秒转暖橙） */
     private var firstEggTickerJob: Job? = null
+
+    /**
+     * 聚焦层当前是否「由数据驱动地显示着」。
+     *
+     * ⚠️ **不能拿 `visibility` 当状态**（2026-10-22 真机「大蛋慢慢消失，只剩背景」）：
+     * 淡出动画跑到一半时 `visibility` 仍是 VISIBLE、`alpha` 已经是 0，
+     * 此时再来一帧 `visible = true`，旧实现看到 `visibility == VISIBLE` 就跳过了淡入，
+     * 于是停在「VISIBLE + 透明」——看不见、却仍然全屏拦截点击。
+     * 用一个显式布尔量记住真实意图，动画只跟着它走。
+     */
+    private var firstEggFocusShown = false
+
+    /** 聚焦层蛋当前是否处于「到点 · 裂缝露眼」态：状态刷新与本地倒计时两条路都靠它去重 */
+    private var firstEggReady = false
+
+    /** 聚焦层蛋的呼吸动画句柄：无限动画重复 start 会叠加互扯（蛋会莫名抖动/缩小） */
+    private var firstEggBreathAnim: Animator? = null
 
     /** 上次触发脉冲的十连门票数（避免每次数据刷新都抖一下） */
     private var badgePulseFor: Int? = null
@@ -163,19 +180,42 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
         } else {
             getString(R.string.scene_day_chip_new)
         }
-        binding.tvFootHint.visibility = if (state.hasAnyPet) View.GONE else View.VISIBLE
+        // 底部提示只在「既没宠物、也没蛋」时出现 —— 有蛋的时候它指向的角落蛋
+        // 要么被聚焦层挡住、要么本身就是主入口，再说一句「点右下角的蛋」是噪音。
+        binding.tvFootHint.visibility =
+            if (state.hasAnyPet || state.incubatingEgg != null) View.GONE else View.VISIBLE
+        // 首日第一帧：落蛋要写一次库，这几百毫秒里说清楚"在准备"，别让用户对着空场景猜
+        binding.tvFootHint.text = if (state.loading) {
+            getString(R.string.scene_preparing_egg)
+        } else {
+            getString(R.string.scene_foot_hint)
+        }
 
         renderEgg(state)
         renderYardChip(state.yardCount)
         renderPets(state.pets)
         renderBubble(state)
         renderTray(state)
+        renderDrawerStats(state)
+    }
+
+    /**
+     * 抽屉里的数字随数据刷新（不必等用户下次打开抽屉）。
+     *
+     * 抽屉是「只建一次」的 Fragment，所以必须有人**主动推**新值进去 ——
+     * 早期实现只在建的时候读一次 `petSlots.size`，之后永远不动。
+     */
+    private fun renderDrawerStats(state: SceneUiState) {
+        val drawer = childFragmentManager.findFragmentByTag(HomeDrawerFragment.TAG)
+            as? HomeDrawerFragment ?: return
+        drawer.render(state.petTotal, state.yardCount, state.codex)
     }
 
     /**
      * 「院子里还有 N 只 ›」（三层链条：拥有不限 ⊃ 家在册 6）。
      *
-     * 十连一次开 10 只时，家里只站得下 6 只。没有这个角标，用户会认为
+     * v3.28（2026-10-22 用户拍板）后这是**常态**：破壳默认只入册一只，
+     * 十连的其余 9 只都在院子待命。没有这个角标，用户会认为
      * **抽到的宠物丢了** —— 静默丢宠比崩溃更难被发现。
      * 常驻可见是硬要求（同「只靠手势的入口 = 没有入口」的教训）。
      */
@@ -199,27 +239,46 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
 
     /** 角落蛋三态：可开箱（含免费引导） / 孵化中 / 可破壳 */
     private fun renderEgg(state: SceneUiState) {
+        // 数据未到：不猜、不画。宁可第一帧是纯背景，也不能把布局里的占位蛋当真数据 ——
+        // 「占位冒充数据」正是 2026-10-22「大蛋慢慢消失」的另一半原因（见 fragment_scene.xml 注释）。
+        if (state.loading) {
+            binding.sceneEgg.root.visibility = View.GONE
+            renderFirstEggFocus(state, null, false)
+            return
+        }
         val egg = state.incubatingEgg
         val tag = binding.sceneEgg.tvEggTag
         val iv = binding.sceneEgg.ivEgg
-        // 首蛋聚焦层：除了这颗蛋没有任何宠物（docs/14 §1.4 的启用条件）
-        val focusVisible = egg != null && !state.hasAnyPet
-        // 聚焦层是半透明压暗（#47…），角落蛋会从底下透出来造成"两颗蛋" —— 聚焦期直接藏掉
-        binding.sceneEgg.root.visibility = if (focusVisible) View.GONE else View.VISIBLE
+        // 首蛋聚焦层：除了这颗蛋没有任何已破壳宠物（docs/14 §1.4）
+        // 判据收在 core 的 EggPresentation —— 位置只有三种，UI 不许自己再判一遍
+        val stage = EggPresentation.of(egg, state.hasAnyPet)
+        val focusVisible = stage == EggPresentation.FOCUS
         renderFirstEggFocus(state, egg, focusVisible)
+        // 聚焦层是半透明压暗（#47…），角落蛋会从底下透出来造成"两颗蛋" —— 聚焦期藏掉角落蛋。
+        // ⚠️ 传的是「聚焦层**真的**显示着」（firstEggFocusShown），不是「应该显示」：
+        // 聚焦层若因时序/动画没能显示，角落蛋必须兜底可见 ——
+        // 否则用户面对的是一屏什么都不能点的背景（2026-10-22 真机现象）。
+        binding.sceneEgg.root.visibility =
+            if (EggPresentation.cornerVisible(stage, firstEggFocusShown)) View.VISIBLE else View.GONE
         renderTenBadge(state)
         if (egg == null) {
             iv.setImageResource(R.drawable.pet_egg_common)
-            tag.text = if (state.hasAnyPet) {
-                getString(R.string.reveal_pity, state.pityRemaining)
-            } else {
-                getString(R.string.scene_egg_tag_free)
+            tag.text = when {
+                state.hasAnyPet -> getString(R.string.reveal_pity, state.pityRemaining)
+                // 无蛋无宠 = 首蛋没落成（正常路径下不该出现）。这时**必须**把角落蛋
+                // 说成一个明确入口，否则用户面对的是一屏背景，不知道下一步做什么。
+                else -> getString(R.string.scene_egg_tag_start)
             }
             return
         }
         val ready = egg.hatchRemainMs() <= 0L
+        // 到点 = 裂缝露眼（docs/14 §1.6 · 2026-10-22 用户拍板保留）；破壳过半 = 壳裂碎片；其余 = 完整蛋
         iv.setImageResource(
-            if (ready || egg.hatchProgress() >= 0.5f) R.drawable.pet_egg_cracked else R.drawable.pet_egg_common
+            when {
+                ready -> R.drawable.pet_egg_ready
+                egg.hatchProgress() >= 0.5f -> R.drawable.pet_egg_cracked
+                else -> R.drawable.pet_egg_common
+            }
         )
         tag.text = getString(
             if (ready) R.string.scene_egg_tag_ready else R.string.scene_egg_tag_incubating
@@ -303,7 +362,7 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
                 slot.plate.text = "${pet.nickname} · ${getString(R.string.pet_plate_level, pet.level)}"
                 if (slot.stage != pet.stage) {
                     slot.stage = pet.stage
-                    slot.renderer.load(pet.species, pet.stage, pet.genes)
+                    slot.renderer.load(pet.species, pet.stage, pet.genes, pet.rarity)
                 }
             }
         }
@@ -425,7 +484,7 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
         binding.petLayer.addView(container, FrameLayout.LayoutParams(containerW, containerH))
         binding.petLayer.post { placePet(slotHolder, animated = false) }
 
-        renderer.load(pet.species, pet.stage, pet.genes)
+        renderer.load(pet.species, pet.stage, pet.genes, pet.rarity)
         lifecycleController.start(viewLifecycleOwner.lifecycleScope)
         startBehaviorLoop(slotHolder)
     }
@@ -807,17 +866,19 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
                     .addToBackStack(null)
                     .commit()
             }
-            is SceneEvent.ShowHatching -> playHatchingOverlay(event.pet)
+            is SceneEvent.ShowHatching ->
+                // ⭐ 出壳演出（3 秒裂蛋遮罩 +「要破壳了！」）已整体移除 ——
+                // 2026-10-22 用户拍板：「用户点击了蛋，出壳时会有图片中的效果，这个不需要的」。
+                // 点击 → 破壳结算 → 直接进强制起名，中间不再插动画层。
+                viewModel.onHatchingAnimDone(event.pet)
             is SceneEvent.ShowNaming ->
-                NamingDialogFragment.newInstance(event.pet).apply {
+                NamingDialogFragment.newInstance(event.pet, event.rewardTickets).apply {
                     onNamed = { petId, name -> viewModel.onNamed(petId, name) }
                 }.show(childFragmentManager, NamingDialogFragment.TAG)
             SceneEvent.ShowYard ->
-                YardDialog().show(childFragmentManager, YardDialog.TAG)
-            is SceneEvent.FirstHatchReward ->
-                FirstHatchRewardDialog().apply {
-                    onGoOpenBox = { viewModel.onOpenBoxRequested() }
-                }.show(childFragmentManager, FirstHatchRewardDialog.TAG)
+                PetRosterDialog().show(childFragmentManager, PetRosterDialog.TAG)
+            // SceneEvent.FirstHatchReward 已删（2026-10-22 用户拍板：不要「第一只宝宝出生啦」弹卡）；
+            // 奖励照发，只是不再打断 —— 起名弹窗里的奖励条 + 蛋旁「十连」徽章已经足够指向。
             is SceneEvent.FloatyExp -> spawnFloatyExp(event.petId, event.text)
             is SceneEvent.PetTalk -> spawnTalk(event.petId, event.text)
             is SceneEvent.LevelUp -> {
@@ -828,59 +889,29 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
         }
     }
 
-    /** 破壳动画：遮罩 + 裂蛋晃动 + 震动（3 秒，docs/04 §1.4） */
-    private fun playHatchingOverlay(pet: Pet) {
-        val ctx = context ?: return
-        val scrim = View(ctx).apply {
-            setBackgroundColor(ContextCompat.getColor(ctx, R.color.scene_scrim))
-        }
-        val egg = ImageView(ctx).apply {
-            setImageResource(R.drawable.pet_egg_cracked)
-        }
-        val title = TextView(ctx).apply {
-            text = getString(R.string.hatching_title)
-            setTextColor(Color.WHITE)
-            textSize = 18f
-            setTypeface(typeface, android.graphics.Typeface.BOLD)
-        }
-        val layer = binding.effectLayer
-        layer.addView(scrim, FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-        ))
-        layer.addView(egg, FrameLayout.LayoutParams(dp(120f), dp(120f), Gravity.CENTER))
-        layer.addView(title, FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
-            Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM
-        ).apply { bottomMargin = dp(140f) })
-
-        @Suppress("DEPRECATION")
-        val vibrator = ContextCompat.getSystemService(ctx, Vibrator::class.java)
-        @Suppress("DEPRECATION")
-        vibrator?.vibrate(400L)
-
-        val wobble = PetViewAnims.eggWobble(egg)
-        wobble.start()
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeat(4) {
-                delay(620L)
-                PetViewAnims.eggWobble(egg).start()
-            }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            delay(HATCHING_DURATION_MS)
-            layer.removeView(scrim)
-            layer.removeView(egg)
-            layer.removeView(title)
-            viewModel.onHatchingAnimDone(pet)
-        }
-    }
-
     // ═══════════ 抽屉 ═══════════
 
+    /**
+     * 抽屉**只建一次**，但每次打开都要**重画**（2026-10-20 真机反馈）。
+     *
+     * 旧实现在这里 `if (drawerAdded) return` —— 建完就再也不更新，
+     * 而抽屉入口的「已收集 N」是 `bindEntry(..., descArg = 1)` 写死的常量，
+     * 于是无论养多少只都显示「已收集 1 / 18」。
+     *
+     * 数字全部来自 [SceneUiState.codex] 与 [SceneUiState.petTotal]，
+     * 它们又来自同一份 `PetRoster` 快照 —— 抽屉、场景、图鉴页不会互相矛盾。
+     */
     private fun refreshDrawerIfNeeded() {
-        if (drawerAdded) return
-        drawerAdded = true
-        val drawer = HomeDrawerFragment.newInstance(petSlots.size)
+        val state = viewModel.uiState.value
+        val existing = childFragmentManager.findFragmentByTag(HomeDrawerFragment.TAG)
+            as? HomeDrawerFragment
+        if (existing != null) {
+            // config change 后 Fragment 被系统重建，`drawerAdded` 已失效；
+            // 按 tag 取回同一个实例，避免往 drawerContainer 里叠第二个
+            existing.render(state.petTotal, state.yardCount, state.codex)
+            return
+        }
+        val drawer = HomeDrawerFragment()
         drawer.onEntryClick = { entryId ->
             binding.drawerLayout.closeDrawers()
             when (entryId) {
@@ -892,8 +923,10 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
             }
         }
         childFragmentManager.beginTransaction()
-            .replace(binding.drawerContainer.id, drawer)
+            .replace(binding.drawerContainer.id, drawer, HomeDrawerFragment.TAG)
             .commitAllowingStateLoss()
+        // commit 是异步的：`_binding` 可能还没就绪，render 会先缓存字段，onViewCreated 补画
+        drawer.render(state.petTotal, state.yardCount, state.codex)
     }
 
     private fun entryLabel(entryId: String): String = when (entryId) {
@@ -958,53 +991,91 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
 
     // ═══════════ 首蛋聚焦层（docs/14 §1.4 · W-14-1 拍板落地） ═══════════
 
-    /** 接线：整层点击 = 敲蛋（可破壳时转为破壳）；三个动作各归其位 */
+    /** 接线：整层点击 = 敲蛋（可破壳时转为破壳）。
+     *  2026-10-22 用户拍板：不再挂「起个名字 / 专注陪伴 / 去看图鉴」三个按钮 ——
+     *  首蛋只有 1 分钟，加速没有意义；破壳才起名；图鉴走抽屉。这一层只做"看着它孵化"。 */
     private fun setupFirstEggFocus() {
-        val f = binding.firstEggFocus
-        f.root.setOnClickListener { onFirstEggTapped() }
-        f.btnFirstEggName.setOnClickListener {
-            viewModel.uiState.value.incubatingEgg?.let { egg ->
-                // 蛋也是 pet 表的一行，可直接提前命名（docs/14 §1.2④）
-                NamingDialogFragment.newInstance(egg).apply {
-                    onNamed = { petId, name -> viewModel.onNamed(petId, name) }
-                }.show(childFragmentManager, NamingDialogFragment.TAG)
-            }
-        }
-        f.btnFirstEggFocus.setOnClickListener {
-            viewModel.uiState.value.incubatingEgg?.let { egg ->
-                IncubationSheetDialog.newInstance(egg).apply {
-                    onStartFocus = { e -> viewModel.onStartFocus(e) }
-                    onPlaceholder = { name -> toast(getString(R.string.drawer_placeholder, name)) }
-                }.show(childFragmentManager, IncubationSheetDialog.TAG)
-            }
-        }
-        f.btnFirstEggDrawer.setOnClickListener { binding.drawerLayout.openDrawer(Gravity.END) }
+        binding.firstEggFocus.root.setOnClickListener { onFirstEggTapped() }
     }
 
     /** 聚焦层显隐：可见时启动呼吸 + 倒计时；消失时 200ms 淡出并清理动效 */
     private fun renderFirstEggFocus(state: SceneUiState, egg: Pet?, visible: Boolean) {
         val f = binding.firstEggFocus
         if (!visible) {
-            if (f.root.visibility == View.VISIBLE) {
-                f.root.animate().alpha(0f).setDuration(200L).withEndAction {
-                    f.root.visibility = View.GONE
-                    f.root.alpha = 1f
-                }.start()
-                firstEggTickerJob?.cancel()
-                firstEggTickerJob = null
+            firstEggTickerJob?.cancel()
+            firstEggTickerJob = null
+            // 呼吸是无限动画：停掉并把缩放复位，否则下次显示会从上次的中间值接着跑
+            firstEggBreathAnim?.cancel()
+            firstEggBreathAnim = null
+            f.ivFirstEgg.scaleX = 1f
+            f.ivFirstEgg.scaleY = 1f
+            if (!firstEggFocusShown) {
+                // 从来没显示过：**不做任何动画**。冷启动第一帧走的就是这条路 ——
+                // 真正要防的是「布局里的静态蛋被当数据画出来又淡掉」，
+                // 那种"淡出"在用户眼里就是「一颗大蛋慢慢消失」。
+                f.root.animate().cancel()
+                f.root.visibility = View.GONE
+                f.root.alpha = 1f
+                return
             }
+            firstEggFocusShown = false
+            // 先取消可能还在跑的上一次动画，否则 withEndAction 会被新动画丢弃，
+            // 留下 VISIBLE + alpha=0 的"隐形全屏遮罩"
+            f.root.animate().cancel()
+            f.root.animate().alpha(0f).setDuration(200L).withEndAction {
+                f.root.visibility = View.GONE
+                f.root.alpha = 1f
+            }.start()
             return
         }
         val e = requireNotNull(egg)
-        if (f.root.visibility != View.VISIBLE) {
+        // `visibility` 也参与判定：view 被重建（返回栈 / 进程恢复）时布局默认是 GONE，
+        // 若只看布尔量会跳过淡入，蛋就永远不出现。
+        if (!firstEggFocusShown || f.root.visibility != View.VISIBLE) {
+            firstEggFocusShown = true
+            f.root.animate().cancel()
             f.root.visibility = View.VISIBLE
-            f.root.alpha = 1f
+            // 淡入而不是直接出现：首蛋是打开 App 后的第一个画面主角，
+            // 从 0 淡到 1（220ms）不会有"啪一下跳出来"的突兀（2026-10-22 修「闪」）
+            f.root.alpha = 0f
+            f.root.animate().cancel()
+            f.root.animate().alpha(1f).setDuration(220L).start()
             // 呼吸（复用宠物待机动画，2.4s 往复）
-            PetViewAnims.breathing(f.ivFirstEgg, 0.5f).start()
+            firstEggBreathAnim?.cancel()
+            firstEggBreathAnim = PetViewAnims.breathing(f.ivFirstEgg, 0.5f).also { it.start() }
         }
         startFirstEggTicker(e)
-        if (viewModel.firstEggTaps > 0) {
-            f.tvFirstEggCrack.text = getString(R.string.first_egg_crack_count, viewModel.firstEggTaps)
+        // 到点态（docs/14 §1.6 · 2026-10-22）：壳横向裂开一道缝，缝里有一双眼睛 ——
+        // 用户看得出「里面有活物」，但看不出是什么品种。文案也从「敲敲它」换成「点一下让它出来」。
+        val ready = e.hatchRemainMs() <= 0L
+        firstEggReady = ready
+        applyFirstEggReadyState(ready)
+    }
+
+    /**
+     * 到点态的视觉切换（docs/14 §1.6）：蛋换「裂缝露眼」（2026-10-22 用户拍板**保留** ——
+     * 要删的是出壳演出，不是它）+ 文案改成邀请点击。
+     *
+     * ⚠️ 必须被**两处**调用：状态刷新（[renderFirstEggFocus]）与本地倒计时（[startFirstEggTicker]）。
+     * 只看状态刷新是不够的 —— 倒计时是 fragment 内的秒表，归零那一刻并**不会**产生新的
+     * state emission，只靠状态刷新的话用户会盯着一个「00:00 + 完整蛋」的静止画面。
+     */
+    private fun applyFirstEggReadyState(ready: Boolean) {
+        val f = binding.firstEggFocus
+        f.ivFirstEgg.setImageResource(
+            if (ready) R.drawable.pet_egg_ready else R.drawable.pet_egg_common
+        )
+        f.tvFirstEggHint.text = getString(
+            if (ready) R.string.first_egg_hint_ready else R.string.first_egg_hint
+        )
+        f.tvFirstEggCrack.text = when {
+            ready -> getString(R.string.first_egg_tap_hint_ready)
+            viewModel.firstEggTaps > 0 ->
+                getString(R.string.first_egg_crack_count, viewModel.firstEggTaps)
+            else ->
+                // 敲蛋是**可选互动**，不是开孵条件（docs/14 §1.5）：
+                // 这句必须明确是"想它了可以敲"，而不是"你需要敲才能开始"
+                getString(R.string.first_egg_tap_hint)
         }
     }
 
@@ -1031,6 +1102,12 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
                     f.tvFirstEggHatchAt.tag = egg.hatchAt
                     f.tvFirstEggHatchAt.text =
                         getString(R.string.first_egg_hatch_at, fmt.format(Date(egg.hatchAt)))
+                }
+                // 归零那一刻切「裂缝露眼」态 —— 不依赖任何状态刷新（见 applyFirstEggReadyState）
+                val ready = sec <= 0
+                if (ready != firstEggReady) {
+                    firstEggReady = ready
+                    applyFirstEggReadyState(ready)
                 }
                 delay(1_000L)
             }
@@ -1062,10 +1139,13 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
             while (true) {
                 delay(4_000L)
                 val s = viewModel.uiState.value
-                if (s.incubatingEgg != null && !s.hasAnyPet) {
+                if (s.incubatingEgg != null && !s.hasAnyPet && firstEggFocusShown) {
                     // 首蛋期：晃聚焦层的大蛋（docs/14 §1.4 每 4s 轻晃）
                     PetViewAnims.eggWobble(binding.firstEggFocus.ivFirstEgg).start()
-                } else if (s.incubatingEgg != null) {
+                } else if (s.incubatingEgg != null &&
+                    binding.sceneEgg.root.visibility == View.VISIBLE
+                ) {
+                    // 聚焦层没显示时蛋在角落 —— 别去晃一个 GONE 的 View
                     PetViewAnims.eggWobble(binding.sceneEgg.ivEgg).start()
                 }
             }
@@ -1080,6 +1160,12 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
     override fun onDestroyView() {
         firstEggTickerJob?.cancel()
         firstEggTickerJob = null
+        // 聚焦层的显隐状态是 view 级的：view 重建后 binding 是新对象，
+        // 布尔量若留着 true，重建的聚焦层（布局默认 GONE）会被判定为"已经显示过"而永远不出现。
+        firstEggFocusShown = false
+        firstEggReady = false
+        firstEggBreathAnim?.cancel()
+        firstEggBreathAnim = null
         petSlots.values.forEach { it.lifecycleController.stop(); it.renderer.release() }
         petSlots.clear()
         super.onDestroyView()
@@ -1090,7 +1176,6 @@ class SceneFragment : BaseFragment<FragmentSceneBinding>() {
 
     companion object {
         /** 破壳动画时长（docs/04 §1.4：3 秒 + 震动） */
-        private const val HATCHING_DURATION_MS = 3_000L
 
         fun newInstance(): SceneFragment = SceneFragment()
     }

@@ -30,6 +30,10 @@ class OwnerLocalDataSource @Inject constructor(
     private val keyPrivacyAgreed = booleanPreferencesKey("privacy_agreed")
     private val keyTrayCollapsed = booleanPreferencesKey("tray_collapsed")
     private val keyFirstHatchReward = booleanPreferencesKey("first_hatch_reward_claimed")
+    private val keyStarterEggPlaced = booleanPreferencesKey("starter_egg_placed")
+
+    /** ⚠️ 试用阶段资源包（2026-10-22 用户拍板）—— **上线前必须回收**（docs/09 `T-01`） */
+    private val keyTrialBonusGranted = booleanPreferencesKey("trial_bonus_granted")
 
     /**
      * 隐私政策同意态（docs/00 §八 红线 5 · design-v2 19 屏 · `16 §三 K-4`）。
@@ -108,5 +112,43 @@ class OwnerLocalDataSource @Inject constructor(
             }
         }
         return granted
+    }
+
+    /**
+     * 领取**试用阶段资源包**（2026-10-22 用户拍板，仅测试期）：
+     * 盲盒门票 ×100 · 金币 ×100,000 · 其余每种道具 ×1000。
+     *
+     * @return true = 本次是第一次领取，调用方应发放；false = 已发过
+     *
+     * ⚠️ 与 [claimFirstHatchReward] 同一条纪律：**读-判-写必须在同一次 `edit` 里**。
+     * ⚠️⚠️ **上线前必须移除调用点并回收本键** —— 这是给试用体验灌水的临时口径，
+     * 记录在 `docs/09-待决问题总表.md` 的 `T-01`，不许悄悄转正。
+     */
+    suspend fun claimTrialBonus(): Boolean {
+        var granted = false
+        dataStore.edit { prefs ->
+            if (prefs[keyTrialBonusGranted] != true) {
+                prefs[keyTrialBonusGranted] = true
+                granted = true
+            }
+        }
+        return granted
+    }
+
+    /**
+     * 「首蛋已自动送入场景」账本（`docs/14 §1.5` · 2026-10-22 用户拍板）。
+     *
+     * 首日的第一颗蛋由程序直接落下（用户不需要点任何东西），这条标记回答两个问题：
+     * - 送过了吗？（进程重启、冷启动补发都不能再送第二颗）
+     * - 送成功了吗？（**落库成功才写**，抽的过程断掉就下次重试，不会出现"票扣了蛋没有"）
+     *
+     * ⚠️ 与 [claimFirstHatchReward] 的区别：那条是**奖励**（先占位再发，绝不能重复发）；
+     * 这条是**开场**（先发再记账，最坏情况是重试一次）—— 顺序不同是因为失败代价不同。
+     */
+    suspend fun isStarterEggPlaced(): Boolean =
+        dataStore.data.map { it[keyStarterEggPlaced] ?: false }.first()
+
+    suspend fun markStarterEggPlaced() {
+        dataStore.edit { it[keyStarterEggPlaced] = true }
     }
 }

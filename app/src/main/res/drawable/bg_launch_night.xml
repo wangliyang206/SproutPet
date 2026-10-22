@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  冷启动首帧背景 · 夜间（docs/02 §10.1）
+
+  色值取自 bg_home_night.png 的顶部 / 中部 / 底部采样。
+  夜间启动若沿用白天色板，用户会先看到一次明显的亮闪 —— 比白屏更刺眼。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="#0B1C41"
+        android:centerColor="#1F6386"
+        android:endColor="#124157"
+        android:type="linear" />
+</shape>

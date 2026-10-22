@@ -1,10 +1,13 @@
 package com.sproutpet.pet.ui
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
 import com.sproutpet.core.base.BaseActivity
+import com.sproutpet.core.domain.daynight.DayNight
 import com.sproutpet.pet.BuildConfig
+import com.sproutpet.pet.R
 import com.sproutpet.pet.SproutPetApplication
 import com.sproutpet.pet.data.local.OwnerLocalDataSource
 import com.sproutpet.pet.debug.DesktopPetProbeActivity
@@ -33,6 +36,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun inflateBinding(inflater: LayoutInflater): ActivityMainBinding =
         ActivityMainBinding.inflate(inflater)
 
+    /**
+     * 冷启动首帧：在 `super.onCreate` **之前**换成与场景同色系的 windowBackground。
+     *
+     * 用户原话：「第一次进入程序后，会闪一下」。根因是启动主题的 `windowBackground`
+     * 是近白色（`bg_page` #F7F8FA），而场景是「灰蓝天空 → 黄绿草地」的整屏图 ——
+     * 背景图解码完成的那一帧，整屏从白跳成彩色。夜间启动同理，只是跳变成"白闪"。
+     *
+     * 修法不是加动画盖住它，而是让**首帧本身就是场景的颜色**
+     * （`bg_launch_day` / `bg_launch_night` 的三段色值直接采样自场景背景图）。
+     * 判据与场景共用 [DayNight]，避免两处各写一份 `hour >= 18` 后漂移。
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(
+            if (DayNight.isNightNow()) R.style.Theme_SproutPet_LaunchNight
+            else R.style.Theme_SproutPet_LaunchDay
+        )
+        super.onCreate(savedInstanceState)
+    }
+
     override fun initView() {
         if (BuildConfig.DEBUG) {
             addProbeEntry()
@@ -60,12 +82,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             onAgreed = { showScene() }
         }
         supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
             .replace(binding.sceneContainer.id, gate, PrivacyGateFragment.TAG)
             .commit()
     }
 
     private fun showScene() {
         supportFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
             .replace(binding.sceneContainer.id, SceneFragment.newInstance())
             .commit()
     }

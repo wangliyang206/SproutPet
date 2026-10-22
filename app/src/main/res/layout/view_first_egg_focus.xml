@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  首蛋聚焦层（docs/14 §1.4 · 2026-10-17 拍板）：
+  首蛋聚焦层（docs/14 §1.4 · 2026-10-17 拍板 · 2026-10-22 精简）：
+
   首蛋孵化期盖在场景之上的「一次性演出」—— 蛋 180dp 居中、场景压暗、
   MM:SS 大字倒计时 + 绝对时刻 + 三组动效（呼吸 / 轻晃 / 数字跳动，代码挂载）。
+
+  ⚠️ **这一层只做一件事：让用户看着它孵化。**
+  2026-10-22 用户拍板去掉「起个名字 / 专注陪伴 / 去看图鉴」三个按钮：
+  ① 首蛋只有 1 分钟（§1.3），加速没有意义；
+  ② 破壳才起名 —— 蛋期起名会让"看见它"和"填表单"抢同一个高光（§1.2 ④ 作废）；
+  ③ 三个按钮把唯一的注意力从蛋上分走了。图鉴在抽屉里仍然可达，只是不再在这层出现。
+
   ⚠️ 只对首蛋启用：hasAnyPet == false 且存在孵化中蛋。
   破壳时由 SceneFragment 淡出移除；不做常驻（第 2 颗起回到角落 72dp 小蛋）。
 -->
@@ -28,8 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/first_egg_hint"
-            android:textColor="#FFF8E1"
-            android:textSize="12.5sp"
+            android:textColor="#FFFDE7"
+            android:textSize="15sp"
+            android:textStyle="bold"
             android:letterSpacing="0.04"
             android:shadowColor="#80000000"
             android:shadowDy="2"
@@ -71,55 +80,10 @@
             android:id="@+id/tv_first_egg_crack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
+            android:text="@string/first_egg_tap_hint"
             android:textColor="#C8E6C9"
             android:textSize="10.5sp"
-            tools:text="敲了 3 次 · 蛋壳留下 3 道细纹" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/btn_first_egg_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_white"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:layout_marginHorizontal="4dp"
-                android:text="@string/first_egg_act_name"
-                android:textColor="@color/scene_text"
-                android:textSize="11.5sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/btn_first_egg_focus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_white"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:layout_marginHorizontal="4dp"
-                android:text="@string/first_egg_act_focus"
-                android:textColor="@color/scene_text"
-                android:textSize="11.5sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/btn_first_egg_drawer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_white"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:layout_marginHorizontal="4dp"
-                android:text="@string/first_egg_act_drawer"
-                android:textColor="@color/scene_text"
-                android:textSize="11.5sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            tools:text="想它了就敲敲它 · 它听得见" />
     </LinearLayout>
 </FrameLayout>

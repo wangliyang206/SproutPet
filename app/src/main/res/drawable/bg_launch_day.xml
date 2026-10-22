@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  冷启动首帧背景 · 白天（docs/02 §10.1）
+
+  用途：Application / Activity 的 windowBackground。在 SceneFragment 的
+  `iv_bg`（bg_home_day.png）解码完成之前，这一层就是用户看到的第一帧。
+
+  为什么不能用 @color/bg_page（原来的 #F7F8FA 近白）：
+  场景白天是「灰蓝天空 → 黄绿草地 → 深绿地面」的三段渐变，
+  从近白跳到彩色就是 2026-10-22 真机反馈的「第一次进入程序后会闪一下」。
+  三段色值直接取自 bg_home_day.png 的顶部 / 中部 / 底部采样，衔接无跳变。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:angle="270"
+        android:startColor="#BDD1D3"
+        android:centerColor="#B6B571"
+        android:endColor="#788C64"
+        android:type="linear" />
+</shape>

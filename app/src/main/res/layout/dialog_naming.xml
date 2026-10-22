@@ -23,7 +23,7 @@
         android:layout_height="88dp"
         android:layout_marginTop="12dp"
         android:contentDescription="@null"
-        tools:src="@drawable/pet_sprout_chicken_baby" />
+        tools:src="@drawable/pet_egg_common" />
 
     <!-- 出生六维（体力/力量/敏捷/智慧/魅力/亲密） -->
     <GridLayout
@@ -32,6 +32,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:columnCount="3" />
+
+    <!-- 首孵奖励条（docs/14 §1.6）：只在首只破壳时亮出 —— 起名和奖励同一次弹窗里看到 -->
+    <TextView
+        android:id="@+id/tv_naming_reward"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_reward_strip"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:textColor="@color/brand_primary_dark"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="破壳奖励 · 10 连抽已到账"
+        tools:visibility="visible" />
 
     <EditText
         android:id="@+id/et_naming_input"

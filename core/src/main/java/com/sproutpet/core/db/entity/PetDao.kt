@@ -68,10 +68,6 @@ interface PetDao {
     @Query("SELECT * FROM pet WHERE parent_id_a = :petId OR parent_id_b = :petId ORDER BY generation ASC")
     suspend fun queryChildren(petId: Long): List<PetEntity>
 
-    /** 图鉴（design-v2 屏 08）：见过的物种 id（含已入后山 —— 见过就算收集） */
-    @Query("SELECT DISTINCT species_id FROM pet WHERE is_hatched = 1")
-    suspend fun querySeenSpecies(): List<String>
-
     /** 族谱：按世代取整棵树 */
     @Query("SELECT * FROM pet WHERE family_id = :familyId ORDER BY generation ASC, born_at ASC")
     suspend fun queryByFamily(familyId: Long): List<PetEntity>

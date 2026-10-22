@@ -85,8 +85,10 @@ interface PetRenderer {
      * @param species 种族（决定加载哪个美术资源）
      * @param stage 当前阶段（决定用哪套体型资源）
      * @param genes 基因（决定外观微调参数）
+     * @param rarity 稀有度（⭐ 2026-10-22 用户需求「不同稀有度外形要不一样」：
+     *   决定光环档位与稀有度脚标 —— [Rarity.fxLevel] 判据，UI 只做映射）
      */
-    fun load(species: PetSpecies, stage: PetStage, genes: PetGenes)
+    fun load(species: PetSpecies, stage: PetStage, genes: PetGenes, rarity: Rarity = Rarity.COMMON)
 
     /**
      * 应用一个渲染状态。

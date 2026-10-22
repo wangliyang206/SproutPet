@@ -45,6 +45,7 @@ html,body{width:390px;height:844px;overflow:hidden;background:#DFF0DF}
   backdrop-filter:blur(6px);border-radius:12px;font-size:11px;font-weight:600;color:#33502F;
   box-shadow:0 2px 8px rgba(30,60,30,.12)}
 .plate .nm i{font-style:normal;font-weight:400;color:#7C8E79}
+.plate .rar{padding:2px 7px;color:#fff;border-radius:8px;font-size:8.5px;font-weight:700}
 .plate .badge{padding:2px 7px;background:#FFB300;color:#5D3F00;border-radius:8px;
   font-size:9px;font-weight:700}
 
@@ -199,6 +200,8 @@ html,body{width:390px;height:844px;overflow:hidden;background:#DFF0DF}
           <b>总长 ≤ 4 分钟</b>。10 颗蛋<b>共用一套队列时长</b>，<b>不按稀有度各走 5~60 分钟</b> —— 这正是旧实现的缺陷。
           <b>稀有度降序</b>出壳：把最好的惊喜前置，避免等 4 分钟才看到最值钱那只。
           <b>每颗都走 3 秒破壳</b>（3s × 10 = 30s，占队列 1/8）；不耐烦时点「全部出壳」，剩余蛋 0.4s 间隔全破。
+          <b>出壳去向（v2.9 · 2026-10-22 用户拍板）</b>：默认只有 <b>1 只</b>自动站进家（家里没宠物时），
+          其余 9 只进<b>待命</b> —— 想看谁，去「家庭成员」（屏 11）<b>放出</b>谁；上限 6 不变。
         </div>
       </div>
     </div>

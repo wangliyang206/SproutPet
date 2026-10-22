@@ -70,17 +70,11 @@ NIGHTCHIP = '<div class="daychip abs" style="background:rgba(28,42,60,.6);color:
 def s01():
     body = f"""
     <img class="bg" src="{BG_DAY}">{DAYCHIP}{drawer_handle()}
-    <div class="chipctx abs" style="left:14px;top:50px">在家 <i>6 / 6</i> · 待命 3</div>
+    <div class="chipctx abs" style="left:14px;top:50px">在家 <i>1 / 6</i> · 待命 6</div>
     {bubble("肚子有点饿了…", 30, 162, act="把食物拖给它", width=186)}
-    {pet("小豆芽", 26, 28, 292, 84, "chick", "happy", badge="主宠")}
-    {pet("瞌睡猫", 31, 150, 288, 84, "cat", "sleep")}
-    {zzz(226, 288)}
-    {pet("绒绒犬", 18, 272, 294, 84, "dog", "happy")}
-    {pet("慢慢", 22, 22, 452, 100, "turtle", "happy")}
-    {pet("小蓝", 9, 145, 456, 100, "snake", "happy")}
-    {pet("团子", 14, 268, 454, 100, "dragon", "happy")}
-    <div class="eggtag abs" style="left:296px;top:626px">{egg_svg(72, 0)}<span class="lb">新蛋 · 轻点看看</span></div>
-    <div class="foot-hint">摸摸它 · 把食物<b>拖过去</b> · 长按看档案　·　家最多站 <b>6</b> 只</div>
+    {pet("小豆芽", 26, 28, 292, 84, "chick", "happy", badge="主宠", rarity="稀有")}
+    <div class="eggtag abs" style="left:296px;top:604px"><span style="padding:4px 10px;background:#FFB300;border-radius:11px;font-size:10.5px;font-weight:700;color:#3E2A00;box-shadow:0 2px 8px rgba(120,80,0,.22)">十连 ×10</span>{egg_svg(72, 0)}<span class="lb">新蛋 · 轻点看看</span></div>
+    <div class="foot-hint">摸摸它 · 把食物<b>拖过去</b> · 长按看档案　·　<b>破壳默认只站一只</b>，想看谁去「家庭成员」<b>放出</b>（上限仍 6）</div>
     """
     return "", body
 
@@ -162,33 +156,28 @@ def s05():
       font-variant-numeric:tabular-nums;text-shadow:0 2px 12px rgba(0,0,0,.5)}
     .fe-sub{position:absolute;left:0;right:0;top:486px;text-align:center;font-size:11.5px;color:#E8F0E4}
     .fe-crack{position:absolute;left:0;right:0;top:512px;text-align:center;font-size:10.5px;color:#C8E6C9}
-    .fe-acts{position:absolute;left:24px;right:24px;top:562px;display:flex;gap:8px;justify-content:center}
-    .fe-act{flex:1;text-align:center;padding:11px 0;border-radius:16px;font-size:11.5px;font-weight:700;
-      background:rgba(255,255,255,.94);color:#33502F;box-shadow:0 8px 18px rgba(0,0,0,.22)}
     .fe-note{position:absolute;left:16px;right:16px;bottom:26px;font-size:9.5px;line-height:1.75;
       color:#DCEBD8;background:rgba(20,38,22,.62);border:1px solid rgba(255,255,255,.14);
       border-radius:14px;padding:10px 12px}
     .fe-note b{color:#FFF3C4}
+    .fe-note .ready{display:inline-flex;align-items:center;gap:6px;vertical-align:middle}
     '''
     return css, f"""
     <img class="bg" src="{BG_DAY}">
     <div class="vig" style="background:rgba(16,32,18,.34)"></div>
     <div class="chipctx abs" style="left:14px;top:14px;background:rgba(255,255,255,.94)">🥚 首蛋 · 第一次孵化<br><i>第 2 颗起回到角落 72dp 小蛋</i></div>
-    <div class="fe-hint">敲敲它，它在里面</div>
+    <div class="fe-hint">正在孵化你的第一颗蛋</div>
     <div class="fe-egg">{egg_svg(180, 2, glow=True)}</div>
     <div class="fe-cd">00:47</div>
     <div class="fe-sub">21:40 破壳 · 到点会提醒你</div>
-    <div class="fe-crack">敲了 3 次 · 蛋壳留下 3 道细纹（破壳后仍留在场景里）</div>
-    <div class="fe-acts">
-      <span class="fe-act">起个名字</span>
-      <span class="fe-act">专注陪伴</span>
-      <span class="fe-act">去看图鉴</span>
-    </div>
+    <div class="fe-crack">想它了就敲敲它 · 它听得见</div>
     <div class="fe-note">
       <b>首蛋聚焦层（14 §1.4）</b>：蛋 <b>180dp</b> · 水平居中 / 垂直 46% · 场景压暗 <b>0.28</b>；
       倒计时 <b>32sp 等宽数字</b>（最后 10 秒转暖橙）+ 绝对时刻；
       动效 = <b>呼吸 2.4s</b> / <b>每 4s 轻晃</b> / <b>数字每秒跳动</b>。
       <b>首蛋恒 1 分钟，与稀有度无关</b>（W-14-1 拍板）—— 稀有度的差异放在<b>破壳演出规格</b>里。
+      <br><b>v1.9（14 §1.4/§1.6）</b>：这一层<b>没有任何按钮</b> —— 「起个名字 / 专注陪伴 / 去看图鉴」已移除（蛋期只做「看着它孵化」，旧 §1.2④ 可提前起名作废）。
+      <span class="ready">到点态 {egg_svg(34, 4)}：壳裂一道缝、缝里<b>一双眼睛</b>（不露物种）→ 点击 → 起名 + 「+10 连抽」同屏（§1.6）<br>⭐ v2.11：**出壳演出（3 秒裂蛋遮罩 +「要破壳了！」）已移除** —— 点击后直接进起名（用户拍板「图片中的效果不需要」）；「缝隙露眼」保留</span>
     </div>
     """
 
@@ -207,6 +196,8 @@ def s06():
       <div style="font-size:12px;font-weight:700;color:{C['brand']};letter-spacing:2px;margin-bottom:8px">宠物档案 · 世代 1</div>
       <div class="kv" style="margin-bottom:12px"><span>羽虫</span><span style="background:#F6EBFA;color:{C['epic']}">史诗</span><span>公</span></div>
       <div class="stats" style="margin-bottom:14px">{stats}</div>
+      <!-- 首孵奖励与起名同屏（docs/14 §1.6 · 2026-10-22）：点击破壳 → 一次弹窗里既起名、又看到 +10 连抽 -->
+      <div style="background:#C8E6C9;color:#2E7D32;border-radius:12px;padding:9px 0;text-align:center;font-size:12.5px;font-weight:800;margin-bottom:12px">破壳奖励 · 10 连抽已到账</div>
       <div style="font-size:11px;color:{C['sub']};margin-bottom:6px">给它起个名字 —— 这是你们故事的第一步</div>
       <div style="padding:12px 14px;border:2px solid {C['brand']};border-radius:15px;font-size:17px;font-weight:800;color:#26382A;margin-bottom:12px">小豆芽<span style="display:inline-block;width:2px;height:17px;background:#4CAF50;vertical-align:-3px;margin-left:3px"></span></div>
       <span class="btn">确认，欢迎回家</span>
@@ -328,26 +319,29 @@ def s11():
     .cnt3 .c b{display:block;font-size:16.5px;font-weight:800;color:#5B6B58}
     .cnt3 .c.hi b{color:#2E7D32}
     .cnt3 .c b s{font-size:10.5px;font-weight:600;color:#7C8E79;text-decoration:none}
+    .prow .chipdup{display:inline-block;margin-top:3px;padding:1.5px 7px;border-radius:8px;
+      font-size:9px;font-weight:700;background:#FFF3D6;color:#9A6A00}
     """
     home = "".join(
         f'<div class="prow"><span class="av" style="background:#FFF3E0">{em}</span>'
         f'<span class="tx"><b>{n}</b><i>{sub}</i></span>{act}</div>'
         for em, n, sub, act in (
-            ("🐣", "小豆芽", "Lv.26 · 萌芽鸡 · 羽虫 · 主宠 · 桌面 1 号", '<span class="go crown">👑</span>'),
-            ("🐱", "瞌睡猫", "Lv.31 · 瞌睡猫 · 毛虫 · 桌面 2 号", '<span class="go">收起</span>'),
-            ("🐶", "绒绒犬", "Lv.18 · 绒绒犬 · 毛虫 · 桌面 3 号", '<span class="go">收起</span>'),
-            ("🐢", "慢慢", "Lv.22 · 圆壳龟 · 昆虫 · 在家", '<span class="go">收起</span>'),
-            ("🐍", "小蓝", "Lv.9 · 小青蛇 · 鳞虫 · 在家", '<span class="go">收起</span>'),
-            ("🐲", "团子", "Lv.14 · 小龙崽 · 鳞虫 · 在家", '<span class="go">收起</span>'),
+            ("🐣", "小豆芽", "Lv.26 · 萌芽鸡 · 羽虫 · 稀有 · 主宠 · 桌面 1 号", '<span class="go crown">👑</span>'),
+            ("🐱", "瞌睡猫", "Lv.31 · 瞌睡猫 · 毛虫 · 史诗 · 桌面 2 号", '<span class="go">收起</span>'),
+            ("🐶", "绒绒犬", "Lv.18 · 绒绒犬 · 毛虫 · 普通 · 桌面 3 号", '<span class="go">收起</span>'),
+            ("🐢", "慢慢", "Lv.22 · 圆壳龟 · 昆虫 · 普通 · 在家", '<span class="go">收起</span>'),
+            ("🐍", "小蓝", "Lv.9 · 小青蛇 · 鳞虫 · 稀有 · 在家", '<span class="go">收起</span>'),
+            ("🐲", "团子", "Lv.14 · 小龙崽 · 鳞虫 · 传说 · 在家", '<span class="go">收起</span>'),
         ))
     bench = "".join(
         f'<div class="prow off"><span class="av">{em}</span>'
-        f'<span class="tx"><b>{n}</b><i>{sub}</i></span>'
+        f'<span class="tx"><b>{n}</b><i>{sub}</i>{chip}</span>'
         f'<span class="go">放出</span></div>'
-        for em, n, sub in (
-            ("🐣", "糖球", "Lv.4 · 萌芽鸡 · 羽虫 · 待命中"),
-            ("🐱", "芝麻", "Lv.11 · 疾风猫 · 毛虫 · 待命中"),
-            ("🐸", "青豆", "Lv.7 · 泡泡蛙 · 蠃虫 · 待命中"),
+        for em, n, sub, chip in (
+            ("🐣", "糖球", "Lv.4 · 萌芽鸡 · 羽虫 · 待命中",
+             '<span class="chipdup">同种 ×3 · 去融合</span>'),
+            ("🐱", "芝麻", "Lv.11 · 疾风猫 · 毛虫 · 待命中", ""),
+            ("🐸", "青豆", "Lv.7 · 泡泡蛙 · 蠃虫 · 待命中", ""),
         ))
     return css, f"""
     <img class="bg" src="{BG_DAY}"><div class="modal-mask"></div>
@@ -739,46 +733,64 @@ def s20():
     .whead{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;color:#44553F;margin:11px 2px 6px}
     .whead .d{width:9px;height:9px;border-radius:50%}
     .whead i{font-style:normal;font-weight:500;color:#94A490;font-size:9.5px;margin-left:auto}
-    .cells{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-    .cell{border-radius:14px;padding:8px 2px 7px;text-align:center;background:#F5F9F4;border:1.5px solid #E4EFE2}
-    .cell .em{font-size:20px;line-height:1.1}
-    .cell .nm{display:block;font-size:9.5px;font-weight:700;color:#33422F;margin-top:4px}
-    .cell .sp{display:block;font-size:8.5px;color:#94A490;margin-top:1px}
+    .cells{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .cell{border-radius:14px;padding:7px 1px 6px;text-align:center;background:#F5F9F4;border:1.5px solid #E4EFE2}
+    .cell .em{font-size:19px;line-height:1.1}
+    .cell .nm{display:block;font-size:9px;font-weight:700;color:#33422F;margin-top:3px}
+    .cell .sp{display:block;font-size:8px;color:#94A490;margin-top:1px}
     .cell.no{background:#F4F6F4;border-style:dashed;border-color:#DDE5DC}
-    .cell.no .em{color:#C4CEC2;font-size:15px;font-weight:800;line-height:1.55}
+    .cell.no .em{color:#C4CEC2;font-size:14px;font-weight:800;line-height:1.55}
     .cell.no .nm{color:#9AA79A}
+    .cell.multi .sp{color:#9A6A00;font-weight:700}
     '''
     got = {"萌芽鸡", "瞌睡猫", "绒绒犬", "圆壳龟", "小青蛇", "小龙崽", "疾风猫", "泡泡蛙"}
+    # 同种重复（2026-10-22 用户需求：重复宠要能看出来 + 去融合）
+    owned = {"萌芽鸡": 3, "瞌睡猫": 2, "绒绒犬": 1, "圆壳龟": 1,
+             "小青蛇": 1, "小龙崽": 1, "疾风猫": 1, "泡泡蛙": 1}
+    # 只有 1 只的物种：格子直接亮**昵称**（v2.9 · 2026-10-22 真机反馈：
+    # 「孵化出第一只了，图鉴中没有」—— 用户在 18 个物种格里找自己的宠物）
+    nick = {"绒绒犬": "绒绒犬", "圆壳龟": "慢慢", "小青蛇": "小蓝",
+            "小龙崽": "团子", "疾风猫": "芝麻", "泡泡蛙": "青豆"}
     emap = {"萌芽鸡": "🐣", "瞌睡猫": "🐱", "绒绒犬": "🐶", "圆壳龟": "🐢",
             "小青蛇": "🐍", "小龙崽": "🐲", "疾风猫": "🐱", "泡泡蛙": "🐸"}
+    # 每类群第 4 格 = 该虫之长（神兽位）。蠃虫按典籍不设形（ADR-020）：
+    # 「倮虫三百六十，而圣人为之长」—— 把圣人做成可攀比的外观皮是结构性文化风险。
     groups = [
-        ("蠃虫 · 倮身无毛羽鳞甲", "#4FC3F7", "慢、黏人 / 跳脱 / 聪明", ("蜗蜗", "泡泡蛙", "软软章")),
-        ("鳞虫 · 有鳞者", "#26A69A", "悠然好运 / 灵动 / 爱炫", ("锦鲤鲤", "小青蛇", "小龙崽")),
-        ("毛虫 · 有毛者", "#BCAAA4", "慵懒傲娇 / 忠诚 / 警觉", ("瞌睡猫", "绒绒犬", "疾风猫")),
-        ("羽虫 · 有羽者", "#FF8A65", "憨好奇 / 话多 / 爱看书", ("萌芽鸡", "元气鸡", "学者鸡")),
-        ("昆虫 · 有甲者", "#9CCC65", "勤劳 / 沉稳 / 发光神秘", ("蜜蜜蜂", "圆壳龟", "闪闪萤")),
-        ("不入十类 · 不可抽", "#78909C", "跨虫混血 4% / 异兽对 40%", ("星狐", "月兔", "荧波")),
+        ("蠃虫 · 倮身无毛羽鳞甲", "#4FC3F7", "慢、黏人 / 跳脱 / 聪明", ("蜗蜗", "泡泡蛙", "软软章"), ("圣人", "☁️", "此位不设形")),
+        ("鳞虫 · 有鳞者", "#26A69A", "悠然好运 / 灵动 / 爱炫", ("锦鲤鲤", "小青蛇", "小龙崽"), ("蛟龙", "🐉", "未获得")),
+        ("毛虫 · 有毛者", "#BCAAA4", "慵懒傲娇 / 忠诚 / 警觉", ("瞌睡猫", "绒绒犬", "疾风猫"), ("麒麟", "🦄", "未获得")),
+        ("羽虫 · 有羽者", "#FF8A65", "憨好奇 / 话多 / 爱看书", ("萌芽鸡", "元气鸡", "学者鸡"), ("凤凰", "🕊️", "未获得")),
+        ("昆虫 · 有甲者", "#9CCC65", "勤劳 / 沉稳 / 发光神秘", ("蜜蜜蜂", "圆壳龟", "闪闪萤"), ("神龟", "🐢", "未获得")),
+        ("不入十类 · 不可抽", "#78909C", "跨虫混血 4% / 异兽对 40%", ("星狐", "月兔", "荧波"), None),
     ]
     secs = ""
-    for name, color, trait, sps in groups:
+    for name, color, trait, sps, deity in groups:
         cells = "".join(
             (f'<div class="cell"><span class="em">{emap[s]}</span><span class="nm">{s}</span>'
-             f'<span class="sp">已收集</span></div>' if s in got else
+             f'<span class="sp">{nick.get(s, "已收集")}</span></div>' if s in got and owned.get(s, 1) <= 1 else
+             f'<div class="cell multi"><span class="em">{emap[s]}</span><span class="nm">{s}</span>'
+             f'<span class="sp">×{owned[s]} 只 · 可融合</span></div>' if s in got else
              f'<div class="cell no"><span class="em">?</span><span class="nm">{s}</span>'
              f'<span class="sp">未遇见</span></div>')
             for s in sps)
+        if deity:
+            dn, dem, dsp = deity
+            cells += (f'<div class="cell no" style="background:#F7F9F6"><span class="em">{dem}</span>'
+                      f'<span class="nm">{dn}</span><span class="sp">{dsp}</span></div>')
         secs += (f'<div class="whead"><span class="d" style="background:{color}"></span>{name}'
                  f'<i>{trait}</i></div><div class="cells">{cells}</div>')
     return css, f'''
     <img class="bg" src="{BG_DAY}"><div class="modal-mask" style="background:rgba(22,42,24,.30)"></div>
     {drawer_handle()}
     <div class="dex">
-      <h3>宠物图鉴 <i>已收集 8 / 18 种 · 5 / 6 类群</i></h3>
+      <h3>宠物图鉴 <i>已收集 8 / 18 种 · 5 / 6 类群 · 神兽 0 / 4</i></h3>
       {secs}
       <div style="margin-top:12px;padding:9px 12px;border-radius:14px;background:#FFF7E6;
         font-size:10px;color:#8A6100;line-height:1.6">
-        还没见过的，都住在这 18 种里 —— 普通档抽蛋就有；<b>「不入十类」只能靠跨虫混血（4%）与异兽配对（40%）</b>；
-        <b>灵兽（第 6 档）不可抽取，只能配对生育</b>（ADR-017 红线）</div>
+        每虫 <b>4 格</b> = 3 个可抽物种 + <b>1 个神兽位</b>（蠃虫按典籍不设形，留白即科普）。
+        <b>五虫 × 3 = 15 种 + 不入十类 3 种 = 18 种，就是全部</b> —— 不是被截断；类群标题右侧连<b>神兽位</b>一起计数（「1/3 种 · 神兽 0/1」）。<br>
+        点已收集的格子 = 看这一种的<b>每一只</b>（放出 / 收起 / 同种 ×N 去融合）；只有 1 只时格子<b>直接亮它的昵称</b>。<br>
+        「不入十类」不可抽 —— 只能靠<b>跨虫混血 4%</b> 与<b>异兽配对 40%</b>；<b>灵兽（第 6 档）不可抽、不可融合</b>（ADR-017）。</div>
     </div>
     '''
 
@@ -1363,6 +1375,8 @@ def s31():
           <b>总长 ≤ 4 分钟</b>。10 颗蛋<b>共用一套队列时长</b>，<b>不按稀有度各走 5~60 分钟</b> —— 这正是旧实现的缺陷。
           <b>稀有度降序</b>出壳：把最好的惊喜前置，避免等 4 分钟才看到最值钱那只。
           <b>每颗都走 3 秒破壳</b>（3s × 10 = 30s，占队列 1/8）；不耐烦时点「全部出壳」，剩余蛋 0.4s 间隔全破。
+          <b>出壳去向（v2.9 · 2026-10-22 用户拍板）</b>：默认只有 <b>1 只</b>自动站进家（家里没宠物时），
+          其余 9 只进<b>待命</b> —— 想看谁，去「家庭成员」（屏 11）<b>放出</b>谁；上限 6 不变。
         </div>
       </div>
     </div>
@@ -1370,11 +1384,11 @@ def s31():
 
 
 SCREENS = [
-    ("01", "家 · 主界面（无 Tab）", "打开 App = 家。场景即信息架构：宠物生活、搭话气泡、蛋在角落；唯一的常驻 HUD 是右缘抽屉把手（环 = 今日经验进度）。⭐ **在家最多同时站 6 只**（这里画满：两排各 3），左下角 chip 显示「在家 6/6 · 待命 3」。", "s01", "旧 01 首页（5-Tab + 功能宫格）整体作废"),
+    ("01", "家 · 主界面（无 Tab）", "打开 App = 家。场景即信息架构：宠物生活、搭话气泡、蛋在角落；唯一的常驻 HUD 是右缘抽屉把手（环 = 今日经验进度）。⭐ **v2.9：破壳默认只站一只**（2026-10-22 用户拍板 —— 「十连抽后桌面默认只有一只宠物，想要看其它的可以选择放出来」）：这里画的就是默认态，主宠独自在家，其余待命，左下角 chip「在家 1/6 · 待命 6」；放出 / 收起在家庭成员名册（屏 11）。**上限仍是 6**（`HomeSlots.MAX_HOME_PETS`，ADR-024 同源，未动）。", "s01", "旧 01 首页（5-Tab + 功能宫格）整体作废"),
     ("02", "手势 · 抚摸", "在宠物身上长按/滑动 = 抚摸。涟漪 + 爱心 + 经验飘字就地反馈，没有「互动面板」页。", "s02", "旧 06 互动面板 → 删除"),
     ("03", "手势 · 拖拽喂食", "托盘按住拖到宠物身上 = 喂食/玩耍/训练。玩具拖过去即消耗耐久（G-08 的落点）。", "s03", "旧 06 互动面板 → 删除"),
     ("04", "蛋 · 就地揭晓", "蛋长在家里，轻点即开箱；揭晓卡浮在家的场景上。保底与概率公示仍在场。", "s04", "旧 02 盲盒开箱页 → 场景化"),
-    ("05", "孵化 · 首蛋聚焦层", "**v2.5 改：首蛋不再是小角落** —— 蛋 180dp 居中、场景压暗，下方 00:47 大字倒计时 + 「21:40 破壳」，上方教手势「敲敲它」。敲一次多一道永久细纹。三组动效：呼吸 2.4s / 每 4s 轻晃 / 数字每秒跳动。**首蛋恒 1 分钟，与稀有度无关**；第 2 颗起回到角落 72dp 小蛋 + 底部孵化片（旧稿形态）。", "s05", "旧 03 孵化中页 → 首蛋聚焦层（v2.5）"),
+    ("05", "孵化 · 首蛋聚焦层", "**v2.5 改：首蛋不再是小角落** —— 蛋 180dp 居中、场景压暗，下方 00:47 大字倒计时 + 「21:40 破壳」，上方教手势「敲敲它」。敲一次多一道永久细纹。三组动效：呼吸 2.4s / 每 4s 轻晃 / 数字每秒跳动。**首蛋恒 1 分钟，与稀有度无关**；第 2 颗起回到角落 72dp 小蛋 + 底部孵化片（旧稿形态）。⭐ **v2.11**：这一层没有任何按钮；到点态 = 裂缝露眼（物种保密）；**出壳演出已移除** —— 点击后直接进起名弹窗。", "s05", "旧 03 孵化中页 → 首蛋聚焦层（v2.5）"),
     ("06", "破壳 · 起名仪式", "唯一保留的模态：起名是仪式，值得一次全屏中断。档案卡与六维初值在仪式内完成。", "s06", "旧 04 破壳起名 → 保留"),
     ("07", "搭话任务", "任务不做成进度条清单：宠物开口要，你回应就算数。今日进度只在把手环与一个淡色 chip。", "s07", "旧 08 今日任务页 → 删除"),
     ("08", "长按 · 档案浮卡", "长按宠物，档案从它身上浮起；左右滑切换家人。等级经验用修正后的 6,238。", "s08", "旧 05 宠物详情页 → 浮卡化"),
@@ -1389,7 +1403,7 @@ SCREENS = [
     ("17", "桌宠授权 · 跳系统设置页", "悬浮窗权限（<code>SYSTEM_ALERT_WINDOW</code>）**给不了普通弹窗**，必须真的跳到系统设置页由用户手动打开。同时解释**用户最反感的那件事**：Android 8+ 要求桌宠挂一条常驻通知才不被杀 —— 产品语言说清楚「它就是那句话，不是广告」。四家 ROM 各自还有自启动 / 后台白名单 / 高耗电 / Doze，**按机型分别引导**。", "s17", "新增屏（U-11 拍板后补）"),
     ("18", "桌宠 · 跳出去 + 拒绝兜底", "授权后播放「**跳出去**」过渡仪式：宠物从「家」走向屏幕边缘 → 从边缘消失 → 出现在手机桌面，**是同一个它**（数据同一份、状态实时同步）。⭐ 同屏给出**拒绝授权后的兜底**：宠物说「那我先在家里陪你」，不惩罚、不反复弹，但抽屉里的入口**一直留着** —— 不能一次拒绝就永久静默。", "s18", "新增屏（U-11 拍板后补）"),
     ("19", "首启 · 隐私政策与开场", "**全 App 唯一一次全屏阻断**（合规红线第 5 条：同意隐私政策前不初始化任何 SDK）。三条实话：悬浮窗只用于展示 / 不用无障碍服务（只能「演」不能「读」）/ 概率全公开。之后处处都是「家」。", "s19", "新增屏（补 00 §八「首次启动」）"),
-    ("20", "图鉴 · 五虫十八种", "抽屉「宠物图鉴」的落点（底部升起）：**18 种按五虫 + 不入十类分六组**，未收集显示灰格。⚠️ 「不入十类」不可抽（跨虫 4% / 异兽对 40%）；**灵兽不可抽**（ADR-017）。空态守 10.3：指向抽蛋，不放空白插画。", "s20", "新增屏（抽屉 8 条目落点补齐 · 1/6）"),
+    ("20", "图鉴 · 五虫十八种", "抽屉「宠物图鉴」的落点（底部升起）：**18 种按五虫 + 不入十类分六组**，未收集显示灰格。**每虫 4 格 = 3 个可抽物种 + 1 个神兽位**（蠃虫按典籍不设形）；⭐ v2.8 起**同种重复在格子上显示「×N 只 · 可融合」，点格子 = 看该物种的每一只**（放出 / 收起 / 去融合）；⭐ v2.9：只有 1 只时格子**直接亮昵称**（真机反馈「孵化出第一只了，图鉴中没有」—— 用户在找自己的那只），类群计数连神兽位一起说（「1/3 种 · 神兽 0/1」）。⚠️ 「不入十类」不可抽（跨虫 4% / 异兽对 40%）；**灵兽不可抽、不可融合**（ADR-017）。空态守 10.3：指向抽蛋，不放空白插画。", "s20", "新增屏（抽屉 8 条目落点补齐 · 1/6）"),
     ("21", "族谱 · 血缘树", "抽屉「族谱」+ 档案浮卡「族谱」的落点（就地展开）：实线 = 血缘、虚线 = 配对；**称谓由血缘推导**，NPC 只标「生育搭档」不进称谓（§5.1）。高亮最大贡献血统 · 统计行 · 导出图片（§2.7 / §7.3）。", "s21", "新增屏（抽屉 8 条目落点补齐 · 2/6）"),
     ("22", "仓库 · 道具与盲盒", "抽屉「仓库」的落点（底部升起）：六类收纳，与 §6.2 道具表逐一对应；玩具显示**耐久条**（G-08）。⚠️ 道具回收 = 售价 50%，**宠物不可售卖** —— 重复宠去融合（26 屏）。", "s22", "新增屏（抽屉 8 条目落点补齐 · 3/6）"),
     ("23", "商店 · 道具与补给", "抽屉「商店 · 盲盒」的落点（底部升起）：门票（金币 300 日限 1 / 钻石 60）+ 道具 + **钻石充值档位**（§6.3 可选付费，含合规三件套）。所有道具都能靠任务拿到 —— 不付费不影响核心体验。", "s23", "新增屏（抽屉 8 条目落点补齐 · 4/6）"),
@@ -1400,7 +1414,7 @@ SCREENS = [
     ("28", "排行榜 · 五榜", "档案浮卡「排行榜」的落点（底部升起）：战力 / 等级 / 亲密 / 世代 / 繁育五榜（§7.1），全服 / 好友切换。⚠️ **综合战力是智慧 / 魅力唯一参与计算的地方**（U-06），类群与性别不制造数值优劣（ADR-021）。", "s28", "新增屏（s08 断链补齐）"),
     ("29", "成就 · 已点亮", "抽屉「成就」的落点（底部升起）：成就墙点亮态 / 未点亮灰格；**奖励只发金币与钻石**（§6.1 产出侧）。稀缺感来自陪伴时长与家族厚度，不来自抽卡运气。", "s29", "新增屏（抽屉 8 条目落点补齐 · 6/6）"),
     ("30", "设置 · 隐私与合规", "抽屉「设置 · 隐私与合规」的落点（底部升起）：悬浮窗 / 常驻通知（保活解释）/**重走 16~18 引导**（U-11 第⑤条「保留再次引导」）/ 隐私政策 / 概率公示 / 数据可导出可删除（合规红线第 10 条）。", "s30", "新增屏（抽屉 8 条目落点补齐 · 设置）"),
-    ("31", "十连 · 出壳队列", "**v2.5 新增**：十连不是「10 只幼体砸下来」，也不是「10 份独立倒计时」—— 是**一个队列**。10 颗蛋横排（按稀有度降序，最值钱的在最前），第 1 颗 `T+60s`、之后每 `20s` 一颗、**总长 ≤ 4 分钟**；每颗都走 3 秒破壳；不耐烦可点「**全部出壳**」（零成本，0.4s 间隔）。", "s31", "新增屏（W-14-2 拍板后补）"),
+    ("31", "十连 · 出壳队列", "**v2.5 新增**：十连不是「10 只幼体砸下来」，也不是「10 份独立倒计时」—— 是**一个队列**。10 颗蛋横排（按稀有度降序，最值钱的在最前），第 1 颗 `T+60s`、之后每 `20s` 一颗、**总长 ≤ 4 分钟**；每颗都走 3 秒破壳；不耐烦可点「**全部出壳**」（零成本，0.4s 间隔）。⭐ **v2.9 出壳去向**：默认只有 1 只自动站进家（家里没宠物时），其余 9 只待命，放出在屏 11；上限 6 不变（2026-10-22 用户拍板）。", "s31", "新增屏（W-14-2 拍板后补）"),
 ]
 
 

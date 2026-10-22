@@ -59,6 +59,7 @@ html,body{width:390px;height:844px;overflow:hidden;background:#DFF0DF}
   backdrop-filter:blur(6px);border-radius:12px;font-size:11px;font-weight:600;color:#33502F;
   box-shadow:0 2px 8px rgba(30,60,30,.12)}
 .plate .nm i{font-style:normal;font-weight:400;color:#7C8E79}
+.plate .rar{padding:2px 7px;color:#fff;border-radius:8px;font-size:8.5px;font-weight:700}
 .plate .badge{padding:2px 7px;background:#FFB300;color:#5D3F00;border-radius:8px;
   font-size:9px;font-weight:700}
 
@@ -248,12 +249,24 @@ def pet_svg(species="chick", mood="happy", scale=1.0):
 
 
 def egg_svg(size=76, crack=0, glow=False):
-    """蛋。crack 0~3 裂纹级；glow 夜光。"""
+    """蛋。crack 0~3 裂纹级，4 = 到点可破壳（docs/14 §1.6：横向裂缝 + 缝里一双眼睛，不露物种）；glow 夜光。"""
     cracks = {
         1: '<path d="M40 36 l9 8 -8 6 10 8" stroke="#B0876A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
         2: '<path d="M40 36 l9 8 -8 6 10 8 M63 32 l-8 10 7 7 -9 10" stroke="#B0876A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
         3: '<path d="M40 36 l9 8 -8 6 10 8 M63 32 l-8 10 7 7 -9 10 M40 70 l8 -6 7 6 8 -5" stroke="#B0876A" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>',
     }
+    # 到点态（docs/14 §1.6 · 2026-10-22 用户拍板**保留**）：壳还完整，横向裂开一道
+    # 透镜形缝隙（两端窄 / 中间宽），缝里一双眼睛 —— 删的是出壳演出，不是它。
+    ready = ('<path d="M32 55 L36 53 40.5 51.5 45 52.5 49.5 51 54 52 58.5 51.5 63 52.5 68 55 '
+             'L68 59 63.5 60.5 59 61.5 54.5 60.5 50 62.5 45.5 61.5 41 60.5 36.5 61 32 59 Z" fill="#2B2118"/>'
+             + ''.join(
+                 f'<circle cx="{50 + sx * 7.5}" cy="56.5" r="3.75" fill="#FFFDF6"/>'
+                 f'<circle cx="{50 + sx * 7.5}" cy="56.9" r="1.95" fill="#4E342E"/>'
+                 f'<circle cx="{50 + sx * 7.5 - 0.7}" cy="55.6" r="0.8" fill="#FFFFFF"/>'
+                 for sx in (-1, 1))
+             + '<path d="M32 56 l-2.5 -6 2 -5 -1.5 -4.5 M68 56 l2.5 -6 -2 -5 1.5 -4.5 '
+               'M50 62.5 l-1 7.5 4 5.5" stroke="#B0876A" stroke-width="2.2" fill="none" '
+               'stroke-linecap="round" stroke-linejoin="round"/>')
     halo = (f'<defs><radialGradient id="eg"><stop offset="0" stop-color="rgba(255,236,160,.55)"/>'
             f'<stop offset=".55" stop-color="rgba(255,232,150,.32)"/>'
             f'<stop offset="1" stop-color="rgba(255,232,150,0)"/></radialGradient></defs>'
@@ -264,7 +277,7 @@ def egg_svg(size=76, crack=0, glow=False):
             f'<path d="M50 16 C70 16 80 36 80 56 C80 76 66 88 50 88 C34 88 20 76 20 56 C20 36 30 16 50 16 z" fill="#FDF6E8"/>'
             f'<ellipse cx="40" cy="34" rx="9" ry="13" fill="rgba(255,255,255,.75)" transform="rotate(-18 40 34)"/>'
             f'<circle cx="62" cy="70" r="4" fill="#F3E3C6"/><circle cx="38" cy="74" r="3" fill="#F3E3C6"/>'
-            f'<circle cx="64" cy="34" r="3.4" fill="#F3E3C6"/>{cracks.get(crack, "")}</svg>')
+            f'<circle cx="64" cy="34" r="3.4" fill="#F3E3C6"/>{cracks.get(crack, ready if crack == 4 else "")}</svg>')
 
 
 def bubble(text, x, y, tail="left", act=None, done=False, width=None):
@@ -275,11 +288,26 @@ def bubble(text, x, y, tail="left", act=None, done=False, width=None):
     return f'<div class="{cls}" style="{st}">{ok}{text}{a}</div>'
 
 
-def pet(name, lvl, x, y, size, species="chick", mood="happy", badge=None, plate_dx=0):
+# 稀有度色（与 app colors.xml rarity_* 一一对应 · 2026-10-22 用户需求「稀有度可见 + 外形分层」）
+RARITY_COLORS = {"普通": "#9E9E9E", "稀有": "#2196F3", "史诗": "#9C27B0",
+                 "传说": "#FF9800", "神话": "#F44336", "灵兽": "#00E5FF"}
+RARITY_AURA = {"普通": "", "稀有": "box-shadow:0 0 10px 2px rgba(33,150,243,.28)",
+               "史诗": "box-shadow:0 0 14px 4px rgba(156,39,176,.34)",
+               "传说": "box-shadow:0 0 16px 6px rgba(255,152,0,.42)",
+               "神话": "box-shadow:0 0 18px 8px rgba(244,67,54,.5)",
+               "灵兽": "box-shadow:0 0 16px 7px rgba(0,229,255,.48)"}
+
+
+def pet(name, lvl, x, y, size, species="chick", mood="happy", badge=None, plate_dx=0, rarity=None):
+    """rarity 传入时：宠物本体垫稀有度色光环 + 名牌追加彩色稀有度小徽（与 app FramePetRenderer 同构）。"""
     badge_html = f'<span class="badge">{badge}</span>' if badge else ""
-    return (f'<div class="abs" style="left:{x}px;top:{y}px;width:{size}px;height:{size}px">{pet_svg(species, mood)}</div>'
+    rar_html = (f'<span class="rar" style="background:{RARITY_COLORS[rarity]}">{rarity}</span>'
+                if rarity else "")
+    aura = RARITY_AURA.get(rarity, "")
+    return (f'<div class="abs" style="left:{x}px;top:{y}px;width:{size}px;height:{size}px;'
+            f'border-radius:50%;{aura}">{pet_svg(species, mood)}</div>'
             f'<div class="plate" style="left:{x + size/2 - 70 + plate_dx}px;top:{y + size*0.94}px;width:140px">'
-            f'<span class="nm">{name}<i>Lv.{lvl}</i>{badge_html}</span></div>')
+            f'<span class="nm">{name}<i>Lv.{lvl}</i>{badge_html}{rar_html}</span></div>')
 
 
 def drawer_handle(ring=True, pct=71):

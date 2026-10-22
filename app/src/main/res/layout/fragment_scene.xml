@@ -139,13 +139,20 @@
             xmlns:tools="http://schemas.android.com/tools"
             tools:ignore="MissingId" />
 
-        <!-- 首蛋聚焦层（docs/14 §1.4）：首蛋孵化期盖在场景之上，破壳后隐藏 -->
+        <!-- 首蛋聚焦层（docs/14 §1.4）：首蛋孵化期盖在场景之上，破壳后隐藏。
+             ⚠️ `android:visibility="gone"` 是**运行时**默认值，不是可选项 ——
+             这里曾经只写了 `tools:visibility="gone"`（只影响预览），运行时第一帧会把
+             布局里的静态蛋（180dp + 01:00 + 三个按钮）当成真数据画出来，
+             等真实状态到达再被淡出：用户看到的就是「一颗大蛋慢慢消失，只剩背景」。
+             显隐**只能由数据驱动**（SceneFragment.renderFirstEggFocus），
+             布局不给任何「假装有蛋」的初值。 -->
         <include
             android:id="@+id/first_egg_focus"
             layout="@layout/view_first_egg_focus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:visibility="gone"
+            android:visibility="gone"
+            tools:visibility="visible"
             xmlns:tools="http://schemas.android.com/tools" />
 
     </FrameLayout>

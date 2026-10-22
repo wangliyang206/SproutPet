@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 起名弹窗里的「首孵奖励」条：浅绿底 + 大圆角，与卡内其它元素同语言（docs/14 §1.6） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/brand_primary_light" />
+    <corners android:radius="12dp" />
+</shape>

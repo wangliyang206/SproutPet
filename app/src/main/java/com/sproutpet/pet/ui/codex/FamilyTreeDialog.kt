@@ -42,7 +42,9 @@ class FamilyTreeDialog : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         val ctx = requireContext()
-        val scroll = ScrollView(ctx).apply { overScrollMode = View.OVER_SCROLL_NEVER }
+        // NestedScrollView：BottomSheetBehavior 只认 NestedScrolling 协议，
+        // 普通 ScrollView 滑到底后回不了顶部（2026-10-22 真机反馈③，与图鉴/名册同修）。
+        val scroll = androidx.core.widget.NestedScrollView(ctx).apply { overScrollMode = View.OVER_SCROLL_NEVER }
         val card = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(dp(20f), dp(24f), dp(20f), dp(28f))

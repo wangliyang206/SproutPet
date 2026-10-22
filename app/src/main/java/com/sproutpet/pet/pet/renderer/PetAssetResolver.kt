@@ -28,9 +28,12 @@ import java.util.concurrent.ConcurrentHashMap
  * - **R-2 DEBUG 下资源缺失必须可见**：抛异常，静默 = 缺陷不可见 = 缺陷长期存在。
  * - **R-3 取图必须传 `species`**：调用方（`FramePetRenderer`）不得只按 `stage` 取图。
  *
- * 资源由 `tools/gen_pet_placeholder_vectors.py` 按类群参数化生成：
- * 6 类群 × 3 可画阶段（baby / juvenile / adult）= 18 个；
+ * 资源（v1.3 起）为 **AI 生成的 3D 渲染 PNG**：6 类群 × 3 可画阶段 = **18 个**
+ * （`res/drawable-nodpi/pet_{family}_{stage}.png`，512×512 透明底），由
+ * `tools/prepare_pet_png.py` 从生成原图抠底后落地（docs/15 §十一）。
  * `ELDER` / `RETIRED` 复用 `adult`（docs/15 §四），不出独立资源。
+ * ⚠️ 本对象是**唯一取图入口**：任何 `R.drawable.pet_*` 字面量都算缺陷
+ * （曾经 `NamingDialogFragment` 硬编码小鸡，导致起名卡永远显示同一只）。
  */
 object PetAssetResolver {
 
@@ -114,5 +117,5 @@ class MissingPetAssetException(
 ) : IllegalStateException(
     "宠物形象资源缺失：${species.displayName}(${species.id}) @ $stage；" +
         "已按四级回落尝试 ${tried.joinToString()}。" +
-        "请补资源或运行 tools/gen_pet_placeholder_vectors.py 重新生成 L1 类群层。"
+        "请补资源或运行 tools/prepare_pet_png.py 重新落地 L1 类群层（docs/15 §十一）。"
 )

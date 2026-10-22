@@ -7,13 +7,26 @@
         <item name="colorPrimaryDark">@color/brand_primary_dark</item>
         <item name="colorSecondary">@color/brand_accent</item>
         <item name="android:colorBackground">@color/bg_page</item>
+        <!-- 冷启动首帧与场景同色（docs/02 §10.1）：近白的 bg_page 会闪一下 -->
+        <item name="android:windowBackground">@drawable/bg_launch_day</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <!-- 启动页主题 -->
     <style name="Theme.SproutPet.Splash" parent="Theme.SproutPet">
-        <item name="android:windowBackground">@color/bg_page</item>
+        <item name="android:windowBackground">@drawable/bg_launch_day</item>
+    </style>
+
+    <!--
+      冷启动分流主题（docs/02 §10.1 · 2026-10-22 修「进程序闪一下」）：
+      MainActivity 在 super.onCreate 之前按真实时间 setTheme，
+      夜间启动用深色 windowBackground —— 两个主题只差这一层背景，其余继承基础主题。
+    -->
+    <style name="Theme.SproutPet.LaunchDay" parent="Theme.SproutPet" />
+
+    <style name="Theme.SproutPet.LaunchNight" parent="Theme.SproutPet">
+        <item name="android:windowBackground">@drawable/bg_launch_night</item>
     </style>
 
     <!-- 通用文本样式 -->

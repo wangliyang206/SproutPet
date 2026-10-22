@@ -94,19 +94,23 @@ class IncubationRepositoryImpl @Inject constructor(
         }
 
     /**
-     * 破壳即「入册」：家有空槽就占一个，满了就留在**院子**（`home_slot = -1`）。
+     * 破壳后的去向（v3.28 · 2026-10-22 用户拍板：**桌面默认只站一只**）：
+     *
+     * - 家里**一只都没有**（首宠 / 用户把家清空了）→ 这只自动入册占 0 号槽 ——
+     *   场景不能空着，第一眼必须有它；
+     * - 家里**已经有任何一只在册** → 一律**待命**（`home_slot = -1`），
+     *   想看谁就到「家庭成员」名册里**放出**谁。十连也不再说"前 6 只挤满家"，
+     *   而是最值钱的那只站出来，其余 9 只进院子等点名。
      *
      * 为什么要在这里做：`BlindBoxEngine.createEgg` 造出来的蛋 `home_slot` 一律是
-     * `NO_SLOT`（引擎是纯函数，看不到"家里还有几个位子"）。如果破壳时不补，
-     * 抽到的宠物就永远不会 `atHome` —— 而场景只渲染 `atHome` 的宠物（三层链条），
-     * 结果就是「抽到了但看不见」。
-     *
-     * ⚠️ 队列（十连）按出壳顺序调用，先到先得 —— 而队列本身是**稀有度降序**，
-     * 所以最好的那几只优先入册，这个顺序恰好是对的。
+     * `NO_SLOT`（引擎是纯函数，看不到"家里还有几个位子"）。如果不补，首宠破壳后
+     * 场景仍是空的（`SceneRoster.onStage` 只画在册的）。
      */
     private suspend fun assignHomeSlotIfPossible(pet: Pet): Pet {
         if (HomeSlots.isAtHome(pet)) return pet
         val peers = petDao.queryByOwner(pet.ownerId).map(PetMapper::toDomain)
+        val staged = peers.count { it.isHatched && HomeSlots.isAtHome(it) }
+        if (staged > 0) return pet
         val slot = HomeSlots.nextFreeHomeSlot(peers) ?: return pet
         return pet.copy(homeSlot = slot)
     }

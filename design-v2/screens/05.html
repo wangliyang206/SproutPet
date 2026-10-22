@@ -45,6 +45,7 @@ html,body{width:390px;height:844px;overflow:hidden;background:#DFF0DF}
   backdrop-filter:blur(6px);border-radius:12px;font-size:11px;font-weight:600;color:#33502F;
   box-shadow:0 2px 8px rgba(30,60,30,.12)}
 .plate .nm i{font-style:normal;font-weight:400;color:#7C8E79}
+.plate .rar{padding:2px 7px;color:#fff;border-radius:8px;font-size:8.5px;font-weight:700}
 .plate .badge{padding:2px 7px;background:#FFB300;color:#5D3F00;border-radius:8px;
   font-size:9px;font-weight:700}
 
@@ -171,31 +172,26 @@ html,body{width:390px;height:844px;overflow:hidden;background:#DFF0DF}
       font-variant-numeric:tabular-nums;text-shadow:0 2px 12px rgba(0,0,0,.5)}
     .fe-sub{position:absolute;left:0;right:0;top:486px;text-align:center;font-size:11.5px;color:#E8F0E4}
     .fe-crack{position:absolute;left:0;right:0;top:512px;text-align:center;font-size:10.5px;color:#C8E6C9}
-    .fe-acts{position:absolute;left:24px;right:24px;top:562px;display:flex;gap:8px;justify-content:center}
-    .fe-act{flex:1;text-align:center;padding:11px 0;border-radius:16px;font-size:11.5px;font-weight:700;
-      background:rgba(255,255,255,.94);color:#33502F;box-shadow:0 8px 18px rgba(0,0,0,.22)}
     .fe-note{position:absolute;left:16px;right:16px;bottom:26px;font-size:9.5px;line-height:1.75;
       color:#DCEBD8;background:rgba(20,38,22,.62);border:1px solid rgba(255,255,255,.14);
       border-radius:14px;padding:10px 12px}
     .fe-note b{color:#FFF3C4}
+    .fe-note .ready{display:inline-flex;align-items:center;gap:6px;vertical-align:middle}
     </style></head><body><div class="stage">
     <img class="bg" src="../assets/bg-home-day.png">
     <div class="vig" style="background:rgba(16,32,18,.34)"></div>
     <div class="chipctx abs" style="left:14px;top:14px;background:rgba(255,255,255,.94)">🥚 首蛋 · 第一次孵化<br><i>第 2 颗起回到角落 72dp 小蛋</i></div>
-    <div class="fe-hint">敲敲它，它在里面</div>
+    <div class="fe-hint">正在孵化你的第一颗蛋</div>
     <div class="fe-egg"><svg viewBox="0 0 100 100" width="180" height="180"><defs><radialGradient id="eg"><stop offset="0" stop-color="rgba(255,236,160,.55)"/><stop offset=".55" stop-color="rgba(255,232,150,.32)"/><stop offset="1" stop-color="rgba(255,232,150,0)"/></radialGradient></defs><circle cx="50" cy="52" r="46" fill="url(#eg)"/><path d="M20 26 l1.8 4.4 4.4 1.8 -4.4 1.8 -1.8 4.4 -1.8 -4.4 -4.4 -1.8 4.4 -1.8 z" fill="#FFF3C4"/><ellipse cx="50" cy="90" rx="20" ry="4.5" fill="rgba(30,55,30,.18)"/><path d="M50 16 C70 16 80 36 80 56 C80 76 66 88 50 88 C34 88 20 76 20 56 C20 36 30 16 50 16 z" fill="#FDF6E8"/><ellipse cx="40" cy="34" rx="9" ry="13" fill="rgba(255,255,255,.75)" transform="rotate(-18 40 34)"/><circle cx="62" cy="70" r="4" fill="#F3E3C6"/><circle cx="38" cy="74" r="3" fill="#F3E3C6"/><circle cx="64" cy="34" r="3.4" fill="#F3E3C6"/><path d="M40 36 l9 8 -8 6 10 8 M63 32 l-8 10 7 7 -9 10" stroke="#B0876A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div class="fe-cd">00:47</div>
     <div class="fe-sub">21:40 破壳 · 到点会提醒你</div>
-    <div class="fe-crack">敲了 3 次 · 蛋壳留下 3 道细纹（破壳后仍留在场景里）</div>
-    <div class="fe-acts">
-      <span class="fe-act">起个名字</span>
-      <span class="fe-act">专注陪伴</span>
-      <span class="fe-act">去看图鉴</span>
-    </div>
+    <div class="fe-crack">想它了就敲敲它 · 它听得见</div>
     <div class="fe-note">
       <b>首蛋聚焦层（14 §1.4）</b>：蛋 <b>180dp</b> · 水平居中 / 垂直 46% · 场景压暗 <b>0.28</b>；
       倒计时 <b>32sp 等宽数字</b>（最后 10 秒转暖橙）+ 绝对时刻；
       动效 = <b>呼吸 2.4s</b> / <b>每 4s 轻晃</b> / <b>数字每秒跳动</b>。
       <b>首蛋恒 1 分钟，与稀有度无关</b>（W-14-1 拍板）—— 稀有度的差异放在<b>破壳演出规格</b>里。
+      <br><b>v1.9（14 §1.4/§1.6）</b>：这一层<b>没有任何按钮</b> —— 「起个名字 / 专注陪伴 / 去看图鉴」已移除（蛋期只做「看着它孵化」，旧 §1.2④ 可提前起名作废）。
+      <span class="ready">到点态 <svg viewBox="0 0 100 100" width="34" height="34"><ellipse cx="50" cy="90" rx="20" ry="4.5" fill="rgba(30,55,30,.18)"/><path d="M50 16 C70 16 80 36 80 56 C80 76 66 88 50 88 C34 88 20 76 20 56 C20 36 30 16 50 16 z" fill="#FDF6E8"/><ellipse cx="40" cy="34" rx="9" ry="13" fill="rgba(255,255,255,.75)" transform="rotate(-18 40 34)"/><circle cx="62" cy="70" r="4" fill="#F3E3C6"/><circle cx="38" cy="74" r="3" fill="#F3E3C6"/><circle cx="64" cy="34" r="3.4" fill="#F3E3C6"/><path d="M32 55 L36 53 40.5 51.5 45 52.5 49.5 51 54 52 58.5 51.5 63 52.5 68 55 L68 59 63.5 60.5 59 61.5 54.5 60.5 50 62.5 45.5 61.5 41 60.5 36.5 61 32 59 Z" fill="#2B2118"/><circle cx="42.5" cy="56.5" r="3.75" fill="#FFFDF6"/><circle cx="42.5" cy="56.9" r="1.95" fill="#4E342E"/><circle cx="41.8" cy="55.6" r="0.8" fill="#FFFFFF"/><circle cx="57.5" cy="56.5" r="3.75" fill="#FFFDF6"/><circle cx="57.5" cy="56.9" r="1.95" fill="#4E342E"/><circle cx="56.8" cy="55.6" r="0.8" fill="#FFFFFF"/><path d="M32 56 l-2.5 -6 2 -5 -1.5 -4.5 M68 56 l2.5 -6 -2 -5 1.5 -4.5 M50 62.5 l-1 7.5 4 5.5" stroke="#B0876A" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>：壳裂一道缝、缝里<b>一双眼睛</b>（不露物种）→ 点击 → 起名 + 「+10 连抽」同屏（§1.6）<br>⭐ v2.11：**出壳演出（3 秒裂蛋遮罩 +「要破壳了！」）已移除** —— 点击后直接进起名（用户拍板「图片中的效果不需要」）；「缝隙露眼」保留</span>
     </div>
     </div></body></html>

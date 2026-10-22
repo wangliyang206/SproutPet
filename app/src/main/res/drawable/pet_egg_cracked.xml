@@ -2,8 +2,8 @@
 <!--
   蛋 · 破壳中
 
-  对应 PetRenderState.Hatching：裂纹 + 漏光 + 崩飞的蛋壳碎片。
-  刻意不画幼崽探头 —— 这一帧对全部物种通用，具体幼崽由 stage 资源接续。
+  对应 PetRenderState.Hatching：锯齿裂纹 + 崩飞的蛋壳碎片。
+  不画漏光斑 —— 视觉上读成一双眼睛（2026-10-22 用户拍板去掉）。
 
   占位资源：由 tools/gen_pet_placeholder_vectors.py 生成，
   美术交付 Rive 版本（docs/02-宠物渲染方案.md §5.1）后可整体替换。
@@ -24,12 +24,6 @@
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:pathData="M56.00 106.00 C56.00 148.00 144.00 148.00 144.00 106.00 L133.00 106.00 L122.00 99.00 L111.00 106.00 L100.00 99.00 L89.00 106.00 L78.00 99.00 L67.00 106.00 L56.00 99.00 Z" />
-    <path
-        android:fillColor="#FFFFF59D"
-        android:pathData="M78.00 47.00 C88.80 60.50 88.80 75.50 78.00 75.50 C67.20 75.50 67.20 60.50 78.00 47.00 Z" />
-    <path
-        android:fillColor="#FFFFF59D"
-        android:pathData="M122.00 47.00 C132.80 60.50 132.80 75.50 122.00 75.50 C111.20 75.50 111.20 60.50 122.00 47.00 Z" />
     <path
         android:fillColor="#00000000"
         android:strokeColor="#FF5D4037"

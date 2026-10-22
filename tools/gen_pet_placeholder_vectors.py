@@ -79,6 +79,7 @@ SLEEP_Z      = "#FF90A4AE"   # Zzz 气泡
 SHELL        = "#FFFFF8E1"   # 蛋壳
 SHELL_SPOT   = "#FFFFE082"   # 蛋壳斑点
 SHELL_GLOW   = "#FFFFF59D"   # 破壳漏光
+SHELL_GAP    = "#FF2B2118"   # 蛋壳裂缝里的暗部（到点态：缝隙 + 一双眼睛）
 NEST         = "#FFC8E6C9"   # 草窝（= brand_primary_light）
 
 W_MAIN = 3.6    # 主体描边宽
@@ -692,12 +693,52 @@ def build_egg(cracked: bool):
         seg.append(("L", (x, y)))
     seg.append(("Z",))
     out.append(S(seg, SHELL, OUTLINE, W_MAIN))
-    for sx in (-1, 1):
-        out.append(S(drop(100 + sx * 22, 62, 15), SHELL_GLOW, None, 0))
+    # ⚠️ 不画「漏光」黄斑（2026-10-22 用户反馈原话：「长着像蛋壳还有俩眼这个是什么鬼」）：
+    # 两个 SHELL_GLOW 水滴在破壳构图里读起来就是一双悬空的眼睛，惊悚不惊喜。
+    # 破壳感由锯齿裂缝 + 两片飞壳承担，够了。
     out.append(S(crack(96, 88, [(10, -14), (-6, -16), (12, -16), (-4, -18)]), None, OUTLINE, W_DETAIL))
     out.append(S(shell_cap(128, 54, 22, 20, teeth=3, rot=-24), SHELL, OUTLINE, W_MAIN))
     out.append(S(shell_cap(74, 40, 15, 14, teeth=3, rot=32), SHELL, OUTLINE, W_MAIN))
     return out
+
+
+def build_egg_ready():
+    """蛋 · 到点可破壳（docs/14 §1.6 · 2026-10-22 用户拍板保留）。
+
+    壳还完整，横向裂开一道缝，**缝隙里有一双眼睛在看你** ——
+    用户能确认"里面有东西、是活的"，但看不出是什么品种。
+    刻意只画眼睛：不画喙、不画耳朵、不画犄角、不画绒毛，任何物种特征都会提前泄底。
+
+    ⚠️ 2026-10-22 二次澄清：用户要删的是**出壳演出**（破壳动画遮罩那张裂壳碎片图），
+    不是本资源 —— 「到点缝隙露眼」原样保留。
+    """
+    out = [S(ellipse(100, 168, 52, 10), NEST, None, 0)]
+    # 壳还完整
+    out.append(S(ellipse(100, 108, 46, 58), SHELL, OUTLINE, W_MAIN))
+    out.append(S(ellipse(74, 76, 8, 6, -20), SHELL_SPOT, None, 0))
+    out.append(S(ellipse(126, 140, 10, 7, 14), SHELL_SPOT, None, 0))
+
+    # 横向缝隙：透镜形（两端窄、中间宽），带锯齿抖动 —— 裂开的口子不是一个规整的椭圆。
+    gap_top = [(64, 110), (72, 106), (81, 103), (90, 105), (99, 102),
+               (108, 104), (117, 103), (126, 105), (136, 110)]
+    gap_bot = [(136, 118), (127, 121), (118, 123), (109, 121), (100, 125),
+               (91, 123), (82, 121), (73, 122), (64, 118)]
+    out.append(S(poly(gap_top + gap_bot), SHELL_GAP, None, 0))
+
+    # 缝隙里的眼睛：只给眼睛，不给任何物种线索
+    gap_eye_y = 113
+    for sx in (-1, 1):
+        ex = 100 + sx * 15
+        out.append(S(circle(ex, gap_eye_y, 7.5), WHITE, None, 0))
+        out.append(S(circle(ex, gap_eye_y + 0.8, 3.9), EYE, None, 0))
+        out.append(S(circle(ex - 1.4, gap_eye_y - 1.8, 1.6), WHITE, None, 0))
+
+    # 缝隙两端延出去的细裂纹（刻意短 —— 长了会读成"长角"）
+    out.append(S(crack(64, 112, [(-5, -12), (4, -10), (-3, -9)]), None, OUTLINE, W_DETAIL))
+    out.append(S(crack(136, 112, [(5, -12), (-4, -10), (3, -9)]), None, OUTLINE, W_DETAIL))
+    out.append(S(crack(100, 125, [(-2, 12), (6, 9)]), None, OUTLINE, W_DETAIL))
+    return out
+
 
 
 # ─────────────────────────── 导出 ───────────────────────────
@@ -909,9 +950,12 @@ SPEC += [
       "外形对全部物种通用 —— 蛋里是什么虫，破壳时才知道。"],
      lambda: build_egg(False)),
     ("pet_egg_cracked", "蛋 · 破壳中",
-     ["对应 PetRenderState.Hatching：裂纹 + 漏光 + 崩飞的蛋壳碎片。",
+     ["对应 PetRenderState.Hatching：锯齿裂纹 + 崩飞的蛋壳碎片（不画漏光斑 —— 读成眼睛，2026-10-22 用户拍板去掉）。",
       "刻意不画幼崽探头 —— 这一帧对全部物种通用，具体幼崽由 stage 资源接续。"],
      lambda: build_egg(True)),
+    ("pet_egg_ready", "蛋 · 到点可破壳",
+     ["docs/14 §1.6：倒计时归零后蛋壳横向裂开一道缝，缝里有一双眼睛（2026-10-22 用户拍板保留 —— 删的是出壳演出，不是它）。"],
+     lambda: build_egg_ready()),
 ]
 
 

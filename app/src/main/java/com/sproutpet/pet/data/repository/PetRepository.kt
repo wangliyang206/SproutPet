@@ -3,6 +3,7 @@ package com.sproutpet.pet.data.repository
 import com.sproutpet.core.db.entity.PetDao
 import com.sproutpet.core.db.mapper.PetMapper
 import com.sproutpet.core.domain.desktop.SceneRoster
+import com.sproutpet.core.domain.pet.CodexProgress
 import com.sproutpet.core.domain.pet.GrowthRules
 import com.sproutpet.core.domain.pet.HomeSlots
 import com.sproutpet.core.domain.pet.Pet
@@ -21,9 +22,19 @@ import javax.inject.Singleton
  */
 data class PetRoster(
     val home: List<Pet> = emptyList(),
-    val yard: List<Pet> = emptyList()
+    val yard: List<Pet> = emptyList(),
+    /**
+     * 图鉴进度（种 / 类群 / 神兽位）。
+     *
+     * 塞进名册快照而不是再开一路 Flow：`combine` 只有 2~5 个重载（场景已用满 5 路），
+     * 而且图鉴本来就是「从同一份宠物表里数出来的」，没有理由再查一次库。
+     */
+    val codex: CodexProgress = CodexProgress.EMPTY
 ) {
     val yardCount: Int get() = yard.size
+
+    /** 已破壳总数（在家 + 院子）—— 抽屉「在册 N 只」用这个，不是场景里站着的只数 */
+    val hatchedTotal: Int get() = home.size + yard.size
 }
 
 /**
@@ -78,8 +89,23 @@ interface PetRepository {
 
     suspend fun queryById(id: Long): Pet?
 
-    /** 图鉴（design-v2 屏 08）：见过的物种 id 集合 —— 含已入后山，见过就算收集 */
-    suspend fun seenSpeciesIds(): Set<String>
+    /**
+     * 图鉴进度的**一次性快照**（模态弹层用：不做实时订阅，避免列表在手指下跳动）。
+     *
+     * 与 [observeRoster] 里的 `codex` 同一判据（[CodexProgress.of]），不会出现
+     * 「抽屉说 8 种、点进去说 7 种」。
+     */
+    suspend fun codexProgress(ownerId: Long): CodexProgress
+
+    /**
+     * 全部在册宠物快照（含蛋、含待命；**不含后山** —— 与 [codexProgress] 同源同过滤，
+     * 不会出现「格子亮了但 ×N 对不上」）。
+     *
+     * 图鉴用它在**物种格上直接亮出宠物昵称**（2026-10-22 真机反馈：「孵化出第一只了，
+     * 图鉴中没有」—— 图鉴是物种口径，一格一个物种、只有"已收集"三个字，
+     * 用户在格子里找不到"我的那只"。把昵称亮出来，"收集到的是它"就不再需要猜）。
+     */
+    suspend fun petsByOwner(ownerId: Long): List<Pet>
 
     /** 族谱（design-v2 屏 20）：某只宠物的直系后代 */
     suspend fun childrenOf(petId: Long): List<Pet>
@@ -127,7 +153,13 @@ class PetRepositoryImpl @Inject constructor(
     override fun observeRoster(ownerId: Long): Flow<PetRoster> =
         petDao.observeByOwner(ownerId).map { entities ->
             val all = PetMapper.toDomainList(entities)
-            PetRoster(home = SceneRoster.onStage(all), yard = SceneRoster.yard(all))
+            PetRoster(
+                home = SceneRoster.onStage(all),
+                yard = SceneRoster.yard(all),
+                // 同一份快照里数出来 —— 三个数字必须同源，否则会出现
+                // 「场景 6 只 / 抽屉 7 只」这类中间帧矛盾
+                codex = CodexProgress.of(all)
+            )
         }
 
     override fun observeYardPets(ownerId: Long): Flow<List<Pet>> =
@@ -161,8 +193,12 @@ class PetRepositoryImpl @Inject constructor(
         petDao.queryById(id)?.let(PetMapper::toDomain)
     }
 
-    override suspend fun seenSpeciesIds(): Set<String> = withContext(Dispatchers.IO) {
-        petDao.querySeenSpecies().toSet()
+    override suspend fun codexProgress(ownerId: Long): CodexProgress = withContext(Dispatchers.IO) {
+        CodexProgress.of(PetMapper.toDomainList(petDao.queryByOwner(ownerId)))
+    }
+
+    override suspend fun petsByOwner(ownerId: Long): List<Pet> = withContext(Dispatchers.IO) {
+        PetMapper.toDomainList(petDao.queryByOwner(ownerId))
     }
 
     override suspend fun childrenOf(petId: Long): List<Pet> = withContext(Dispatchers.IO) {
